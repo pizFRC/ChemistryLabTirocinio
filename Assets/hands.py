@@ -17,7 +17,7 @@ class CaptureThread(threading.Thread):
     counter = 0
     timer = 0.0
     def run(self):
-        self.cap = cv2.VideoCapture(0) # sometimes it can take a while for certain video captures
+        self.cap = cv2.VideoCapture(1) # sometimes it can take a while for certain video captures
         
         print("Opened Capture")
         while(True):
