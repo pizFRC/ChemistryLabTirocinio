@@ -30,9 +30,8 @@ while True:
         s = thread.data.encode('ascii')
     
         sent = clientSocket.sendto(s, server_address)
-      
-       # f.write(struct.pack('I', len(s)) + s)   
-       # f.seek(0)                          
+        
+                       
 
         thread.dirty = False
 

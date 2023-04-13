@@ -15,7 +15,7 @@ public class InteractSelector : MonoBehaviour
     {
         
     }
-    private bool isGrabbed=false;
+    //private bool isGrabbed=false;
 
     private void OnTriggerEnter(Collider other)
     {

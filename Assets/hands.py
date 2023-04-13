@@ -17,8 +17,13 @@ class CaptureThread(threading.Thread):
     counter = 0
     timer = 0.0
     def run(self):
-        self.cap = cv2.VideoCapture(1) # sometimes it can take a while for certain video captures
+        self.set_camera()
         
+        if cv2.useOptimized():
+            print("Optimized")
+        else:
+            print("not Optimized")
+
         print("Opened Capture")
         while(True):
             self.ret, self.frame = self.cap.read()
@@ -29,11 +34,41 @@ class CaptureThread(threading.Thread):
                     print("Capture FPS: ",self.counter/(time.time()-self.timer))
                     self.counter = 0
                     self.timer = time.time()
+    def set_camera(self):
+        index=0;
+        camera_list=[]
+        camera_list_resolution=[]
+        index_out_of_range=False
+        
+        while not index_out_of_range:
+            
+            cap = cv2.VideoCapture(index)
+          
+            ret,frame = cap.read()
+            if not ret:
+                print(f"{index} out of range")
+                index_out_of_range=True
+                break
+            else:
+                cam_height,cam_width, channels = frame.shape
+                camera_list.append(index)
+                camera_list_resolution.append(cam_width*cam_height)
+                index+=1
+            best_resolution=camera_list_resolution[0]
+            index_camera_chosen=0
+            for i in range(0,len(camera_list_resolution)):
+                if best_resolution < camera_list_resolution[i]:
+                    best_resolution = camera_list_resolution[i]
+                    index_camera_chosen=i
+            print(f"risoluzione : {best_resolution}: {index_camera_chosen}")
+
+            cap.release()
+            self.cap = cv2.VideoCapture(index_camera_chosen)
+          
+        print(f" Trovate n:{len(camera_list)} camere")
 
 # the hand thread actually does the processing of the captured images
 class HandThread(threading.Thread):
-    dataLeft = ""
-    dataLeft = ""
     data=""
     dirty = True
 
@@ -93,7 +128,7 @@ class HandThread(threading.Thread):
                         for i in range(0,21):
                             self.data += "{}|{}|{}|{}|{}\n".format(results.multi_handedness[j].classification[0].label,i,hand_world_landmarks.landmark[i].x,hand_world_landmarks.landmark[i].y,hand_world_landmarks.landmark[i].z)
                    
-                        print(self.data)
+                        #print(self.data)
                         self.dirty = True
 
                     
@@ -106,3 +141,8 @@ class HandThread(threading.Thread):
 
         capture.cap.release()
         cv2.destroyAllWindows()
+
+
+
+capture = CaptureThread()
+capture.set_camera()
