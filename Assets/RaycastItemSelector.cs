@@ -8,8 +8,7 @@ public class RaycastItemSelector : MonoBehaviour
 
     public float maxDistance=100f;
    
-    public Camera second;
-     GameObject raySelectorLeft;
+     GameObject raySelector;
     public GameObject prefab;
     Vector3 startPoint;
     Vector3 direction;
@@ -18,7 +17,7 @@ public class RaycastItemSelector : MonoBehaviour
     private LineRenderer lineRenderer;
     void Start()
     {
-       raySelectorLeft=Instantiate(prefab);
+       raySelector=Instantiate(prefab);
       lineRenderer=GetComponent<LineRenderer>();
     }
 
@@ -37,55 +36,29 @@ public class RaycastItemSelector : MonoBehaviour
           Vector3 indexDirection =  (indexTipPosition -wristPosition).normalized;
           Vector3 pinkyDirection =(pinkyTipPosition -wristPosition).normalized;   
          Vector3 thumbDirection =(thumbTipPosition -wristPosition).normalized;  
-          Vector3 handDirection= (indexDirection+pinkyDirection+thumbDirection).normalized;
-          
-            
+          Vector3 handDirection= (indexDirection+pinkyDirection+thumbDirection);
+        
  
-          RaycastHit hit;
-          Ray ray = new Ray(wristPosition, handDirection);
-      
 
-           
-         /* if (Input.GetKeyDown("space"))
-            {
-                            
-                      if(Physics.Raycast(ray,out hit,maxDistance*multiplier)){
 
-                              print(hit.transform.gameObject);
-                             
-                          StartCoroutine(itemSelectedChangeColor(hit.transform));
 
-           }
 
-        lineRenderer.SetPosition(0,wristPosition);
-       lineRenderer.SetPosition(1,hit.transform.position);
 
-           
-
-                
-
-                      
-                  
-                      /* Debug.DrawRay(wristPosition, thumbDirection, Color.red,3f);
-                       Debug.DrawRay(wristPosition, pinkyDirection, Color.blue,3f);
-                       Debug.DrawRay(wristPosition, indexDirection, Color.green,3f);
-                       Debug.DrawRay(wristPosition,handDirection,Color.black,5f);
-                      
-                  
-                      
-              }
-*/
-               
-if(elapsedTime> timeToWait){
+            if(elapsedTime> timeToWait){
            
                elapsedTime=0;
-                 raySelectorLeft.transform.localPosition=wristPosition;
-                raySelectorLeft.transform.rotation=Quaternion.LookRotation(handDirection,wristPosition);
+                 raySelector.transform.localPosition=wristPosition;
+                 if(handDirection.magnitude>float.Epsilon)
+                    raySelector.transform.localRotation=Quaternion.LookRotation(handDirection);
 
            }
+           
+    }
+                     
+
                        
                 
-              }
+              
 
 
       void OnCollisionEnter(Collision collision)

@@ -15,10 +15,30 @@ public class InteractSelector : MonoBehaviour
     {
         
     }
-
+    private bool isGrabbed=false;
 
     private void OnTriggerEnter(Collider other)
     {
-        print("triggered");
+        print("triggered :"+this.gameObject +" from : "+other.gameObject);
+         selectedItem();
     }
+    private void OnTriggerExit(Collider other)
+    {
+        print("EXSIT :"+this.gameObject +" from : "+other.gameObject);
+       
+    }
+
+ 
+        private IEnumerator selectedItem(){
+            print("caroutine");
+                 yield  return new WaitForSeconds(0.5f);           
+             foreach(Renderer m in this.GetComponents<Renderer>()){
+            
+                 m.material.SetColor("Color", Color.red);
+            
+             }
+
+            
+        }
+   
 }
