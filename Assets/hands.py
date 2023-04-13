@@ -17,7 +17,7 @@ class CaptureThread(threading.Thread):
     counter = 0
     timer = 0.0
     def run(self):
-        self.set_camera()
+        self.set_best_camera()
         
         if cv2.useOptimized():
             print("Optimized")
@@ -34,7 +34,7 @@ class CaptureThread(threading.Thread):
                     print("Capture FPS: ",self.counter/(time.time()-self.timer))
                     self.counter = 0
                     self.timer = time.time()
-    def set_camera(self):
+    def set_best_camera(self):
         index=0;
         camera_list=[]
         camera_list_resolution=[]
@@ -144,5 +144,3 @@ class HandThread(threading.Thread):
 
 
 
-capture = CaptureThread()
-capture.set_camera()
