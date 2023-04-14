@@ -17,8 +17,8 @@ class CaptureThread(threading.Thread):
     counter = 0
     timer = 0.0
     def run(self):
-        self.set_best_camera()
-        
+        #self.set_best_camera()
+        self.cap = cv2.VideoCapture(1)
         if cv2.useOptimized():
             print("Optimized")
         else:
@@ -54,16 +54,19 @@ class CaptureThread(threading.Thread):
                 camera_list.append(index)
                 camera_list_resolution.append(cam_width*cam_height)
                 index+=1
-            best_resolution=camera_list_resolution[0]
-            index_camera_chosen=0
-            for i in range(0,len(camera_list_resolution)):
-                if best_resolution < camera_list_resolution[i]:
-                    best_resolution = camera_list_resolution[i]
-                    index_camera_chosen=i
-            print(f"risoluzione : {best_resolution}: {index_camera_chosen}")
-
             cap.release()
-            self.cap = cv2.VideoCapture(index_camera_chosen)
+
+        best_resolution=camera_list_resolution[0]
+        index_camera_chosen=0
+        for i in range(0,len(camera_list_resolution)):
+            print(camera_list_resolution[i])
+            if best_resolution < camera_list_resolution[i]:
+                best_resolution = camera_list_resolution[i]
+                index_camera_chosen=i
+        print(f"risoluzione : {best_resolution}: {index_camera_chosen}")
+
+            
+      
           
         print(f" Trovate n:{len(camera_list)} camere")
 
@@ -71,11 +74,11 @@ class CaptureThread(threading.Thread):
 class HandThread(threading.Thread):
     data=""
     dirty = True
-
     def run(self):
         mp_drawing = mp.solutions.drawing_utils
         mp_hands = mp.solutions.hands
-        
+        width=0
+
         capture = CaptureThread()
         capture.start()
 
@@ -90,7 +93,7 @@ class HandThread(threading.Thread):
                 #ret, frame = cap.read()
                 ret = capture.ret
                 frame = capture.frame
-                
+                width=frame.shape[1]
                 # BGR 2 RGB
                 image = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
                 
@@ -119,7 +122,8 @@ class HandThread(threading.Thread):
                 # Set up data for piping
                 self.data = ""
                 i = 0
-                if results.multi_hand_world_landmarks:
+                
+                if results.multi_hand_landmarks:
                     for j in range(len(results.multi_handedness)):
                         
                         hand_world_landmarks = results.multi_hand_landmarks[j]
@@ -130,9 +134,8 @@ class HandThread(threading.Thread):
                    
                         #print(self.data)
                         self.dirty = True
-
-                    
-                    
+                   # self.get_gesture(results.multi_hand_landmarks,width)
+                
                 if DEBUG:
                     cv2.imshow('Hand Tracking', image)
 
@@ -141,6 +144,26 @@ class HandThread(threading.Thread):
 
         capture.cap.release()
         cv2.destroyAllWindows()
+    def get_gesture(self,multi_hand_landmarks,width):
+        hand_landmarks = multi_hand_landmarks[0]
 
+        landmarks = np.array([[lmk.x, lmk.y] for lmk in hand_landmarks.landmark])
+
+            # Calcola la distanza tra il pollice e l'indice
+        thumb_tip = landmarks[4]
+        index_tip = landmarks[8]
+        dist_thumb_index = np.linalg.norm(thumb_tip - index_tip)
+
+        # Rileva il gesto del pollice in su
+        if dist_thumb_index > 0.32:
+            # Il pollice è in su
+            print(dist_thumb_index /width)
+            print("Il pollice è in su.")
+            print(dist_thumb_index )
+        else:
+            # Il pollice non è in su
+            print(dist_thumb_index /width)
+            print("Il pollice non è in su.")
+            print(dist_thumb_index )
 
 
