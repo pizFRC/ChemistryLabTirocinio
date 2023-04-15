@@ -18,7 +18,7 @@ class CaptureThread(threading.Thread):
     timer = 0.0
     def run(self):
         #self.set_best_camera()
-        self.cap = cv2.VideoCapture(1)
+        self.cap = cv2.VideoCapture(0)
         if cv2.useOptimized():
             print("Optimized")
         else:
