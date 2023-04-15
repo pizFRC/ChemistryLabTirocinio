@@ -35,8 +35,8 @@ public class RaycastItemSelector : MonoBehaviour
           Vector3 thumbTipPosition=this.transform.GetChild(4).transform.position;
           Vector3 indexDirection =  (indexTipPosition -wristPosition).normalized;
           Vector3 pinkyDirection =(pinkyTipPosition -wristPosition).normalized;   
-        // Vector3 thumbDirection =(thumbTipPosition -wristPosition).normalized;  
-          Vector3 handDirection= (indexDirection+pinkyDirection);//+thumbDirection);
+         Vector3 thumbDirection =(thumbTipPosition -wristPosition).normalized;  
+          Vector3 handDirection= (indexDirection/2+thumbDirection);//+thumbDirection);
         
  
 
@@ -47,7 +47,7 @@ public class RaycastItemSelector : MonoBehaviour
             if(elapsedTime> timeToWait){
            
                elapsedTime=0;
-                 raySelector.transform.localPosition=indexTipPosition;
+                 raySelector.transform.localPosition=thumbTipPosition;
                  if(handDirection.magnitude>float.Epsilon)
                     raySelector.transform.localRotation=Quaternion.LookRotation(handDirection);
 
