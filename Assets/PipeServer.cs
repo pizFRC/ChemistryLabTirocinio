@@ -194,7 +194,7 @@ void OnDrawGizmosSelected()
         Gizmos.color = new Color(1, 0, 0, 0.5f);
     
         Gizmos.DrawCube(lParent.localPosition, new Vector3(1, 1, 1));
-        Gizmos.color = new Color(1, 1, 1, 0.5f);
+        Gizmos.color = new Color(1, 1, 0, 0.5f);
          Gizmos.DrawCube(rParent.localPosition, new Vector3(1, 1, 1));
     }
    
@@ -215,7 +215,7 @@ void OnDrawGizmosSelected()
             for (int i = 0; i < LANDMARK_COUNT; ++i)
             {
                 
-                h.instances[i].transform.localPosition = h.positionsBuffer[i] / (float)h.samplesCounter * multiplier;
+                h.instances[i].transform.localPosition = h.positionsBuffer[i]/(float)h.samplesCounter * multiplier;// / ;
                 
                 h.positionsBuffer[i] = Vector3.zero;
             

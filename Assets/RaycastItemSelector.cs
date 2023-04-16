@@ -13,45 +13,65 @@ public class RaycastItemSelector : MonoBehaviour
     Vector3 startPoint;
     Vector3 direction;
      float elapsedTime=0f;
-     public float  timeToWait=2f;
+     public float  timeToWait=1.0f;
+     public float smoothingFactor=0.020f;
     private LineRenderer lineRenderer;
+    Vector3 previousHandDirection, thumbDirection,  thumbTipPosition,wristPosition , filteredHandDirection;
     void Start()
     {
        raySelector=Instantiate(prefab);
       lineRenderer=GetComponent<LineRenderer>();
+        
     }
 
     // Update is called once per frame
     void Update()
     {
-           
+         
            elapsedTime+=Time.deltaTime;
            
-          Vector3 wristPosition= this.transform.GetChild(0).transform.position;
-
+           /*
        
-          Vector3 indexTipPosition= this.transform.GetChild(8).transform.position;
-          Vector3 pinkyTipPosition= this.transform.GetChild(20).transform.position;
-          Vector3 thumbTipPosition=this.transform.GetChild(4).transform.position;
-          Vector3 indexDirection =  (indexTipPosition -wristPosition).normalized;
-          Vector3 pinkyDirection =(pinkyTipPosition -wristPosition).normalized;   
-         Vector3 thumbDirection =(thumbTipPosition -wristPosition).normalized;  
-          Vector3 handDirection= (indexDirection/2+thumbDirection);//+thumbDirection);
         
+         
+       
+
+ */
+
+          
+          //+thumbDirection);
+         
  
 
 
 
 
-
             if(elapsedTime> timeToWait){
-           
-               elapsedTime=0;
-                 raySelector.transform.localPosition=thumbTipPosition;
-                 if(handDirection.magnitude>float.Epsilon)
-                    raySelector.transform.localRotation=Quaternion.LookRotation(handDirection);
+          wristPosition= this.transform.GetChild(0).transform.position;
+          thumbTipPosition=this.transform.GetChild(4).transform.position;
+          thumbDirection =(thumbTipPosition -wristPosition).normalized;  
+        
+             
+            Vector3 indexTipPosition= this.transform.GetChild(8).transform.position;
+          Vector3 indexDirection =  (indexTipPosition -wristPosition).normalized;
+         
+       Vector3 wristToMiddleFingeMCPDirection = (this.transform.GetChild(9).transform.position-wristPosition ).normalized;
 
+        Vector3 direction=thumbDirection+wristToMiddleFingeMCPDirection/2+indexDirection/2;
+             
+
+           filteredHandDirection=Vector3.Lerp(previousHandDirection,thumbDirection,smoothingFactor);
+
+               elapsedTime=0;
+               print("raycast");
+               
+                Debug.DrawRay(wristPosition,filteredHandDirection*3f,Color.red,1f);
+                 raySelector.transform.localPosition=wristPosition;
+                 if(filteredHandDirection.magnitude>float.Epsilon)
+                    raySelector.transform.localRotation=Quaternion.LookRotation(filteredHandDirection);
+                   
            }
+                previousHandDirection=filteredHandDirection;
            
     }
                      
