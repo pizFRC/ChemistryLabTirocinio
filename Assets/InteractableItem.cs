@@ -25,13 +25,13 @@ public class InteractableItem : MonoBehaviour
     {
         
         print("triggered :"+this.gameObject +" from : "+other.gameObject);
-       changeMaterial(true);
-       StartCoroutine("changeSize");
+     changeMaterial(true);
+      // StartCoroutine("changeSize");
     }
     private void OnTriggerExit(Collider other)
     {
         print("EXSIT :"+this.gameObject +" from : "+other.gameObject);
-        changeMaterial(false);
+     changeMaterial(false);
     }
     private void OnTriggerStay(Collider other)
     {

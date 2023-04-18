@@ -30,48 +30,53 @@ public class RaycastItemSelector : MonoBehaviour
          
            elapsedTime+=Time.deltaTime;
            
-           /*
-       
-        
-         
-       
-
- */
-
-          
-          //+thumbDirection);
-         
- 
-
-
-
-
             if(elapsedTime> timeToWait){
+
+          //GET BONES POSITION
           wristPosition= this.transform.GetChild(0).transform.position;
+
           thumbTipPosition=this.transform.GetChild(4).transform.position;
-          thumbDirection =(thumbTipPosition -wristPosition).normalized;  
         
-             
-            Vector3 indexTipPosition= this.transform.GetChild(8).transform.position;
-          Vector3 indexDirection =  (indexTipPosition -wristPosition).normalized;
-         
-       Vector3 wristToMiddleFingeMCPDirection = (this.transform.GetChild(9).transform.position-wristPosition ).normalized;
-
-        Vector3 direction=thumbDirection+wristToMiddleFingeMCPDirection/2+indexDirection/2;
-             
-
+          thumbDirection =(thumbTipPosition -wristPosition).normalized;  
+ 
+          //SMOTHING FILTER
            filteredHandDirection=Vector3.Lerp(previousHandDirection,thumbDirection,smoothingFactor);
 
-               elapsedTime=0;
-               print("raycast");
                
-                Debug.DrawRay(wristPosition,filteredHandDirection*3f,Color.red,1f);
-                 raySelector.transform.localPosition=wristPosition;
+               //print("raycast");
+
+
+     
+                 Debug.DrawRay(thumbTipPosition,filteredHandDirection*3f, Color.red,2f);
+                 raySelector.transform.localPosition=thumbTipPosition;
                  if(filteredHandDirection.magnitude>float.Epsilon)
                     raySelector.transform.localRotation=Quaternion.LookRotation(filteredHandDirection);
                    
-           }
+                }
+
                 previousHandDirection=filteredHandDirection;
+                elapsedTime=0;
+
+
+/*
+
+        int layerMask = 1 << 5;
+
+      
+
+        RaycastHit hit;
+        // Does the ray intersect any objects excluding the player layer
+        if (Physics.Raycast(thumbTipPosition,filteredHandDirection*3f, out hit))
+        {
+          
+            Debug.Log(hit.transform.gameObject.name);
+        }
+*/
+
+
+
+
+                
            
     }
                      
