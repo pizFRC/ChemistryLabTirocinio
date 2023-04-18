@@ -5,6 +5,7 @@ import struct
 from socket import *
 
 
+
 serverName = '127.0.0.1'
 serverPort = 6790
 

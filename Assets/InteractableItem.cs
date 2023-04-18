@@ -35,7 +35,7 @@ public class InteractableItem : MonoBehaviour
     }
     private void OnTriggerStay(Collider other)
     {
-        print("STAY :"+this.gameObject +" from : "+other.gameObject);
+       // print("STAY :"+this.gameObject +" from : "+other.gameObject);
        
     }
         void changeMaterial(bool selected_material){

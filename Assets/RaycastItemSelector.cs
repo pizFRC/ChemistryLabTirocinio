@@ -9,7 +9,8 @@ public class RaycastItemSelector : MonoBehaviour
     public float maxDistance=100f;
    
      GameObject raySelector;
-    public GameObject prefab;
+    public GameObject prefab;//;,prefabLine;
+    GameObject instanceLine;
     Vector3 startPoint;
     Vector3 direction;
      float elapsedTime=0f;
@@ -20,6 +21,7 @@ public class RaycastItemSelector : MonoBehaviour
     void Start()
     {
        raySelector=Instantiate(prefab);
+    //   instanceLine=Instantiate(prefabLine);
       lineRenderer=GetComponent<LineRenderer>();
         
     }
@@ -45,37 +47,50 @@ public class RaycastItemSelector : MonoBehaviour
                
                //print("raycast");
 
-
-     
+                 
+                        //GetComponent<LineRenderer>().
+                     //    GetComponent<LineRenderer>().transform.LookAt(thumbDirection);
+           //    GetComponent<LineRenderer>().alignment = LineAlignment.TransformZ;
                  Debug.DrawRay(thumbTipPosition,filteredHandDirection*3f, Color.red,2f);
                  raySelector.transform.localPosition=thumbTipPosition;
                  if(filteredHandDirection.magnitude>float.Epsilon)
                     raySelector.transform.localRotation=Quaternion.LookRotation(filteredHandDirection);
-                   
-                }
+                  
+                
+                elapsedTime=0;
+ 
+            
+         }
 
                 previousHandDirection=filteredHandDirection;
-                elapsedTime=0;
-
+                
 
 /*
+
 
         int layerMask = 1 << 5;
 
       
 
         RaycastHit hit;
-        // Does the ray intersect any objects excluding the player layer
-        if (Physics.Raycast(thumbTipPosition,filteredHandDirection*3f, out hit))
+      //  Does the ray intersect any objects excluding the player layer
+        if (Physics.Raycast(thumbTipPosition,filteredHandDirection*10f, out hit))
         {
-          
-            Debug.Log(hit.transform.gameObject.name);
+
+
+
+                  
+                    lineRenderer.SetPosition(0,thumbTipPosition);
+                       lineRenderer.SetPosition(1,hit.transform.position);
+            Debug.Log(hit.transform.gameObject);
+        }else{
+            
         }
+
+
+
+
 */
-
-
-
-
                 
            
     }
@@ -90,9 +105,7 @@ public class RaycastItemSelector : MonoBehaviour
     {
         Debug.DrawRay(collision.contacts[0].point, collision.contacts[0].normal, Color.green, 2, false);
     }
-    private void OnTriggerEnter(Collider other){
-      print(other.gameObject.name);
-    }
+  
     
     private  IEnumerator itemSelectedChangeColor(Transform t){
 

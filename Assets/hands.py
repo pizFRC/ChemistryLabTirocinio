@@ -19,7 +19,7 @@ class CaptureThread(threading.Thread):
     haveFinished=False
     def run(self):
         #self.set_best_camera()
-        self.cap = cv2.VideoCapture(0)
+        self.cap = cv2.VideoCapture(1)
         if cv2.useOptimized():
             print("Optimized")
         else:
@@ -38,41 +38,7 @@ class CaptureThread(threading.Thread):
         print("capture thread finished")
     def set_have_finished(self,booleanValue):
         self.haveFinished=True
-    def set_best_camera(self):
-        index=0;
-        camera_list=[]
-        camera_list_resolution=[]
-        index_out_of_range=False
-        
-        while not index_out_of_range:
-            
-            cap = cv2.VideoCapture(index)
-          
-            ret,frame = cap.read()
-            if not ret:
-                print(f"{index} out of range")
-                index_out_of_range=True
-                break
-            else:
-                cam_height,cam_width, channels = frame.shape
-                camera_list.append(index)
-                camera_list_resolution.append(cam_width*cam_height)
-                index+=1
-            cap.release()
-
-        best_resolution=camera_list_resolution[0]
-        index_camera_chosen=0
-        for i in range(0,len(camera_list_resolution)):
-            print(camera_list_resolution[i])
-            if best_resolution < camera_list_resolution[i]:
-                best_resolution = camera_list_resolution[i]
-                index_camera_chosen=i
-        print(f"risoluzione : {best_resolution}: {index_camera_chosen}")
-
-            
-      
-          
-        print(f" Trovate n:{len(camera_list)} camere")
+    
 
 # the hand thread actually does the processing of the captured images
 class HandThread(threading.Thread):
@@ -144,14 +110,22 @@ class HandThread(threading.Thread):
                 
                 if DEBUG:
                     cv2.imshow('Hand Tracking', image)
-
+                    cv2.resizeWindow("Hand Tracking",320,240)
                     if cv2.waitKey(5) & 0xFF == ord('q'):
                         self.haveFinished=True
                         self.capture.set_have_finished(self.haveFinished)
                         break
+                if self.capture.haveFinished:
+                    break
+                    
+                    
 
         self.capture.cap.release()
+        self.capture.join()
         cv2.destroyAllWindows()
+
+
+
     def get_gesture(self,multi_hand_landmarks,width):
         hand_landmarks = multi_hand_landmarks[0]
 
