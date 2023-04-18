@@ -16,16 +16,17 @@ class CaptureThread(threading.Thread):
     isRunning = False
     counter = 0
     timer = 0.0
+    haveFinished=False
     def run(self):
         #self.set_best_camera()
-        self.cap = cv2.VideoCapture(1)
+        self.cap = cv2.VideoCapture(0)
         if cv2.useOptimized():
             print("Optimized")
         else:
             print("not Optimized")
 
         print("Opened Capture")
-        while(True):
+        while(not self.haveFinished):
             self.ret, self.frame = self.cap.read()
             self.isRunning = True
             if DEBUG:
@@ -34,6 +35,9 @@ class CaptureThread(threading.Thread):
                     print("Capture FPS: ",self.counter/(time.time()-self.timer))
                     self.counter = 0
                     self.timer = time.time()
+        print("capture thread finished")
+    def set_have_finished(self,booleanValue):
+        self.haveFinished=True
     def set_best_camera(self):
         index=0;
         camera_list=[]
@@ -74,25 +78,27 @@ class CaptureThread(threading.Thread):
 class HandThread(threading.Thread):
     data=""
     dirty = True
+    haveFinished=False
+    capture = CaptureThread()
     def run(self):
         mp_drawing = mp.solutions.drawing_utils
         mp_hands = mp.solutions.hands
         width=0
 
-        capture = CaptureThread()
-        capture.start()
+        
+        self.capture.start()
 
         # Based Heavily on: https://github.com/nicknochnack/MediaPipeHandPose/blob/main/Handpose%20Tutorial.ipynb
-        with mp_hands.Hands(min_detection_confidence=0.75, min_tracking_confidence=0.5, model_complexity = MODEL_COMPLEXITY) as hands: 
-            while capture.isRunning==False:
+        with mp_hands.Hands(min_detection_confidence=0.9, min_tracking_confidence=0.7, model_complexity = MODEL_COMPLEXITY) as hands: 
+            while self.capture.isRunning==False:
                 print("Waiting for capture")
                 time.sleep(500/1000)
             print("beginning capture")
                 
-            while capture.cap.isOpened():
+            while self.capture.cap.isOpened():
                 #ret, frame = cap.read()
-                ret = capture.ret
-                frame = capture.frame
+                ret = self.capture.ret
+                frame = self.capture.frame
                 width=frame.shape[1]
                 # BGR 2 RGB
                 image = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
@@ -140,9 +146,11 @@ class HandThread(threading.Thread):
                     cv2.imshow('Hand Tracking', image)
 
                     if cv2.waitKey(5) & 0xFF == ord('q'):
+                        self.haveFinished=True
+                        self.capture.set_have_finished(self.haveFinished)
                         break
 
-        capture.cap.release()
+        self.capture.cap.release()
         cv2.destroyAllWindows()
     def get_gesture(self,multi_hand_landmarks,width):
         hand_landmarks = multi_hand_landmarks[0]

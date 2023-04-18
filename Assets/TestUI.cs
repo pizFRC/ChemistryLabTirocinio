@@ -16,6 +16,6 @@ public class TestUI : MonoBehaviour
         
     }
     public void printto(){
-        print("TEST\n");
+        Debug.Log("TEST\n");
     }
 }

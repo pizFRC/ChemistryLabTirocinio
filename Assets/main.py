@@ -23,7 +23,7 @@ thread.start()
 
 
 
-while True:
+while not thread.haveFinished:
     
     if thread.dirty:
         #in data ci sono i dati ottenuti dal thread hand
@@ -36,6 +36,6 @@ while True:
         thread.dirty = False
 
     time.sleep(16/1000) # enforces a hard limit on the speed of sending data
- 
+print("end")
 quit()
 
