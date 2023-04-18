@@ -110,7 +110,7 @@ class HandThread(threading.Thread):
                 
                 if DEBUG:
                     cv2.imshow('Hand Tracking', image)
-                    cv2.resizeWindow("Hand Tracking",320,240)
+                    cv2.resizeWindow("Hand Tracking",720,480)
                     if cv2.waitKey(5) & 0xFF == ord('q'):
                         self.haveFinished=True
                         self.capture.set_have_finished(self.haveFinished)

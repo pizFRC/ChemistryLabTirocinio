@@ -15,6 +15,14 @@ public class TestUI : MonoBehaviour
     {
         
     }
+    private void OnTriggerEnter(Collider other){
+        print(other);
+        
+    }
+     private void OnTriggerStay(Collider other){
+        print("fermo nel canvas");
+        
+    }
     public void printto(){
         Debug.Log("TEST\n");
     }
