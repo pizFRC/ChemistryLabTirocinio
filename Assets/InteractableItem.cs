@@ -8,16 +8,21 @@ public class InteractableItem : MonoBehaviour
    public Material original;
    public Material selected;
 
+   public Transform canvasLocalPosition,player;
+   float timeElapsed=0f;
+   public Canvas localCanvas;
+   
     void Start()
     {
     var renderers=this.gameObject.GetComponents<Renderer>();
     print("renderer:"+renderers);
+    localCanvas.transform.position=canvasLocalPosition.position;
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+      //localCanvas.transform.LookAt(player.transform);
     }
     //private bool isGrabbed=false;
 
@@ -32,9 +37,26 @@ public class InteractableItem : MonoBehaviour
     {
         print("EXSIT :"+this.gameObject +" from : "+other.gameObject);
      changeMaterial(false);
+     localCanvas.gameObject.SetActive(false);
     }
     private void OnTriggerStay(Collider other)
     {
+     
+     
+      
+      if(other.transform.tag== "Rayselector"){
+         
+         timeElapsed+=Time.deltaTime;
+       
+       
+        if(timeElapsed>2.0f){
+         localCanvas.gameObject.SetActive(true);
+         print("passati due secondi"+ other.transform.name);
+        
+         timeElapsed=0f;
+
+         }
+        }
        // print("STAY :"+this.gameObject +" from : "+other.gameObject);
        
     }

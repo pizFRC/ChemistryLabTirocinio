@@ -32,7 +32,7 @@ public class RayselectorPointerObject : MonoBehaviour
 
     private void OnTriggerStay(Collider other){
            //  startPositionTransform.transform.parent.transform.localScale = newScaleTMP;
-    print(other.transform.name);
+    //print(other.transform.name);
 
     
     }

@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 7594571151281387423}
   m_Layer: 3
   m_Name: RaySelectorPivot 1
-  m_TagString: Untagged
+  m_TagString: Rayselector
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -49,7 +49,7 @@ GameObject:
   - component: {fileID: 1384357763829104359}
   m_Layer: 3
   m_Name: RaySelector
-  m_TagString: Untagged
+  m_TagString: Rayselector
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -145,8 +145,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 236762fb77a003d4288ef78325385415, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  startPositionTransform: {fileID: 5045852755397022089}
-  sp: {fileID: 8350615333747963359}
 --- !u!54 &1384357763829104359
 Rigidbody:
   m_ObjectHideFlags: 0
