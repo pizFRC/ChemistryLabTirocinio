@@ -7,7 +7,7 @@ import time
 
 DEBUG = True # significantly reduces performance
 MODEL_COMPLEXITY = 0 # set to 1 to improve accuracy at the cost of performance
-
+CAMERA_INDEX=0
 # the capture thread captures images from the WebCam on a separate thread (for performance)
 class CaptureThread(threading.Thread):
     cap = None
@@ -19,7 +19,7 @@ class CaptureThread(threading.Thread):
     haveFinished=False
     def run(self):
         #self.set_best_camera()
-        self.cap = cv2.VideoCapture(1)
+        self.cap = cv2.VideoCapture(CAMERA_INDEX)
         if cv2.useOptimized():
             print("Optimized")
         else:

@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 0.18289033, g: 0.22858703, b: 0.30691886, a: 1}
+  m_IndirectSpecularColor: {r: 0.18288094, g: 0.22857909, b: 0.30692768, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -873,8 +873,8 @@ Camera:
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0
   m_TargetEye: 3
-  m_HDR: 1
-  m_AllowMSAA: 1
+  m_HDR: 0
+  m_AllowMSAA: 0
   m_AllowDynamicResolution: 0
   m_ForceIntoRT: 0
   m_OcclusionCulling: 1
@@ -1486,9 +1486,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   original: {fileID: -6312538093618914725, guid: 70f8f906453b80c41b3f092b3eca7adc, type: 3}
   selected: {fileID: 2100000, guid: 9a348eb0a65ec7a49be3505052e662e5, type: 2}
-  canvasLocalPosition: {fileID: 0}
-  player: {fileID: 0}
-  localCanvas: {fileID: 0}
+  player: {fileID: 1721011883}
+  localCanvas: {fileID: 7276714046077756540, guid: f0a4f7c4f15b21546a45dc874dcf450b, type: 3}
 --- !u!1 &963194225
 GameObject:
   m_ObjectHideFlags: 0
@@ -7996,7 +7995,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   original: {fileID: 5351410873485513530, guid: 70f8f906453b80c41b3f092b3eca7adc, type: 3}
   selected: {fileID: 2100000, guid: 9a348eb0a65ec7a49be3505052e662e5, type: 2}
-  canvasLocalPosition: {fileID: 1477734635}
   player: {fileID: 1721011883}
   localCanvas: {fileID: 1482219301}
 --- !u!54 &8603413942035968722

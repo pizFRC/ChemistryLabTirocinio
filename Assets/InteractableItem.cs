@@ -8,7 +8,8 @@ public class InteractableItem : MonoBehaviour
    public Material original;
    public Material selected;
 
-   public Transform canvasLocalPosition,player;
+   public Transform player;
+   Transform canvasLocalPosition;
    float timeElapsed=0f;
    public Canvas localCanvas;
    
@@ -16,7 +17,8 @@ public class InteractableItem : MonoBehaviour
     {
     var renderers=this.gameObject.GetComponents<Renderer>();
     print("renderer:"+renderers);
-    localCanvas.transform.position=canvasLocalPosition.position;
+    Transform objTransform=this.transform;
+    localCanvas.transform.position=new Vector3(objTransform.position.x,objTransform.position.y+1,objTransform.position.z);
     }
 
     // Update is called once per frame
