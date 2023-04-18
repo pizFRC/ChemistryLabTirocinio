@@ -5,7 +5,6 @@ import struct
 from socket import *
 
 
-
 serverName = '127.0.0.1'
 serverPort = 6790
 
@@ -13,7 +12,6 @@ serverPort = 6790
 # Create a UDP socket
 clientSocket = socket(AF_INET, SOCK_DGRAM)
 server_address = (serverName, serverPort)
-
 
 
 thread = HandThread()

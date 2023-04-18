@@ -155,7 +155,7 @@ void OnApplicationQuit()
     private void Start()
     {
 
-        print("height"+Screen.height/2);
+        //print("height"+Screen.height/2);
         //lParent.localPosition=new Vector3(lParent.localPosition.x,lParent.localPosition.y,lParent.localPosition.z);
        
         left = new Hand(lParent,landmarkPrefab,linePrefab);
