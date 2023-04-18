@@ -10,8 +10,8 @@ public class PythonScriptLauncher : MonoBehaviour
     void Start()
     {
 
-     
-         string m_Path = Application.dataPath +"\\main.py";
+
+         string m_Path = Application.dataPath +"\\Resources\\main.py";
             UnityEngine.Debug.Log("START "+ m_Path);
            p=Process.Start("C:\\Users\\francesco.defazio\\AppData\\Local\\Programs\\Python\\Python39\\python.exe",m_Path);
     }

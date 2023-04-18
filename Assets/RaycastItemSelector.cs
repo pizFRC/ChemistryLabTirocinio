@@ -65,32 +65,6 @@ public class RaycastItemSelector : MonoBehaviour
                 previousHandDirection=filteredHandDirection;
                 
 
-/*
-
-
-        int layerMask = 1 << 5;
-
-      
-
-        RaycastHit hit;
-      //  Does the ray intersect any objects excluding the player layer
-        if (Physics.Raycast(thumbTipPosition,filteredHandDirection*10f, out hit))
-        {
-
-
-
-                  
-                    lineRenderer.SetPosition(0,thumbTipPosition);
-                       lineRenderer.SetPosition(1,hit.transform.position);
-            Debug.Log(hit.transform.gameObject);
-        }else{
-            
-        }
-
-
-
-
-*/
                 
            
     }
