@@ -25,6 +25,8 @@ public class RayselectorPointerObject : MonoBehaviour
         private void OnTriggerEnter(Collider other)
     {
 //raySelector.transform.localRotation=Quaternion.LookRotation(other.transform.position);
+
+                if(other.gameObject.tag == "Item" && numberOfCollider < maxCollider)
                 numberOfCollider++;
                 if(other.gameObject.tag == "Item" && numberOfCollider < maxCollider){
                        
@@ -53,9 +55,11 @@ public class RayselectorPointerObject : MonoBehaviour
 
      private void OnTriggerExit(Collider other){
 
-             if(other.gameObject.tag == "Item" ){
-                if(numberOfCollider > 0)
+
+                 if(numberOfCollider > 0 && other.gameObject.tag == "Item")
                         numberOfCollider--;
+             if(other.gameObject.tag == "Item" ){
+               
                          other.gameObject.GetComponent<InteractableItem>().changeMaterial();
                 }
 
