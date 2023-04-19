@@ -23,7 +23,7 @@ public class PythonScriptLauncher : MonoBehaviour
 
          string m_Path = Application.dataPath +"\\Resources\\main.py";
             UnityEngine.Debug.Log("START "+ m_Path);
-           p=Process.Start(path2,m_Path);
+           p=Process.Start(path1,m_Path);
 
     }
 
