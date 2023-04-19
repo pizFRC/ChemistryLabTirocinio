@@ -10,6 +10,7 @@ serverPort = 6790
 
 def main():
 # Create a UDP socket
+    
     clientSocket = socket(AF_INET, SOCK_DGRAM)
     server_address = (serverName, serverPort)
 

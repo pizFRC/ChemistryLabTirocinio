@@ -8,6 +8,7 @@ import time
 DEBUG = True # significantly reduces performance
 MODEL_COMPLEXITY = 0 # set to 1 to improve accuracy at the cost of performance
 CAMERA_INDEX=1
+print( mp.__file__)
 # the capture thread captures images from the WebCam on a separate thread (for performance)
 class CaptureThread(threading.Thread):
     cap = None
@@ -110,7 +111,7 @@ class HandThread(threading.Thread):
                 
                 if DEBUG:
                     cv2.imshow('Hand Tracking', image)
-                    cv2.resizeWindow("Hand Tracking",720,480)
+                    #cv2.resizeWindow("Hand Tracking",720,480)
                     if cv2.waitKey(5) & 0xFF == ord('q'):
                         self.haveFinished=True
                         self.capture.set_have_finished(self.haveFinished)
