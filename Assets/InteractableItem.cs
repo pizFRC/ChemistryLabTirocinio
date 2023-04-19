@@ -10,9 +10,9 @@ public class InteractableItem : MonoBehaviour
 
    public Transform player;
    Transform canvasLocalPosition;
-   float timeElapsed=0f;
-   public Canvas localCanvas;
    
+   public Canvas localCanvas;
+   bool selected_material=false;   
     void Start()
     {
     var renderers=this.gameObject.GetComponents<Renderer>();
@@ -28,10 +28,24 @@ public class InteractableItem : MonoBehaviour
     }
    public void interact(string str){
       print("stai interagendo con "+ this.gameObject.name +" : "+str);
+      
    }
      void openCanvas(){
 
     }
+
+     public void changeMaterial(){
+               selected_material=!selected_material;
+                var renderer = this.gameObject.GetComponents<Renderer>();
+             foreach(Renderer r in renderer){
+               
+                if (selected_material){
+                r.material=selected;
+                }else{
+                     r.material=original;
+                }
+             }
+        }
     //private bool isGrabbed=false;
 /*
     private void OnTriggerEnter(Collider other)
@@ -90,17 +104,7 @@ public class InteractableItem : MonoBehaviour
        // print("STAY :"+this.gameObject +" from : "+other.gameObject);
        
     }
-        void changeMaterial(bool selected_material){
-                var renderer = this.gameObject.GetComponents<Renderer>();
-             foreach(Renderer r in renderer){
-               
-                if (selected_material){
-                r.material=selected;
-                }else{
-                     r.material=original;
-                }
-             }
-        }
+       
 
         private IEnumerator changeSize(){
             this.GetComponent<Transform>().localScale*=1.0f;

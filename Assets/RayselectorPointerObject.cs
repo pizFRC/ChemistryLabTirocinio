@@ -25,10 +25,12 @@ public class RayselectorPointerObject : MonoBehaviour
         private void OnTriggerEnter(Collider other)
     {
 //raySelector.transform.localRotation=Quaternion.LookRotation(other.transform.position);
+                numberOfCollider++;
                 if(other.gameObject.tag == "Item" && numberOfCollider < maxCollider){
-                        numberOfCollider++;
+                       
                         print(other.tag +" ha attivato il trigger num"+numberOfCollider);
                         other.gameObject.GetComponent<InteractableItem>().interact("enter");
+                        other.gameObject.GetComponent<InteractableItem>().changeMaterial();
                 }else{
                         return;
                 }
@@ -54,6 +56,7 @@ public class RayselectorPointerObject : MonoBehaviour
              if(other.gameObject.tag == "Item" ){
                 if(numberOfCollider > 0)
                         numberOfCollider--;
+                         other.gameObject.GetComponent<InteractableItem>().changeMaterial();
                 }
 
  
