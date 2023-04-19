@@ -598,7 +598,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 132509534}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -1.5, y: 0, z: 0}
+  m_LocalPosition: {x: -1, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -617,10 +617,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e79f24306f9e44649bd2bd4e98a91c47, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxDistance: 100
   prefab: {fileID: 2184334229875863246, guid: 2ba35057d8964204da01de05462f0d62, type: 3}
-  timeToWait: 0.15
-  smoothingFactor: 0.3
+  timeToWait: 0.1
+  smoothingFactor: 0.25
 --- !u!120 &132509537
 LineRenderer:
   m_ObjectHideFlags: 0
@@ -782,7 +781,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: b09540c90edf9454fab3b6aa1400f446, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -893,7 +892,7 @@ Camera:
     height: 1
   near clip plane: 0.3
   far clip plane: 1000
-  field of view: 60
+  field of view: 45
   orthographic: 0
   orthographic size: 5
   m_Depth: 0
@@ -964,7 +963,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: b09540c90edf9454fab3b6aa1400f446, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -1062,7 +1061,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: b09540c90edf9454fab3b6aa1400f446, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -1160,7 +1159,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: b09540c90edf9454fab3b6aa1400f446, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -1616,7 +1615,8 @@ MonoBehaviour:
   original: {fileID: -6312538093618914725, guid: 70f8f906453b80c41b3f092b3eca7adc, type: 3}
   selected: {fileID: 2100000, guid: 9a348eb0a65ec7a49be3505052e662e5, type: 2}
   player: {fileID: 1721011883}
-  localCanvas: {fileID: 7276714046077756540, guid: f0a4f7c4f15b21546a45dc874dcf450b, type: 3}
+  isTrigger: 0
+  localCanvas: {fileID: 7276714046077756536, guid: f0a4f7c4f15b21546a45dc874dcf450b, type: 3}
 --- !u!1 &963194225
 GameObject:
   m_ObjectHideFlags: 0
@@ -1669,7 +1669,7 @@ Camera:
     height: 1
   near clip plane: 0.3
   far clip plane: 1000
-  field of view: 60
+  field of view: 45
   orthographic: 0
   orthographic size: 5
   m_Depth: -1
@@ -1695,7 +1695,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 963194225}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 2.5900002, y: 2.46, z: -7.4700003}
+  m_LocalPosition: {x: 2.5900002, y: 1.32, z: -7.71}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -2128,7 +2128,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1427218862}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1.5, y: 0, z: 0}
+  m_LocalPosition: {x: 1, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -2147,10 +2147,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e79f24306f9e44649bd2bd4e98a91c47, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxDistance: 100
   prefab: {fileID: 2184334229875863246, guid: 2ba35057d8964204da01de05462f0d62, type: 3}
-  timeToWait: 0.15
-  smoothingFactor: 0.4
+  timeToWait: 0.1
+  smoothingFactor: 0.25
 --- !u!120 &1427218865
 LineRenderer:
   m_ObjectHideFlags: 0
@@ -2379,11 +2378,6 @@ Transform:
 --- !u!224 &1482219295 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 7276714046077756547, guid: f0a4f7c4f15b21546a45dc874dcf450b, type: 3}
-  m_PrefabInstance: {fileID: 22536868}
-  m_PrefabAsset: {fileID: 0}
---- !u!223 &1482219301 stripped
-Canvas:
-  m_CorrespondingSourceObject: {fileID: 7276714046077756540, guid: f0a4f7c4f15b21546a45dc874dcf450b, type: 3}
   m_PrefabInstance: {fileID: 22536868}
   m_PrefabAsset: {fileID: 0}
 --- !u!1 &1489081933
@@ -3439,7 +3433,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: -7896684918082898265, guid: 70f8f906453b80c41b3f092b3eca7adc, type: 3}
+  - {fileID: 2100000, guid: 2dc4efc6300597d419c9a247603193b6, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -4335,7 +4329,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e79f24306f9e44649bd2bd4e98a91c47, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxDistance: 100
   prefab: {fileID: 2184334229875863246, guid: 2ba35057d8964204da01de05462f0d62, type: 3}
   timeToWait: 0.15
   smoothingFactor: 0.4
@@ -4457,7 +4450,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e79f24306f9e44649bd2bd4e98a91c47, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxDistance: 100
   prefab: {fileID: 2184334229875863246, guid: 2ba35057d8964204da01de05462f0d62, type: 3}
   timeToWait: 0.15
   smoothingFactor: 0.4
@@ -8139,7 +8131,8 @@ MonoBehaviour:
   original: {fileID: 5351410873485513530, guid: 70f8f906453b80c41b3f092b3eca7adc, type: 3}
   selected: {fileID: 2100000, guid: 9a348eb0a65ec7a49be3505052e662e5, type: 2}
   player: {fileID: 1721011883}
-  localCanvas: {fileID: 1482219301}
+  isTrigger: 0
+  localCanvas: {fileID: 7276714046077756536, guid: f0a4f7c4f15b21546a45dc874dcf450b, type: 3}
 --- !u!54 &8603413942035968722
 Rigidbody:
   m_ObjectHideFlags: 0

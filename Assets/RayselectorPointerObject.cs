@@ -8,6 +8,7 @@ public class RayselectorPointerObject : MonoBehaviour
 
      public int numberOfCollider;
      public int maxCollider=2;
+     float timeElapsed=0;
     // Collider[] colliders2;
     void Start()
     {
@@ -26,15 +27,15 @@ public class RayselectorPointerObject : MonoBehaviour
     {
 //raySelector.transform.localRotation=Quaternion.LookRotation(other.transform.position);
 
-                if(other.gameObject.tag == "Item" && numberOfCollider < maxCollider)
+                if(other.gameObject.tag == "Item")
                 numberOfCollider++;
-                if(other.gameObject.tag == "Item" && numberOfCollider < maxCollider){
+                else return;
+                if(other.gameObject.tag == "Item" && numberOfCollider <= maxCollider){
                        
                         print(other.tag +" ha attivato il trigger num"+numberOfCollider);
                         other.gameObject.GetComponent<InteractableItem>().interact("enter");
-                        other.gameObject.GetComponent<InteractableItem>().changeMaterial();
-                }else{
-                        return;
+                        other.gameObject.GetComponent<InteractableItem>().changeMaterial(true);
+                       other.gameObject.GetComponent<InteractableItem>().setTrigger(true);
                 }
 
     }
@@ -44,10 +45,25 @@ public class RayselectorPointerObject : MonoBehaviour
     private void OnTriggerStay(Collider other){
            //  startPositionTransform.transform.parent.transform.localScale = newScaleTMP;
     //print(other.transform.name);
-    if(other.gameObject.tag == "Item" && numberOfCollider < maxCollider){
+     timeElapsed+=Time.deltaTime;
+    if(other.gameObject.tag == "Item" && numberOfCollider <= maxCollider){
+      
          // print(other.gameObject.tag+" on trigger stay il trigger num"+numberOfCollider);
           other.gameObject.GetComponent<InteractableItem>().interact("stay");
+     
           print("number of colliders "+numberOfCollider);
+           timeElapsed+=Time.deltaTime;
+             
+       
+         if(timeElapsed>2.0f){
+   other.gameObject.GetComponent<InteractableItem>().openCanvas(true);
+  
+  
+
+               timeElapsed=0; 
+        }
+        
+
    } 
     
     }
@@ -58,9 +74,15 @@ public class RayselectorPointerObject : MonoBehaviour
 
                  if(numberOfCollider > 0 && other.gameObject.tag == "Item")
                         numberOfCollider--;
+                        else
+                        return;
              if(other.gameObject.tag == "Item" ){
                
-                         other.gameObject.GetComponent<InteractableItem>().changeMaterial();
+                     if(    other.gameObject.GetComponent<InteractableItem>().isTrigger){
+                        other.gameObject.GetComponent<InteractableItem>().changeMaterial(false);
+                          other.gameObject.GetComponent<InteractableItem>().setTrigger(false);
+            other.gameObject.GetComponent<InteractableItem>().openCanvas(false);
+                     }
                 }
 
  
@@ -68,7 +90,7 @@ public class RayselectorPointerObject : MonoBehaviour
 
      }
 
-     private IEnumerable changeSizeAfter(){
+     private IEnumerator resetAfterOpen(){
         
             yield return new WaitForSeconds(0.5f);
            //  startPositionTransform.transform.parent.transform.localScale = newScaleTMP;

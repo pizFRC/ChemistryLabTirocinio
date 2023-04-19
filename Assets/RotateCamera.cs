@@ -17,8 +17,8 @@ public class RotateCamera : MonoBehaviour
     {
         if(Input.GetKeyDown(KeyCode.Space)){
             print("key down");
-            this.transform.Rotate(new Vector3(0,90,0));
-            handsObject.transform.RotateAround(this.transform.position,new Vector3(0,1,0),90f);
+            this.transform.Rotate(new Vector3(0,60,0));
+            handsObject.transform.RotateAround(this.transform.position,new Vector3(0,1,0),60f);
         }
     }
 }

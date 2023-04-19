@@ -6,7 +6,7 @@ public class RaycastItemSelector : MonoBehaviour
 {
     // Start is called before the first frame update
 
-    public float maxDistance=100f;
+  
    
      GameObject raySelector;
     public GameObject prefab;//;,prefabLine;

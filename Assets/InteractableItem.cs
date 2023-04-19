@@ -10,32 +10,44 @@ public class InteractableItem : MonoBehaviour
 
    public Transform player;
    Transform canvasLocalPosition;
-   
-   public Canvas localCanvas;
-   bool selected_material=false;   
+   public bool isTrigger= false;
+   public GameObject localCanvas;
+   GameObject instance;
+   bool canvasNotActive=true;
+
+
     void Start()
     {
     var renderers=this.gameObject.GetComponents<Renderer>();
     print("renderer:"+renderers);
     Transform objTransform=this.transform;
-    localCanvas.transform.position=new Vector3(objTransform.position.x,objTransform.position.y+1,objTransform.position.z);
+    instance=Instantiate(localCanvas);
+    instance.transform.position=new Vector3(objTransform.position.x,objTransform.position.y+1,objTransform.position.z);
     }
 
     // Update is called once per frame
     void Update()
     {
+      
       //localCanvas.transform.LookAt(player.transform);
+    }
+    public void setTrigger(bool value){
+      isTrigger=value;
     }
    public void interact(string str){
       print("stai interagendo con "+ this.gameObject.name +" : "+str);
+      if(str == "stay"){
+
+        // openCanvas(true);
+
+      }
       
    }
-     void openCanvas(){
-
+     public void openCanvas(bool value){
+     instance.SetActive(value);
     }
 
-     public void changeMaterial(){
-               selected_material=!selected_material;
+     public void changeMaterial(bool selected_material){
                 var renderer = this.gameObject.GetComponents<Renderer>();
              foreach(Renderer r in renderer){
                
