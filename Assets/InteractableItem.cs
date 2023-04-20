@@ -28,7 +28,10 @@ public class InteractableItem : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-      
+      if(isTrigger){
+         changeMaterial(true);
+      }else
+      changeMaterial(false);
       //localCanvas.transform.LookAt(player.transform);
     }
     public void setTrigger(bool value){
@@ -43,9 +46,13 @@ public class InteractableItem : MonoBehaviour
       }
       
    }
-     public void openCanvas(bool value){
-     instance.SetActive(value);
+     public void showCanvas(){
+     instance.SetActive(true);
     }
+    public void hideCanvas(){
+     instance.SetActive(false);
+    }
+
 
      public void changeMaterial(bool selected_material){
                 var renderer = this.gameObject.GetComponents<Renderer>();
@@ -58,6 +65,9 @@ public class InteractableItem : MonoBehaviour
                 }
              }
         }
+
+
+  
     //private bool isGrabbed=false;
 /*
     private void OnTriggerEnter(Collider other)

@@ -56,7 +56,7 @@ public class RayselectorPointerObject : MonoBehaviour
              
        
          if(timeElapsed>2.0f){
-   other.gameObject.GetComponent<InteractableItem>().openCanvas(true);
+   //other.gameObject.GetComponent<InteractableItem>().openCanvas();
   
   
 
@@ -81,7 +81,7 @@ public class RayselectorPointerObject : MonoBehaviour
                      if(    other.gameObject.GetComponent<InteractableItem>().isTrigger){
                         other.gameObject.GetComponent<InteractableItem>().changeMaterial(false);
                           other.gameObject.GetComponent<InteractableItem>().setTrigger(false);
-            other.gameObject.GetComponent<InteractableItem>().openCanvas(false);
+        //    other.gameObject.GetComponent<InteractableItem>().openCanvas(false);
                      }
                 }
 

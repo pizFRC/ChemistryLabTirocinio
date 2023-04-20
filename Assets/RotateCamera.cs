@@ -5,7 +5,8 @@ using UnityEngine;
 public class RotateCamera : MonoBehaviour
 {
 
-    public GameObject handsObject;
+    public GameObject handsObject,leftArraow,rightArrow;
+    
     // Start is called before the first frame update
     void Start()
     {
@@ -15,10 +16,12 @@ public class RotateCamera : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(Input.GetKeyDown(KeyCode.Space)){
-            print("key down");
-            this.transform.Rotate(new Vector3(0,60,0));
-            handsObject.transform.RotateAround(this.transform.position,new Vector3(0,1,0),60f);
-        }
+        
+    }
+   public void rotate(float rotationAngle){
+            this.transform.Rotate(new Vector3(0,rotationAngle,0));
+            leftArraow.transform.RotateAround(this.transform.position,new Vector3(0,1,0),rotationAngle);
+            rightArrow.transform.RotateAround(this.transform.position,new Vector3(0,1,0),rotationAngle);
+            handsObject.transform.RotateAround(this.transform.position,new Vector3(0,1,0),rotationAngle);
     }
 }

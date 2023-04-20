@@ -8,6 +8,8 @@ TagManager:
   - RightHand
   - Rayselector
   - Item
+  - RightArrow
+  - LeftArrow
   layers:
   - Default
   - TransparentFX

@@ -9,18 +9,21 @@ public class RaycastItemSelector : MonoBehaviour
   
    
      GameObject raySelector;
-    public GameObject prefab;//;,prefabLine;
+    
     GameObject instanceLine;
     Vector3 startPoint;
     Vector3 direction;
      float elapsedTime=0f;
      public float  timeToWait=1.0f;
-     public float smoothingFactor=0.020f;
+     public float smoothingFactor=0.020f,maxDistance=150f;
     private LineRenderer lineRenderer;
+    float timeOverItem=0f;
+    InteractableItem lastItem;
+    public float range=2;
     Vector3 previousHandDirection, thumbDirection,  thumbTipPosition,wristPosition , filteredHandDirection;
     void Start()
     {
-       raySelector=Instantiate(prefab);
+      
     //   instanceLine=Instantiate(prefabLine);
       lineRenderer=GetComponent<LineRenderer>();
         
@@ -31,7 +34,8 @@ public class RaycastItemSelector : MonoBehaviour
     {
          
            elapsedTime+=Time.deltaTime;
-           
+          
+          //ogni 1/10 di secondo 
             if(elapsedTime> timeToWait){
 
           //GET BONES POSITION
@@ -48,24 +52,67 @@ public class RaycastItemSelector : MonoBehaviour
                //print("raycast");
 
                  
-                        //GetComponent<LineRenderer>().
-                     //    GetComponent<LineRenderer>().transform.LookAt(thumbDirection);
-           //    GetComponent<LineRenderer>().alignment = LineAlignment.TransformZ;
-                 Debug.DrawRay(thumbTipPosition,filteredHandDirection*3f, Color.red,2f);
-                 raySelector.transform.localPosition=thumbTipPosition;
-                 if(filteredHandDirection.magnitude>float.Epsilon)
-                    raySelector.transform.localRotation=Quaternion.LookRotation(filteredHandDirection);
-                  
+                    Ray ray=new Ray(thumbTipPosition,filteredHandDirection*range);
+                    
+             RaycastHit hit;
+                       
+           Vector3 endPosition = filteredHandDirection * maxDistance;
+                      int layerMask= 1 << 8;
+              layerMask = ~layerMask;
+
+            if(Physics.Raycast(ray,out hit,250f)){
+            Debug.DrawRay(thumbTipPosition,filteredHandDirection*range,Color.black,0.2f);   
+              endPosition=hit.point;
+              GetComponent<LineRenderer>().positionCount = 2;
+              GetComponent<LineRenderer>().SetPosition(0,thumbTipPosition);
+              GetComponent<LineRenderer>().SetPosition(1,endPosition);
+                   if(hit.collider.tag=="Item"){
+                    lastItem=hit.collider.GetComponent<InteractableItem>();
+                     timeOverItem+=Time.deltaTime+0.1f;
+                    
+                   
+                       hit.collider.GetComponent<InteractableItem>().isTrigger=true;
+                       if( timeOverItem>1.5f){
+                        hit.collider.GetComponent<InteractableItem>().showCanvas();
+                       }
+                   }else if(hit.collider.tag=="LeftArrow"){
+
+                        Debug.LogError("left arrow ");
+                        Camera.main.GetComponent<RotateCamera>().rotate(-90f);
+
+                   } 
+                   else if(hit.collider.tag=="RightArrow"){
+
+                        Debug.LogError("right arrow ");
+                        Camera.main.GetComponent<RotateCamera>().rotate(90f);
+
+                   }else{
+                     timeOverItem=0;
+                     if(lastItem!=null){
+                     lastItem.hideCanvas();
+                       lastItem.isTrigger=false;
+                     }
+                     lastItem=null;
+                   }
+            }else
+            {
+
+              lineRenderer.positionCount = 0;
+            }
+         
+         
+         /*   raySelector.transform.localPosition=thumbTipPosition;
+           if(filteredHandDirection.magnitude>float.Epsilon)
+              raySelector.transform.localRotation=Quaternion.LookRotation(filteredHandDirection);
+              */    
                 
-                elapsedTime=0;
+             elapsedTime=0;
  
             
          }
 
-                previousHandDirection=filteredHandDirection;
-                
-
-                
+       previousHandDirection=filteredHandDirection;
+                  
            
     }
                      
@@ -77,6 +124,8 @@ public class RaycastItemSelector : MonoBehaviour
 
       void OnCollisionEnter(Collision collision)
     {
+
+      print(collision.gameObject.transform.name);
         Debug.DrawRay(collision.contacts[0].point, collision.contacts[0].normal, Color.green, 2, false);
     }
   
