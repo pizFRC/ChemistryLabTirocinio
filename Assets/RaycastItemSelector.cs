@@ -84,27 +84,26 @@ public class RaycastItemSelector : MonoBehaviour
                 else
                     GetComponent<LineRenderer>().SetPosition(1, endPosition);
 
-                    //SE COLPISCO UN ITEM :
-                      // SE LO COLPISCO PER PIù DI DUE SECONDI POSSO FARE UNA GESTURE E SCEGLIERE COSA FARE
+                //SE COLPISCO UN ITEM :
+                // SE LO COLPISCO PER PIù DI DUE SECONDI POSSO FARE UNA GESTURE E SCEGLIERE COSA FARE
                 if (hit.collider.tag == "Item")
                 {
 
 
                     lastItem = hit.collider.GetComponent<InteractableItem>();
-
+               
                     //  lastItem.localCanvas.GetComponent<TestUI>().fillSlider(1.5f/timeOverItem);
 
-                    hit.collider.GetComponent<InteractableItem>().isTrigger = true;
+                    hit.collider.GetComponent<InteractableItem>().changeMaterial(true);
                     hit.collider.GetComponent<InteractableItem>().showCanvas();
                     if (timeOverItem > 2)
                     {
 
-                        lastItem.localCanvas.GetComponent<TestUI>().fillSlider(2);
+                       
                         lastItemSelectedFor2Second = lastItem;
+                      
                     }
-                    else
-                        lastItemSelectedFor2Second = null;
-
+                  
 
 
                 }
@@ -112,12 +111,12 @@ public class RaycastItemSelector : MonoBehaviour
                 {
 
                     Debug.LogError("left arrow ");
-                    StartCoroutine("waitAndRotate", -90f);
+                    Camera.main.GetComponent<RotateCamera>().rotate(-90f);
 
                 }
                 else if (hit.collider.tag == "RightArrow")
                 {
-                    StartCoroutine("waitAndRotate", 90f);
+                    Camera.main.GetComponent<RotateCamera>().rotate(90f);
                     Debug.LogError("right arrow ");
 
 
@@ -127,9 +126,11 @@ public class RaycastItemSelector : MonoBehaviour
                     timeOverItem = 0;
                     if (lastItem != null)
                     {
+                        
                         lastItem.hideCanvas();
-                        lastItem.isTrigger = false;
-                        lastItem.localCanvas.GetComponent<TestUI>().fillSlider(0);
+                        lastItem.changeMaterial(false);
+                        
+                       
                     }
                     lastItem = null;
                 }
@@ -137,6 +138,14 @@ public class RaycastItemSelector : MonoBehaviour
             else
             {
 
+                timeOverItem = 0;
+                if (lastItem != null)
+                {
+                    lastItem.hideCanvas();
+                    lastItem.changeMaterial(false);
+                
+                }
+                lastItem = null;
                 lineRenderer.positionCount = 0;
             }
 

@@ -20,15 +20,16 @@ public class PipeServer : MonoBehaviour
 {
     public Transform rParent;
     public Transform lParent;
-    
+
     public GameObject landmarkPrefab;
     public GameObject linePrefab;
     public float multiplier = 10f;
-   
+
 
 
     const int LANDMARK_COUNT = 21;
-    public enum Landmark { 
+    public enum Landmark
+    {
         Wrist = 0,
         Thumb1 = 1,
         Thumb2 = 2,
@@ -52,22 +53,22 @@ public class PipeServer : MonoBehaviour
         Pinky4 = 20
     }
 
-void OnApplicationQuit()
+    void OnApplicationQuit()
     {
- 
+
         recvThread.Interrupt();
-         recvThread.Abort();
-         t.Interrupt();
-         t.Abort();
-         
- 
+        recvThread.Abort();
+        t.Interrupt();
+        t.Abort();
+
+
     }
-    public class Hand 
+    public class Hand
     {
         public Vector3[] positionsBuffer = new Vector3[LANDMARK_COUNT];
         public GameObject[] instances = new GameObject[LANDMARK_COUNT];
         public LineRenderer[] lines = new LineRenderer[5];
-       
+
         public float reportedSamplesPerSecond;
         public float lastSampleTime;
         public float samplesCounter;
@@ -75,13 +76,13 @@ void OnApplicationQuit()
         public Hand(Transform parent, GameObject landmarkPrefab, GameObject linePrefab)
         {
 
-                
-          
-           
+
+
+
             for (int i = 0; i < instances.Length; ++i)
             {
                 instances[i] = Instantiate(landmarkPrefab);// GameObject.CreatePrimitive(PrimitiveType.Sphere);
-               
+
                 instances[i].transform.localScale = Vector3.one * 0.1f;
                 instances[i].transform.parent = parent;
             }
@@ -91,7 +92,7 @@ void OnApplicationQuit()
             }
         }
 
-        
+
         public void UpdateLines()
         {
             lines[0].positionCount = 5;
@@ -139,18 +140,18 @@ void OnApplicationQuit()
         }
     }
 
-    Thread recvThread,gestureController;
+    Thread recvThread, gestureController;
     UdpClient client;
     Thread t;
     private Hand left;
     private Hand right;
-    public bool lineVisible=false;
+    public bool lineVisible = false;
     public int port = 6789;
     public bool startRecv = true;
     public bool printToConsole = false;
     public string data;
-      byte[] dataByte;
-      Transform tip,pip,mcp,wrist;
+    byte[] dataByte;
+    Transform tip, pip, mcp, wrist;
     public float sampleThreshold = 0.25f; // how many seconds of data should be averaged to produce a single pose of the hand.
 
     private void Start()
@@ -158,26 +159,27 @@ void OnApplicationQuit()
 
         //print("height"+Screen.height/2);
         //lParent.localPosition=new Vector3(lParent.localPosition.x,lParent.localPosition.y,lParent.localPosition.z);
-       
-        left = new Hand(lParent,landmarkPrefab,linePrefab);
-        right = new Hand(rParent, landmarkPrefab,linePrefab);
+
+        left = new Hand(lParent, landmarkPrefab, linePrefab);
+        right = new Hand(rParent, landmarkPrefab, linePrefab);
 
         t = new Thread(new ThreadStart(Run));
         t.Start();
-        gestureController=new Thread(new ThreadStart(checkGesture));
+        gestureController = new Thread(new ThreadStart(checkGesture));
         gestureController.Start();
 
 
         recvThread = new Thread(new ThreadStart(RecvData));
-        recvThread.IsBackground= true;
+        recvThread.IsBackground = true;
         recvThread.Start();
 
     }
-        private void checkGesture(){
+    private void checkGesture()
+    {
 
-        }
+    }
 
-        
+
     private void RecvData()
     {
         client = new UdpClient(port);
@@ -186,33 +188,34 @@ void OnApplicationQuit()
         {
             try
             {
-                IPEndPoint anyIP = new IPEndPoint(IPAddress.Any,0);
-                 dataByte = client.Receive(ref anyIP);
+                IPEndPoint anyIP = new IPEndPoint(IPAddress.Any, 0);
+                dataByte = client.Receive(ref anyIP);
                 data = Encoding.ASCII.GetString(dataByte);
-                if (printToConsole) { print("recv:"+data); }
-            }catch(Exception err)
+                if (printToConsole) { print("recv:" + data); }
+            }
+            catch (Exception err)
             {
                 print(err.ToString());
             }
         }
     }
-void OnDrawGizmosSelected()
+    void OnDrawGizmosSelected()
     {
         // Draw a semitransparent red cube at the transforms position
         Gizmos.color = new Color(1, 0, 0, 0.5f);
-    
+
         Gizmos.DrawCube(lParent.localPosition, new Vector3(1, 1, 1));
         Gizmos.color = new Color(1, 1, 0, 0.5f);
-         Gizmos.DrawCube(rParent.localPosition, new Vector3(1, 1, 1));
+        Gizmos.DrawCube(rParent.localPosition, new Vector3(1, 1, 1));
     }
-   
+
     private void Update()
     {
-       
+
         UpdateHand(left);
-        
+
         UpdateHand(right);
-     
+
     }
     private void UpdateHand(Hand h)
     {
@@ -222,91 +225,92 @@ void OnDrawGizmosSelected()
         {
             for (int i = 0; i < LANDMARK_COUNT; ++i)
             {
-                
-                h.instances[i].transform.localPosition = h.positionsBuffer[i]/(float)h.samplesCounter * multiplier;// / ;
-                
+
+                h.instances[i].transform.localPosition = h.positionsBuffer[i] / (float)h.samplesCounter * multiplier;// / ;
+
                 h.positionsBuffer[i] = Vector3.zero;
-            
+
             }
-           
+
             h.reportedSamplesPerSecond = h.samplesCounter / (Time.timeSinceLevelLoad - h.lastSampleTime);
             h.lastSampleTime = Time.timeSinceLevelLoad;
             h.samplesCounter = 0f;
-            if(lineVisible)
+            if (lineVisible)
                 h.UpdateLines();
-            
-           
+
+
         }
     }
 
     void Run()
     {
-       
+
 
         print("Waiting for connection...");
-        
+
 
         print("Connected.");
-       
+
         while (true)
         {
 
             try
             {
                 Hand h = null;
-               // var len = (int)br.ReadUInt32();
+                // var len = (int)br.ReadUInt32();
                 //var str = new string(br.ReadChars(len));
 
-                 //Debug.Log(data);
+                //Debug.Log(data);
 
-                 string[] lines = data.Split('\n');
-                 print("stringhe trovate"+lines.Length );
-                 foreach (string l in lines)
-                 {
-                     
-                     string[] s = l.Split('|');
-                     if (s.Length < 4) continue;
-                     int i;
-                     if (s[0] == "Left") h = left;
-                     else if (s[0] == "Right") h = right;
-                     if (!int.TryParse(s[1], out i)) continue;
-                    
-                       CultureInfo ci = (CultureInfo)CultureInfo.CurrentCulture.Clone();
-                       float x = float.Parse(s[2] , CultureInfo.InvariantCulture.NumberFormat);
-                       float y = float.Parse(s[3] , CultureInfo.InvariantCulture.NumberFormat);
-                       float z = float.Parse(s[4] , CultureInfo.InvariantCulture.NumberFormat);
-                     //  x*= Screen.width;
-                      Vector3 v=new Vector3(x,y,z);
-                       
-                     h.positionsBuffer[i] += v;
-                     
-                     
-                     h.samplesCounter += 1f / LANDMARK_COUNT;
-                 }
-               
-               if(!recvThread.IsAlive){
-                 t.Abort();
-            this.recvThread.Abort();
-               }
+                string[] lines = data.Split('\n');
+
+                foreach (string l in lines)
+                {
+
+                    string[] s = l.Split('|');
+                    if (s.Length < 4) continue;
+                    int i;
+                    if (s[0] == "Left") h = left;
+                    else if (s[0] == "Right") h = right;
+                    if (!int.TryParse(s[1], out i)) continue;
+
+                    CultureInfo ci = (CultureInfo)CultureInfo.CurrentCulture.Clone();
+                    float x = float.Parse(s[2], CultureInfo.InvariantCulture.NumberFormat);
+                    float y = float.Parse(s[3], CultureInfo.InvariantCulture.NumberFormat);
+                    float z = float.Parse(s[4], CultureInfo.InvariantCulture.NumberFormat);
+                    //  x*= Screen.width;
+                    Vector3 v = new Vector3(x, y, z);
+
+                    h.positionsBuffer[i] += v;
+
+
+                    h.samplesCounter += 1f / LANDMARK_COUNT;
+                }
+
+                if (!recvThread.IsAlive)
+                {
+                    t.Abort();
+                    this.recvThread.Abort();
+                }
             }
             catch (EndOfStreamException)
-             {
-                 t.Abort();
-            this.recvThread.Abort();
-                 print("nel catch");
-                 break;                    // When client disconnects
-       
+            {
+                t.Abort();
+                this.recvThread.Abort();
+                print("nel catch");
+                break;                    // When client disconnects
+
             }
 
 
         }
-               t.Abort();
-            this.recvThread.Abort();
+        t.Abort();
+        this.recvThread.Abort();
     }
 
     private void OnDisable()
     {
         print("Client disconnected.");
-       
+
     }
 }
