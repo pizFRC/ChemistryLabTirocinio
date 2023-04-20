@@ -139,7 +139,7 @@ void OnApplicationQuit()
         }
     }
 
-    Thread recvThread;
+    Thread recvThread,gestureController;
     UdpClient client;
     Thread t;
     private Hand left;
@@ -150,6 +150,7 @@ void OnApplicationQuit()
     public bool printToConsole = false;
     public string data;
       byte[] dataByte;
+      Transform tip,pip,mcp,wrist;
     public float sampleThreshold = 0.25f; // how many seconds of data should be averaged to produce a single pose of the hand.
 
     private void Start()
@@ -163,13 +164,20 @@ void OnApplicationQuit()
 
         t = new Thread(new ThreadStart(Run));
         t.Start();
+        gestureController=new Thread(new ThreadStart(checkGesture));
+        gestureController.Start();
+
 
         recvThread = new Thread(new ThreadStart(RecvData));
         recvThread.IsBackground= true;
         recvThread.Start();
 
     }
+        private void checkGesture(){
 
+        }
+
+        
     private void RecvData()
     {
         client = new UdpClient(port);
@@ -252,6 +260,7 @@ void OnDrawGizmosSelected()
                  //Debug.Log(data);
 
                  string[] lines = data.Split('\n');
+                 print("stringhe trovate"+lines.Length );
                  foreach (string l in lines)
                  {
                      

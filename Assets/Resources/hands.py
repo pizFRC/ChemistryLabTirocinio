@@ -7,7 +7,7 @@ import time
 
 DEBUG = True # significantly reduces performance
 MODEL_COMPLEXITY = 0 # set to 1 to improve accuracy at the cost of performance
-CAMERA_INDEX=0
+CAMERA_INDEX=1
 print( mp.__file__)
 # the capture thread captures images from the WebCam on a separate thread (for performance)
 class CaptureThread(threading.Thread):
@@ -47,16 +47,18 @@ class HandThread(threading.Thread):
     dirty = True
     haveFinished=False
     capture = CaptureThread()
+    def is_finger_raised(self,tip,pip,mcp,wrist):
+        return tip.y < pip.y and pip.y < mcp.y and mcp.y > wrist.y
     def run(self):
         mp_drawing = mp.solutions.drawing_utils
-        mp_hands = mp.solutions.hands
+        self.mp_hands = mp.solutions.hands
         width=0
 
         
         self.capture.start()
 
         # Based Heavily on: https://github.com/nicknochnack/MediaPipeHandPose/blob/main/Handpose%20Tutorial.ipynb
-        with mp_hands.Hands(min_detection_confidence=0.9, min_tracking_confidence=0.7, model_complexity = MODEL_COMPLEXITY) as hands: 
+        with self.mp_hands.Hands(min_detection_confidence=0.9, min_tracking_confidence=0.7, model_complexity = MODEL_COMPLEXITY) as hands: 
             while self.capture.isRunning==False:
                 print("Waiting for capture")
                 time.sleep(500/1000)
@@ -86,7 +88,7 @@ class HandThread(threading.Thread):
                 if DEBUG:
                     if results.multi_hand_landmarks:
                         for num, hand in enumerate(results.multi_hand_landmarks):
-                            mp_drawing.draw_landmarks(image, hand, mp_hands.HAND_CONNECTIONS, 
+                            mp_drawing.draw_landmarks(image, hand, self.mp_hands.HAND_CONNECTIONS, 
                                                     mp_drawing.DrawingSpec(color=(121, 22, 76), thickness=2, circle_radius=4),
                                                     mp_drawing.DrawingSpec(color=(250, 44, 250), thickness=2, circle_radius=2),
                                                     )
@@ -94,8 +96,7 @@ class HandThread(threading.Thread):
                        
                 # Set up data for piping
                 self.data = ""
-                i = 0
-                
+         
                 if results.multi_hand_landmarks:
                     for j in range(len(results.multi_handedness)):
                         
@@ -105,8 +106,10 @@ class HandThread(threading.Thread):
                         for i in range(0,21):
                             self.data += "{}|{}|{}|{}|{}\n".format(results.multi_handedness[j].classification[0].label,i,hand_world_landmarks.landmark[i].x,hand_world_landmarks.landmark[i].y,hand_world_landmarks.landmark[i].z)
                    
-                        #print(self.data)
+                            
                         self.dirty = True
+                        #print(results.multi_hand_landmarks[0])
+                        self.count_raised_fingers(results.multi_hand_landmarks)
                    # self.get_gesture(results.multi_hand_landmarks,width)
                 
                 if DEBUG:
@@ -148,5 +151,56 @@ class HandThread(threading.Thread):
             print(dist_thumb_index /width)
             print("Il pollice non è in su.")
             print(dist_thumb_index )
+    
+    
+    def count_raised_fingers(self,hand_landmarks_pa):
+        count = 0
+        i=0
+        hand_tmp = self.mp_hands.HandLandmark
+        print(hand_tmp)
+        for j, hand_landmarks in enumerate(hand_landmarks_pa):
+            
+            
+            for point in self.mp_hands.HandLandmark:
+                i+=1
+                print(point)
+                normalized_landmark = hand_landmarks.landmark[point]
 
+              #  print(f"cord:{normalized_landmark}")
+                
+          #  print(f"{hand_tmp.landmark[0]} ")
+                
+        return count        # Pollice
+    '''if hand_landmarks[4].x < hand_landmarks[3].x:
+           count += 1
+        
+        
+        # Indice
+        if self.is_finger_raised(hand_landmarks[self.mp_hands.HandLandmark.INDEX_FINGER_TIP],
+                            hand_landmarks[self.mp_hands.HandLandmark.INDEX_FINGER_PIP],
+                            hand_landmarks[self.mp_hands.HandLandmark.INDEX_FINGER_MCP],
+                            hand_landmarks[self.mp_hands.HandLandmark.WRIST]):
+            count += 1
 
+        # Medio
+        if self.is_finger_raised(hand_landmarks[self.mp_hands.HandLandmark.MIDDLE_FINGER_TIP],
+                            hand_landmarks[self.mp_hands.HandLandmark.MIDDLE_FINGER_PIP],
+                            hand_landmarks[self.mp_hands.HandLandmark.MIDDLE_FINGER_MCP],
+                            hand_landmarks[self.mp_hands.HandLandmark.WRIST]):
+            count += 1
+
+        # Anulare
+        if  self.is_finger_raised(hand_landmarks[self.mp_hands.HandLandmark.RING_FINGER_TIP],
+                            hand_landmarks[self.mp_hands.HandLandmark.RING_FINGER_PIP],
+                            hand_landmarks[self.mp_hands.HandLandmark.RING_FINGER_MCP],
+                            hand_landmarks[self.mp_hands.HandLandmark.WRIST]):
+            count += 1
+
+        # Mignolo
+        if  self.is_finger_raised(hand_landmarks[self.mp_hands.HandLandmark.PINKY_TIP],
+                            hand_landmarks[self.mp_hands.HandLandmark.PINKY_PIP],
+                            hand_landmarks[self.mp_hands.HandLandmark.PINKY_MCP],
+                            hand_landmarks[self.mp_hands.HandLandmark.WRIST]):
+            count += 1
+        print(f"{count} dita alzate")'''
+         

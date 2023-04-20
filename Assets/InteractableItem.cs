@@ -22,7 +22,8 @@ public class InteractableItem : MonoBehaviour
     print("renderer:"+renderers);
     Transform objTransform=this.transform;
     instance=Instantiate(localCanvas);
-    instance.transform.position=new Vector3(objTransform.position.x,objTransform.position.y+1,objTransform.position.z);
+    instance.SetActive(false);
+    instance.transform.position=new Vector3(objTransform.position.x,objTransform.position.y+1f,objTransform.position.z-0.3f);
     }
 
     // Update is called once per frame
@@ -31,6 +32,7 @@ public class InteractableItem : MonoBehaviour
       if(isTrigger){
          changeMaterial(true);
       }else
+       //localCanvas.GetComponent<TestUI>().fillSlider(0);
       changeMaterial(false);
       //localCanvas.transform.LookAt(player.transform);
     }
