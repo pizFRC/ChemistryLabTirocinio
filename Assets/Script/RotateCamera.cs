@@ -5,7 +5,7 @@ using UnityEngine;
 public class RotateCamera : MonoBehaviour
 {
 
-    public GameObject handsObject, leftArraow, rightArrow;
+    public GameObject handsObject, leftArraow, rightArrow,rawImage;
     bool alreadyRotateSecondoAgo = false;
     // Start is called before the first frame update
     void Start()
@@ -39,7 +39,7 @@ public class RotateCamera : MonoBehaviour
         leftArraow.transform.RotateAround(this.transform.position, new Vector3(0, 1, 0), rotationAngle);
         rightArrow.transform.RotateAround(this.transform.position, new Vector3(0, 1, 0), rotationAngle);
         handsObject.transform.RotateAround(this.transform.position, new Vector3(0, 1, 0), rotationAngle);
-
+        rawImage.transform.RotateAround(this.transform.position, new Vector3(0, 1, 0), rotationAngle);
 
         yield return new WaitForSeconds(2f);
         alreadyRotateSecondoAgo = false;

@@ -37,7 +37,7 @@ byte [] data;
                 //qui uso la nuove classe
                 if(data.Length>0)
                UnityMainThreadDispatcher.Instance().Enqueue(() =>BytesToTexture2D(data));
-               print("recv:" + data.ToString()); 
+              
               
             }
             catch (Exception err)

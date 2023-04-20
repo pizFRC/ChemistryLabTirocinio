@@ -12,6 +12,8 @@ MODEL_COMPLEXITY = 1 # set to 1 to improve accuracy at the cost of performance
 CAMERA_INDEX=0
 print( mp.__file__)
 
+def setCamera(index):
+    CAMERA_INDEX=index
 class ImageSender(threading.Thread):
     def __init__(self,):
         super().__init__()
