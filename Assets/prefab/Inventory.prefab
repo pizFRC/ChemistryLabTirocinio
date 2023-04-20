@@ -443,7 +443,7 @@ MonoBehaviour:
   m_FallbackScreenDPI: 96
   m_DefaultSpriteDPI: 96
   m_DynamicPixelsPerUnit: 1
-  m_PresetInfoIsWorld: 0
+  m_PresetInfoIsWorld: 1
 --- !u!114 &7276714046077756542
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -474,7 +474,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   slider: {fileID: 2126068159861319070}
-  timer: 0
   timerDuration: 2
   finish: 0
 --- !u!65 &7276714046077756545
