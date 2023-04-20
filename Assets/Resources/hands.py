@@ -4,11 +4,50 @@ import cv2
 import numpy as np
 import threading
 import time
-
-DEBUG = True # significantly reduces performance
-MODEL_COMPLEXITY = 0 # set to 1 to improve accuracy at the cost of performance
+from socket import *
+import time
+from threading import RLock
+DEBUG = False # significantly reduces performance
+MODEL_COMPLEXITY = 1 # set to 1 to improve accuracy at the cost of performance
 CAMERA_INDEX=0
 print( mp.__file__)
+
+class ImageSender(threading.Thread):
+    def __init__(self,):
+        super().__init__()
+        print("start")
+        self.serverName="127.0.0.1"
+        self.serverPort=6792
+        self.clientSocket = socket(AF_INET, SOCK_DGRAM)
+        self.server_address = (self.serverName, self.serverPort)
+        self.haveFinished=False
+        self.dirty=False
+        self.lock =RLock()
+        self.img=bytearray()
+
+    def run(self):
+        while True:
+            print("first")
+           
+            print(" invio")
+            
+        
+            self.clientSocket.sendto(self.img,self.server_address)
+               # sent = self.clientSocket.sendto(, self.server_address)
+            time.sleep(0.05)
+            #in data ci sono i dati ottenuti dal thread hand
+            
+    def setDirty(self):
+        with self.lock:
+            self.dirty=True
+    def setImg(self,data):
+        with self.lock:
+            self.img=data
+         #   
+            
+                        
+
+          #  thread.dirty = False
 # the capture thread captures images from the WebCam on a separate thread (for performance)
 class CaptureThread(threading.Thread):
     cap = None
@@ -43,10 +82,12 @@ class CaptureThread(threading.Thread):
 
 # the hand thread actually does the processing of the captured images
 class HandThread(threading.Thread):
+    
     data=""
     dirty = True
     haveFinished=False
     capture = CaptureThread()
+    imageSender=ImageSender()
     def is_finger_raised(self,tip,pip,mcp,wrist):
         return tip.y < pip.y and pip.y < mcp.y and mcp.y > wrist.y
     def run(self):
@@ -56,9 +97,10 @@ class HandThread(threading.Thread):
 
         
         self.capture.start()
-
+        self.imageSender.start()
+        print("started")
         # Based Heavily on: https://github.com/nicknochnack/MediaPipeHandPose/blob/main/Handpose%20Tutorial.ipynb
-        with self.mp_hands.Hands(min_detection_confidence=0.9, min_tracking_confidence=0.7, model_complexity = MODEL_COMPLEXITY) as hands: 
+        with self.mp_hands.Hands(min_detection_confidence=0.5, min_tracking_confidence=0.6, model_complexity = MODEL_COMPLEXITY) as hands: 
             while self.capture.isRunning==False:
                 print("Waiting for capture")
                 time.sleep(500/1000)
@@ -75,24 +117,27 @@ class HandThread(threading.Thread):
                 # Flip on horizontal
                 image = cv2.flip(image, 1)
                 
-                # Set flag
-                image.flags.writeable = DEBUG
-                
-                # Detections
-                results = hands.process(image)
-                
+               
+                image.flags.writeable = True
                 # RGB 2 BGR
                 image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
+                # Detections
+                results = hands.process(image)
+
+
+
+              
                 
-                # Rendering results
-                if DEBUG:
-                    if results.multi_hand_landmarks:
-                        for num, hand in enumerate(results.multi_hand_landmarks):
-                            mp_drawing.draw_landmarks(image, hand, self.mp_hands.HAND_CONNECTIONS, 
-                                                    mp_drawing.DrawingSpec(color=(121, 22, 76), thickness=2, circle_radius=4),
-                                                    mp_drawing.DrawingSpec(color=(250, 44, 250), thickness=2, circle_radius=2),
-                                                    )
-                            
+               
+                    
+                
+                if results.multi_hand_landmarks:
+                    for num, hand in enumerate(results.multi_hand_landmarks):
+                        mp_drawing.draw_landmarks(image, hand, self.mp_hands.HAND_CONNECTIONS, 
+                                                mp_drawing.DrawingSpec(color=(121, 22, 76), thickness=2, circle_radius=4),
+                                                mp_drawing.DrawingSpec(color=(250, 44, 250), thickness=2, circle_radius=2),
+                                                )
+                        
                        
                 # Set up data for piping
                 self.data = ""
@@ -108,16 +153,32 @@ class HandThread(threading.Thread):
                    
                             
                         self.dirty = True
+                        print("change")
+                        
+                        encode_param = [int(cv2.IMWRITE_JPEG_QUALITY), 50]
+                        compressed_img, _ = cv2.imencode('.jpg', image, encode_param)
+                        
+                      #  resized_frame = cv2.resize(frame, (new_width, new_height))
+                        
+                        
+                        
+                        self.imageSender.img=_.tobytes()
+                        
+                        
+                       # self.imageSender.setImg()
+            
                         #print(results.multi_hand_landmarks[0])
                         #self.count_raised_fingers(results.multi_hand_landmarks)
                    # self.get_gesture(results.multi_hand_landmarks,width)
                 
-                if DEBUG:
-                    cv2.imshow('Hand Tracking', image)
-                    #cv2.resizeWindow("Hand Tracking",720,480)
+                    if DEBUG:
+                        cv2.imshow('Hand Tracking', image)
+                        
                     if cv2.waitKey(5) & 0xFF == ord('q'):
                         self.haveFinished=True
                         self.capture.set_have_finished(self.haveFinished)
+
+                        
                         break
                 if self.capture.haveFinished:
                     break
@@ -204,3 +265,10 @@ class HandThread(threading.Thread):
             count += 1
         print(f"{count} dita alzate")'''
          
+
+
+
+       
+
+        #time.sleep(16/1000)
+        

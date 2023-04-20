@@ -14,7 +14,6 @@ def main():
     clientSocket = socket(AF_INET, SOCK_DGRAM)
     server_address = (serverName, serverPort)
 
-
     thread = HandThread()
     thread.start()
 
