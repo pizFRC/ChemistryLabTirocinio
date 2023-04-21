@@ -188,7 +188,7 @@ public class PipeServer : MonoBehaviour
         {
             try
             {
-                IPEndPoint anyIP = new IPEndPoint(IPAddress.Any, 0);
+                IPEndPoint anyIP = new IPEndPoint(IPAddress.Any, port);
                 dataByte = client.Receive(ref anyIP);
                 data = Encoding.ASCII.GetString(dataByte);
                 if (printToConsole) { print("recv:" + data); }

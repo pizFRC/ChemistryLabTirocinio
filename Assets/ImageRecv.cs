@@ -32,7 +32,7 @@ byte [] data;
         {
             try
             {
-                IPEndPoint anyIP = new IPEndPoint(IPAddress.Any, 0);
+                IPEndPoint anyIP = new IPEndPoint(IPAddress.Any,port);
                 data = client.Receive(ref anyIP);
                 //qui uso la nuove classe
                 if(data.Length>0)

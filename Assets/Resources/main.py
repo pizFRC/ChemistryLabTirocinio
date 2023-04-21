@@ -10,7 +10,7 @@ serverPort = 6790
 
 def main():
 # Create a UDP socket
-    index =input("seleziona l'index della camera")
+    
     
     clientSocket = socket(AF_INET, SOCK_DGRAM)
     server_address = (serverName, serverPort)

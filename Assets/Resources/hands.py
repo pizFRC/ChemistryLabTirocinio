@@ -9,7 +9,7 @@ import time
 from threading import RLock
 DEBUG = False # significantly reduces performance
 MODEL_COMPLEXITY = 0 # set to 1 to improve accuracy at the cost of performance
-CAMERA_INDEX=1
+CAMERA_INDEX=0
 print( mp.__file__)
 
 def setCamera(index):
@@ -158,16 +158,15 @@ class HandThread(threading.Thread):
                    
                             
                         self.dirty = True
-                        print("change")
-                        
-                        encode_param = [int(cv2.IMWRITE_JPEG_QUALITY), 50]
-                        compressed_img, _ = cv2.imencode('.jpg', image, encode_param)
-                        
-                      #  resized_frame = cv2.resize(frame, (new_width, new_height))
-                        
-                        
-                        
-                        self.imageSender.img=_.tobytes()
+                       
+                encode_param = [int(cv2.IMWRITE_JPEG_QUALITY), 50]
+                compressed_img, _ = cv2.imencode('.jpg', image, encode_param)
+                
+                #  resized_frame = cv2.resize(frame, (new_width, new_height))
+                
+                
+                
+                self.imageSender.img=_.tobytes()
                         
                         
                        # self.imageSender.setImg()
@@ -176,15 +175,14 @@ class HandThread(threading.Thread):
                         #self.count_raised_fingers(results.multi_hand_landmarks)
                    # self.get_gesture(results.multi_hand_landmarks,width)
                 
-                    if DEBUG:
-                        cv2.imshow('Hand Tracking', image)
-                        
-                    if cv2.waitKey(5) & 0xFF == ord('q'):
-                        self.haveFinished=True
-                        self.capture.set_have_finished(self.haveFinished)
+                if DEBUG:
+                    cv2.imshow('Hand Tracking', image)
+                    
+                if cv2.waitKey(5) & 0xFF == ord('q'):
+                    self.haveFinished=True
+                    self.capture.set_have_finished(self.haveFinished) 
+                    break
 
-                        
-                        break
                 if self.capture.haveFinished:
                     break
                     
