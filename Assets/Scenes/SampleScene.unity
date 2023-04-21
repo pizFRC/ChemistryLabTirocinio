@@ -363,7 +363,7 @@ MonoBehaviour:
   timeToWait: 0.02
   smoothingFactor: 0.25
   maxDistance: 150
-  valueToSubtractY: 0.1
+  valueToSubtractY: 0.13
   valueToAddX: 0.1
   range: 10
 --- !u!1 &23313183
@@ -1068,7 +1068,7 @@ MonoBehaviour:
   timeToWait: 0.02
   smoothingFactor: 0.25
   maxDistance: 150
-  valueToSubtractY: 0.1
+  valueToSubtractY: 0.13
   valueToAddX: -0.1
   range: 10
 --- !u!120 &132509537
@@ -1254,7 +1254,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: -1.63, y: 0}
-  m_SizeDelta: {x: 360, y: 240}
+  m_SizeDelta: {x: 480, y: 360}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &184874115
 MonoBehaviour:
