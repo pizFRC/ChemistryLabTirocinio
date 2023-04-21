@@ -29,7 +29,8 @@ public class InteractableItem : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        if(isTrigger)
+            localCanvas.SetActive(true);
     }
 
 

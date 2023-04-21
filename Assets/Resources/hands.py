@@ -8,12 +8,14 @@ from socket import *
 import time
 from threading import RLock
 DEBUG = False # significantly reduces performance
-MODEL_COMPLEXITY = 1 # set to 1 to improve accuracy at the cost of performance
-CAMERA_INDEX=0
+MODEL_COMPLEXITY = 0 # set to 1 to improve accuracy at the cost of performance
+CAMERA_INDEX=1
 print( mp.__file__)
 
 def setCamera(index):
     CAMERA_INDEX=index
+
+
 class ImageSender(threading.Thread):
     def __init__(self,):
         super().__init__()
@@ -36,7 +38,7 @@ class ImageSender(threading.Thread):
         
             self.clientSocket.sendto(self.img,self.server_address)
                # sent = self.clientSocket.sendto(, self.server_address)
-            time.sleep(0.05)
+            time.sleep(0.08)
             #in data ci sono i dati ottenuti dal thread hand
             
     def setDirty(self):
@@ -88,8 +90,9 @@ class HandThread(threading.Thread):
     data=""
     dirty = True
     haveFinished=False
-    capture = CaptureThread()
     imageSender=ImageSender()
+    capture = CaptureThread()
+   
     def is_finger_raised(self,tip,pip,mcp,wrist):
         return tip.y < pip.y and pip.y < mcp.y and mcp.y > wrist.y
     def run(self):

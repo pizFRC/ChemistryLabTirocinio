@@ -8,7 +8,7 @@ public class PythonScriptLauncher : MonoBehaviour
 {
     // Start is called before the first frame update
     Process p;
-    bool debug=true;
+    bool debug=false;
     void Start()
     {
          
@@ -27,12 +27,12 @@ public class PythonScriptLauncher : MonoBehaviour
             if (debug){
                 try{
             string path="C:\\Users\\fdefa\\Desktop\\HandTracking\\main.exe";
-            p=Process.Start(path);
+            p=Process.Start(path1);
                 }catch{
                     UnityEngine.Debug.LogError("errore");
                 }
          }else
-           p=Process.Start(path2,m_Path);
+           p=Process.Start(path1,m_Path);
 
     }
 

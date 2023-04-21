@@ -63,8 +63,7 @@ byte [] data;
     
         texture.Apply();
         rm.texture=texture;
-  
-   
+          
 }
 
 }

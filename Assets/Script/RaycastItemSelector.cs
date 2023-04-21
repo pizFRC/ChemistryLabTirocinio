@@ -20,7 +20,9 @@ public class RaycastItemSelector : MonoBehaviour
     float timeOverItem = 0f;
     InteractableItem lastItem;
     InteractableItem lastItemSelectedFor2Second;
+    public float valueToSubtractY,valueToAddX;
     public float range = 2;
+    bool lockOnItem=false;
     Vector3 previousHandDirection, thumbDirection, thumbTipPosition, wristPosition, filteredHandDirection;
     void Start()
     {
@@ -57,7 +59,8 @@ public class RaycastItemSelector : MonoBehaviour
 
             //print("raycast");
 
-
+                filteredHandDirection.y-=valueToSubtractY;
+                filteredHandDirection.x+=valueToAddX;
             Ray ray = new Ray(thumbTipPosition, filteredHandDirection * range);
 
             RaycastHit hit;
@@ -68,6 +71,7 @@ public class RaycastItemSelector : MonoBehaviour
 
 
             //RAYCASTO IL RAGGIO SE NON COLPISCO NIENTE NON LO MOSTRO
+           
             if (Physics.Raycast(ray, out hit, 250f))
             {
                 Debug.DrawRay(thumbTipPosition, filteredHandDirection * range, Color.black, 0.2f);
@@ -80,10 +84,11 @@ public class RaycastItemSelector : MonoBehaviour
                 if (lastItemSelectedFor2Second != null)
                 {
                     GetComponent<LineRenderer>().SetPosition(1, lastItemSelectedFor2Second.transform.position);
+                    
                 }
-                else
+                else{
                     GetComponent<LineRenderer>().SetPosition(1, endPosition);
-
+                }
                 //SE COLPISCO UN ITEM :
                 // SE LO COLPISCO PER PIù DI DUE SECONDI POSSO FARE UNA GESTURE E SCEGLIERE COSA FARE
                 if (hit.collider.tag == "Item")
@@ -91,7 +96,8 @@ public class RaycastItemSelector : MonoBehaviour
 
 
                     lastItem = hit.collider.GetComponent<InteractableItem>();
-               
+                    lastItem.isTrigger=true;
+
                     //  lastItem.localCanvas.GetComponent<TestUI>().fillSlider(1.5f/timeOverItem);
 
                     hit.collider.GetComponent<InteractableItem>().changeMaterial(true);
@@ -101,6 +107,7 @@ public class RaycastItemSelector : MonoBehaviour
 
                        
                         lastItemSelectedFor2Second = lastItem;
+                        lockOnItem=true;
                       
                     }
                   
@@ -129,21 +136,25 @@ public class RaycastItemSelector : MonoBehaviour
                         
                         lastItem.hideCanvas();
                         lastItem.changeMaterial(false);
-                        
+                         lastItem.isTrigger=false;
                        
                     }
                     lastItem = null;
                 }
-            }
+                }
             else
             {
 
                 timeOverItem = 0;
+                if(lockOnItem){
+                    lastItem.showCanvas();
+                    lastItem.isTrigger=true;
+                }
                 if (lastItem != null)
                 {
                     lastItem.hideCanvas();
                     lastItem.changeMaterial(false);
-                
+                        lastItem.isTrigger=false;
                 }
                 lastItem = null;
                 lineRenderer.positionCount = 0;
