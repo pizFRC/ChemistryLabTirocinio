@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class InteractableItem : MonoBehaviour
 {
@@ -10,12 +11,13 @@ public class InteractableItem : MonoBehaviour
 
     public Transform player;
     Transform canvasLocalPosition;
-    public bool isTrigger = false;
+    public bool isSelected = false;
     public GameObject localCanvas;
     GameObject instance;
     bool canvasNotActive = true;
 
    bool materialSetted=false;
+   float localObjectTimer;
     void Start()
     {
         var renderers = this.gameObject.GetComponents<Renderer>();
@@ -29,8 +31,31 @@ public class InteractableItem : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(isTrigger)
-            localCanvas.SetActive(true);
+       
+        
+
+        if(isSelected)
+           { 
+            instance.SetActive(true);
+            localObjectTimer+=Time.deltaTime;
+              instance.GetComponentInChildren<Slider>().value=localObjectTimer;
+
+           }
+           else{
+            localObjectTimer=0;
+             instance.GetComponentInChildren<Slider>().value=0;
+             instance.SetActive(false);
+           }
+
+           if(localObjectTimer >2.0f && isSelected){
+                
+                localObjectTimer=2;
+           }else{
+           
+            instance.GetComponentInChildren<Slider>().value=localObjectTimer;
+           }
+
+          
     }
 
 
@@ -45,6 +70,13 @@ public class InteractableItem : MonoBehaviour
     {
         instance.SetActive(false);
        
+    }
+
+        private void OnTriggerStay(Collider other)
+    {
+
+
+        Debug.LogError("stay on ");
     }
 
 
