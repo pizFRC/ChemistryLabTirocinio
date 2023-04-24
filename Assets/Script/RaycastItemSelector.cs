@@ -97,7 +97,7 @@ public class RaycastItemSelector : MonoBehaviour
                 selectionTimer += timeToWait + Time.deltaTime;
                 isSelecting = true;
                 lastItemSelected = hit.transform.GetComponent<InteractableItem>();
-                hit.collider.GetComponent<InteractableItem>().isSelected = true;
+                lastItemSelected.isSelected = true;
 
                 GetComponent<LineRenderer>().positionCount = 2;
                 GetComponent<LineRenderer>().SetPosition(0, thumbTipPosition);
@@ -120,20 +120,27 @@ public class RaycastItemSelector : MonoBehaviour
             {
                 selectionTimer = 0;
                 isSelecting = false;
-                if (lastItemSelected != null)
+                if (lastItemSelected != null){
                     lastItemSelected.isSelected = false;
+                    lastItemSelected=null;
+                
+                }
+                
                 GetComponent<LineRenderer>().positionCount = 2;
                 GetComponent<LineRenderer>().SetPosition(0, thumbTipPosition);
                 GetComponent<LineRenderer>().SetPosition(1, hit.point);
             }
             else
             {
+                GetComponent<LineRenderer>().positionCount = 0;
 
                 selectionTimer = 0;
                 isSelecting = false;
-                if (lastItemSelected != null)
+                if (lastItemSelected != null){
                     lastItemSelected.isSelected = false;
+                    lastItemSelected=null;
 
+                }
                 //   lineRenderer.positionCount = 0;
 
             }

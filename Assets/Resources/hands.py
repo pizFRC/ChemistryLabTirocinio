@@ -7,7 +7,8 @@ import time
 from socket import *
 import time
 from threading import RLock
-DEBUG = False # significantly reduces performance
+import math
+DEBUG = True # significantly reduces performance
 MODEL_COMPLEXITY = 0 # set to 1 to improve accuracy at the cost of performance
 CAMERA_INDEX=0
 print( mp.__file__)
@@ -31,9 +32,7 @@ class ImageSender(threading.Thread):
 
     def run(self):
         while True:
-            print("first")
            
-            print(" invio")
             
         
             self.clientSocket.sendto(self.img,self.server_address)
@@ -99,7 +98,13 @@ class HandThread(threading.Thread):
         mp_drawing = mp.solutions.drawing_utils
         self.mp_hands = mp.solutions.hands
         width=0
+        x1, y1 = int(image_w/4)  , int(image_h/2)
+        x2, y2 = int(image_w*(3/4)) ,int(image_h/2)
 
+        # disegna i cerchi sui due frame
+        radius = 100
+        color = (0, 255, 0)
+        thickness = 2
         
         self.capture.start()
         self.imageSender.start()
@@ -129,7 +134,7 @@ class HandThread(threading.Thread):
                 # Detections
                 results = hands.process(image)
 
-
+                image_h, image_w, _ = frame.shape
 
               
                 
@@ -158,7 +163,26 @@ class HandThread(threading.Thread):
                    
                             
                         self.dirty = True
-                       
+                        
+                        
+                        
+                        
+                        
+                       # euclidean_distance_to_camera = math.sqrt(hand_world_landmarks.landmark[j].x ** 2 + hand_world_landmarks.landmark[0].y ** 2 + hand_world_landmarks.landmark[0].z ** 2)
+                        y_coord = (hand_world_landmarks.landmark[0].y *image_h)
+    
+                        # Verifica se la coordinata y del punto medio si trova più o meno nel centro dell'immagine lungo l'asse y
+                        if y_coord < image_h / 2:
+                            print(f"{results.multi_handedness[j].classification[0].label} si più in alto rispetto  {y_coord} - { image_h / 2}")
+                        elif y_coord > image_h / 2:
+                            print(f"{results.multi_handedness[j].classification[0].label}  più in basso rispetto{y_coord}  { image_h / 2}");
+                       # print(f"{results.multi_handedness[j].classification[0].label}: {euclidean_distance_to_camera}")       
+                
+  
+              
+                
+                
+                
                 encode_param = [int(cv2.IMWRITE_JPEG_QUALITY), 50]
                 compressed_img, _ = cv2.imencode('.jpg', image, encode_param)
                 

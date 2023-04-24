@@ -9,8 +9,10 @@ public class InteractableItem : MonoBehaviour
     public Material original;
     public Material selected;
 
-    public Transform player;
-    Transform canvasLocalPosition;
+    public Item item;
+
+   
+ 
     public bool isSelected = false;
     public GameObject localCanvas;
     GameObject instance;
