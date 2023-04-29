@@ -11,22 +11,49 @@ public class HandController : MonoBehaviour
     public RaycastItemSelector rightHandSelector; // Riferimento al RaycastSelector per la mano destra
 
     // Oggetto tenuto dalla mano sinistra
-    private InteractableItem selectedHandObject; // Oggetto tenuto dalla mano destra
-
+    public InteractableItem selectedHandObject; // Oggetto tenuto dalla mano destra
+    public string hand="";
     private GameObject[] slots; // Array di slot vuoti
+    public bool simulaGestureAfferra=false;
     public bool simulaGestureRilascia=false;
     private string lastGestureChecked="";
     public Sprite imgTest;
-    public Image selectedHandItwmUI;
+    public Image selectedHandItemUI;
+    
     private void Awake()
     {
         instance = this; // Inizializzazione del singleton
     }
     // Update is called once per frame
+    public void simula_gesture_rilascia(){
+    simulaGestureRilascia=true;
+    simulaGestureAfferra=false;
+    }
+    public void simula_gesture_afferra(){
+    simulaGestureRilascia=false;
+    simulaGestureAfferra=true;
+    }
+
+
+    public void setHandObject(InteractableItem itemSelectedFor2Seconds,string hand){
+        if(this.hand==""){
+            selectedHandObject=itemSelectedFor2Seconds;
+            this.hand=hand;
+        }
+    }
     void Update()
     {
+        
+        if(selectedHandObject!=null && hand!=""){
+            if(hand=="Left"){
+                rightHandSelector.canRaycast=false;
+            }else if(hand=="Right")
+            {
+                 leftHandSelector.canRaycast=false;
+            }else{
 
-        if(simulaGestureRilascia){
+            }
+        if(simulaGestureRilascia && !simulaGestureAfferra){
             Debug.Log(" gesture");
 
             if(rightHandSelector.lastItemSelectedFor2Second !=null){
@@ -46,9 +73,20 @@ public class HandController : MonoBehaviour
             }
             simulaGestureRilascia=false;
             selectedHandObject=null;
-            selectedHandItwmUI.sprite=null;
-            return;
+            selectedHandItemUI.sprite=null;
+            hand="";
+        }else if(simulaGestureAfferra && !simulaGestureRilascia){
+              selectedHandItemUI.sprite=selectedHandObject.item.sprite;
+              simulaGestureAfferra=false;
+              //hand="";
+             
         }
+
+        
+        }
+      /*
+
+      //se ho selezionato qualcoasa con ilraycast sinistro per almeno due seocondi e l'oggetto selezionato non è nullo
         if(leftHandSelector.lastItemSelectedFor2Second!= null && selectedHandObject==null)
         {
           //  Debug.LogError("HAI SELEZIONATO UN OGGETTO CON LA KMANO SINISTRA ORA DEVI USARE UNA GESTURE");
@@ -63,7 +101,7 @@ public class HandController : MonoBehaviour
             leftHandSelector.canRaycast=false;
              selectedHandObject=rightHandSelector.lastItemSelectedFor2Second;
             selectedHandItwmUI.sprite=selectedHandObject.item.sprite;
-        }
+        }*/
     }
     
 }

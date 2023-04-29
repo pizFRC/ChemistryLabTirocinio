@@ -43,6 +43,7 @@ byte [] data;
             catch (Exception err)
             {
                 print(err.ToString());
+                break;
             }
         }
     }

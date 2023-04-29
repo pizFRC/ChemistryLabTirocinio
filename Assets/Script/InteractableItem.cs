@@ -12,7 +12,7 @@ public class InteractableItem : MonoBehaviour
     public Item item;
 
    
- 
+    
     public bool isSelected = false;
     public GameObject localCanvas;
     GameObject instance;

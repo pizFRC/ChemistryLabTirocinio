@@ -26,9 +26,9 @@ public class RaycastItemSelector : MonoBehaviour
         lineRenderer = GetComponent<LineRenderer>();
         if(hand==""){
             if(this.tag=="RightHand"){
-                hand="R";
+                hand="Right";
             }else{
-                hand="L";
+                hand="Left";
             }
         }
 
@@ -84,7 +84,7 @@ public class RaycastItemSelector : MonoBehaviour
             //RAYCASTO IL RAGGIO SE NON COLPISCO NIENTE NON LO MOSTRO
     
                if(lastItemSelectedFor2Second!=null){
-           
+              
             GetComponent<LineRenderer>().positionCount = 2;
             thumbTipPosition = this.transform.GetChild(4).transform.position;
                 GetComponent<LineRenderer>().SetPosition(0, thumbTipPosition);
@@ -102,16 +102,15 @@ public class RaycastItemSelector : MonoBehaviour
                 GetComponent<LineRenderer>().positionCount = 2;
                 GetComponent<LineRenderer>().SetPosition(0, thumbTipPosition);
                 GetComponent<LineRenderer>().SetPosition(1, endPosition);
-                if (selectionTimer >= 2f)
+                if (selectionTimer >= 2f &&  HandController.instance.selectedHandObject==null )
                 {
                      GetComponent<LineRenderer>().SetPosition(1, hit.point);
-
                      lastItemSelectedFor2Second=hit.collider.GetComponent<InteractableItem>();
-                    
-                    //canvas e raycast 
-                    //blocca raggio sull'ggetto
+                    HandController.instance.setHandObject(lastItemSelectedFor2Second,hand);
 
-                    //Inizia a prendere le gesture
+                   
+                   
+                  
                 }
 
               
