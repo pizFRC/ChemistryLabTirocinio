@@ -72,13 +72,20 @@ public class HandController : MonoBehaviour
                     
             }
             simulaGestureRilascia=false;
+             if(!selectedHandObject.gameObject.activeInHierarchy)
+                selectedHandObject.gameObject.SetActive(true);
+            selectedHandObject.isSelected=false;
             selectedHandObject=null;
             selectedHandItemUI.sprite=null;
             hand="";
+           
         }else if(simulaGestureAfferra && !simulaGestureRilascia){
               selectedHandItemUI.sprite=selectedHandObject.item.sprite;
               simulaGestureAfferra=false;
               //hand="";
+              selectedHandObject.isSelected=true;
+              selectedHandObject.gameObject.SetActive(false);
+
              
         }
 
