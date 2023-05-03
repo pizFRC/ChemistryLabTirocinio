@@ -19,7 +19,9 @@ public class InteractableItem : MonoBehaviour
     bool canvasNotActive = true;
 
    bool materialSetted=false;
-   float localObjectTimer;
+  public float localObjectTimer;
+   public string hand="";
+   public RaycastItemSelector leftOrRightSelector;
     void Start()
     {
         var renderers = this.gameObject.GetComponents<Renderer>();
@@ -37,24 +39,29 @@ public class InteractableItem : MonoBehaviour
     {
        
         
-
-          if(localObjectTimer >2.0f && isSelected){
+    if(isSelected){
+          if(localObjectTimer >=2.0f){
                 
                 localObjectTimer=2;
+               
+                //HandController.instance.setHandObject(this);
                  instance.GetComponentInChildren<Slider>().value=localObjectTimer;
+                
                  return;
            } 
-           if(isSelected && localObjectTimer <2.0f)
+           if(localObjectTimer <2.0f)
            { 
             instance.SetActive(true);
             localObjectTimer+=Time.deltaTime;
               instance.GetComponentInChildren<Slider>().value=localObjectTimer;
 
            }
+    }
            if(!isSelected){
             localObjectTimer=0;
              instance.GetComponentInChildren<Slider>().value=0;
              instance.SetActive(false);
+              this.hand="";
            }
 
         
@@ -63,7 +70,9 @@ public class InteractableItem : MonoBehaviour
     }
 
 
-    
+    public void setSelector(RaycastItemSelector leftOrRight){
+        this.leftOrRightSelector=leftOrRight;
+    }
     
     public void showCanvas()
     {

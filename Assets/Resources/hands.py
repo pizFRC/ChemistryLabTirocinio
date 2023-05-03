@@ -11,7 +11,7 @@ import os
 
 DEBUG = True # significantly reduces performance
 MODEL_COMPLEXITY = 0 # set to 1 to improve accuracy at the cost of performance
-CAMERA_INDEX=0
+CAMERA_INDEX=1
 
 
 def setCamera(index):
@@ -129,18 +129,21 @@ class HandThread(threading.Thread):
             
            
             
-            
-            if(len(result.gestures)>1 and len(result.handedness)>1 ):
+            resultHand1=resultGesture1=resultGesture=resultHand=final=final2=""
+            if(len(result.gestures)>0 and len(result.handedness)>0 ):
                 #print(result.gestures," <----->",result.handedness)
                 resultGesture1=f"{result.gestures[0]}"
                 resultHand1=f"{result.handedness[0]}"
+                final=f"[{resultGesture1.split(',')[3]}  [{resultHand1.split(',')[3]}"
+            if( len(result.gestures)>1 and len(result.handedness)>1 ):
                 resultGesture=f"{result.gestures[1]}"
                 resultHand=f"{result.handedness[1]}"
-                final=f"[{resultGesture1.split(',')[3]}  [{resultHand1.split(',')[3]}"
+         
+            if(resultGesture!= "" and resultHand != ""):
                 final2=f"[{resultGesture.split(',')[3]}  [{resultHand.split(',')[3]}"
-                self.last_gesture=final+"---"+final2
-                self.gesture_rilevata=True
-                print(final ,"-----",final2)
+            self.last_gesture=final+"---"+final2
+            self.gesture_rilevata=True
+            print(final ,"-----",final2)
                
                 
         gesture_file = os.path.join(os.path.dirname(__file__), 'gesture_recognizer.task')
@@ -158,7 +161,8 @@ class HandThread(threading.Thread):
                 recognizer = mp.tasks.vision.GestureRecognizer.create_from_options(options)
            
             while self.capture.isRunning==False:
-                print("Waiting for capture")
+                
+                print(f"Waiting for capture t:{threading.get_ident()}")
                 time.sleep(500/1000)
             print("beginning capture")
                 
@@ -216,8 +220,7 @@ class HandThread(threading.Thread):
                     
                     lastTimestamp=timestamp
                     
-                    recognition_result = recognizer.recognize_async(mp_image,timestamp)     
-                       
+                    recognizer.recognize_async(mp_image,timestamp)
 
                 # Set up data for piping
                 self.data = ""

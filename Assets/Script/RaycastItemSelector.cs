@@ -2,12 +2,27 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+public enum selectorMode
+{
+    CanSelect = 1,
+    CannotSelect = 2,
+    RaycastOff = 3,
+
+    AlreadySelect = 4,
+
+    LockOnItem = 5,
+    MoveItem=6,
+}
+
 public class RaycastItemSelector : MonoBehaviour
 {
     // Start is called before the first frame update
+    [SerializeField] public selectorMode mode;
 
     float elapsedTime = 0f;
     public string hand;
+
+
     public float timeToWait = 1.0f;
     public float smoothingFactor = 0.020f, maxDistance = 150f;
     private LineRenderer lineRenderer;
@@ -17,18 +32,23 @@ public class RaycastItemSelector : MonoBehaviour
     public float valueToSubtractY, valueToAddX;
     public float range = 2;
     bool isSelecting = false;
-    public bool canRaycast=true;
+    Vector3 itemPosition;
+    public bool canRaycast = true;
     Vector3 previousHandDirection, thumbDirection, thumbTipPosition, wristPosition, filteredHandDirection;
     void Start()
     {
 
         //   instanceLine=Instantiate(prefabLine);
         lineRenderer = GetComponent<LineRenderer>();
-        if(hand==""){
-            if(this.tag=="RightHand"){
-                hand="Right";
-            }else{
-                hand="Left";
+        if (hand == "")
+        {
+            if (this.tag == "RightHand")
+            {
+                hand = "Right";
+            }
+            else
+            {
+                hand = "Left";
             }
         }
 
@@ -63,86 +83,50 @@ public class RaycastItemSelector : MonoBehaviour
 
         elapsedTime += Time.deltaTime;
 
+
         //ogni 1/10 di secondo  sparo non ogni frame
-          if(!canRaycast){
-             GetComponent<LineRenderer>().positionCount =0;
-             return;
-          }
+        if (!canRaycast)
+        {
+
+        }
         if (elapsedTime > timeToWait)
         {
 
-
-            Ray ray = new Ray(thumbTipPosition, GetHandDirection() * range);
-
-            RaycastHit hit;
-
-            Vector3 endPosition = filteredHandDirection * maxDistance;
-            int layerMask = 1 << 8;
-            layerMask = ~layerMask;
-
-
-            //RAYCASTO IL RAGGIO SE NON COLPISCO NIENTE NON LO MOSTRO
-    
-               if(lastItemSelectedFor2Second!=null){
-              
-            GetComponent<LineRenderer>().positionCount = 2;
-            thumbTipPosition = this.transform.GetChild(4).transform.position;
-                GetComponent<LineRenderer>().SetPosition(0, thumbTipPosition);
-                GetComponent<LineRenderer>().SetPosition(1, lastItemSelectedFor2Second.transform.position);
-
-        }  else  if (Physics.Raycast(ray, out hit, 250f) && hit.collider.CompareTag("Item"))
+            switch (mode)
             {
-                Debug.DrawRay(thumbTipPosition, filteredHandDirection * range, Color.black, 0.2f);
-                endPosition = hit.point;
-                selectionTimer += timeToWait + Time.deltaTime;
-                isSelecting = true;
-                lastItemSelected = hit.transform.GetComponent<InteractableItem>();
-                lastItemSelected.isSelected = true;
+                case (selectorMode.CanSelect):
+                    raycast();
+                    return;
+                case (selectorMode.CannotSelect):
+                    GetComponent<LineRenderer>().positionCount = 0;
+                    // GetComponent<LineRenderer>().SetPosition(1, lastItemSelected.transform.position);
+                    //lastItemSelectedFor2Second = lastItemSelected.GetComponent<InteractableItem>();
+                    return;
 
-                GetComponent<LineRenderer>().positionCount = 2;
-                GetComponent<LineRenderer>().SetPosition(0, thumbTipPosition);
-                GetComponent<LineRenderer>().SetPosition(1, endPosition);
-                if (selectionTimer >= 2f &&  HandController.instance.selectedHandObject==null )
-                {
-                     GetComponent<LineRenderer>().SetPosition(1, hit.point);
-                     lastItemSelectedFor2Second=hit.collider.GetComponent<InteractableItem>();
-                    HandController.instance.setHandObject(lastItemSelectedFor2Second,hand);
-
-                   
-                   
-                  
-                }
-
-              
-            }
-            else if (Physics.Raycast(ray, out hit, 250f) && hit.collider.CompareTag("Wall"))
-            {
-                selectionTimer = 0;
-                isSelecting = false;
-                if (lastItemSelected != null){
-                    lastItemSelected.isSelected = false;
-                    lastItemSelected=null;
+                case (selectorMode.LockOnItem):
+                 //   Debug.Log("lock on item");
+                    //lastItemSelectedFor2Second.setSelector(this);
+                    this.lastItemSelectedFor2Second=lastItemSelected;
+                    thumbTipPosition = this.transform.GetChild(4).transform.position;
+                    GetComponent<LineRenderer>().SetPosition(0, thumbTipPosition);
+                    GetComponent<LineRenderer>().SetPosition(1, itemPosition);
+                    HandController.instance.setHandObject(lastItemSelected, this.hand);
+                    return;
+                 case (selectorMode.MoveItem):
+                 break;
                 
-                }
-                
-                GetComponent<LineRenderer>().positionCount = 2;
-                GetComponent<LineRenderer>().SetPosition(0, thumbTipPosition);
-                GetComponent<LineRenderer>().SetPosition(1, hit.point);
+
+               
+
+
+                default: break;
             }
-            else
-            {
-                GetComponent<LineRenderer>().positionCount = 0;
 
-                selectionTimer = 0;
-                isSelecting = false;
-                if (lastItemSelected != null){
-                    lastItemSelected.isSelected = false;
-                    lastItemSelected=null;
 
-                }
-                //   lineRenderer.positionCount = 0;
 
-            }
+
+
+           
 
 
 
@@ -172,6 +156,62 @@ public class RaycastItemSelector : MonoBehaviour
 
 
     }
+    public void reset()
+    {
+        this.mode = selectorMode.CanSelect;
+          this.lastItemSelectedFor2Second=null;
+        Debug.LogError("reset called");
+    }
+    private void raycast()
+    {
+
+        Ray ray = new Ray(thumbTipPosition, GetHandDirection() * range);
+
+        RaycastHit hit;
+
+        Vector3 endPosition = filteredHandDirection * maxDistance;
+        if (Physics.Raycast(ray, out hit, 250f))
+        {
+
+
+            if (hit.collider.CompareTag("Item"))
+            {
+                Debug.DrawRay(thumbTipPosition, filteredHandDirection * range, Color.black, 0.2f);
+                endPosition = hit.point;
+                selectionTimer += timeToWait + Time.deltaTime;
+                isSelecting = true;
+                lastItemSelected = hit.transform.GetComponent<InteractableItem>();
+                lastItemSelected.isSelected = true;
+                if (lastItemSelected.localObjectTimer >= 2.0f)
+                {
+                    Debug.LogError("sull item per più di 2 secondi");
+
+                    this.mode = selectorMode.LockOnItem;
+                    this.itemPosition = hit.point;
+                    return;
+                }
+            }
+            else if (hit.collider.CompareTag("Wall"))
+            {
+                selectionTimer = 0;
+                isSelecting = false;
+                if (lastItemSelected != null)
+                {
+                    lastItemSelected.isSelected = false;
+                    lastItemSelected = null;
+
+                }
+
+            }
+
+
+            GetComponent<LineRenderer>().positionCount = 2;
+            GetComponent<LineRenderer>().SetPosition(0, thumbTipPosition);
+            GetComponent<LineRenderer>().SetPosition(1, hit.point);
+        }
+
+    }
+
 
 }
 

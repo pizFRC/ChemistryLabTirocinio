@@ -42,27 +42,35 @@ byte [] data;
                     print("recv:"+dataStr);
                  
                     string []handGesture=dataStr.Split("---");
-                    if (handGesture.Length<1)
-                        continue;
+                   
 
                     string h=HandController.instance.hand;
-                    print("hand di hand controller"+h);
-                    if(h=="Left")
-                        h="Right";
-                    else if(h=="Right")
-                        h="Left";
+                 //   print("hand di hand controller"+h);
+              
                     foreach(string s in handGesture){
                     
                     //la mano destra e sinistra vengono inviate invertite quindi se left -> mano destra e viceversa
-                        if(s.Contains(h)){
+                        if(s.Contains("Left")){
                             if(s.Contains("Closed_Fist")){
-                                HandController.instance.simula_gesture_afferra();
-                                Debug.Log("afferra");
+                                HandController.instance.simula_gestureDX_afferra();
+                               Debug.Log("afferra");
                             }else if(s.Contains("Victory")){
                                 Debug.Log("victory");
-                                HandController.instance.simula_gesture_rilascia();
+                                HandController.instance.simula_gestureDX_rilascia();
                             }else if(s.Contains("Open_Palm")){
-                                Debug.Log("mano aperta non mi interessa");
+                                //Debug.Log("mano aperta non mi interessa");
+                            }
+                        }
+                       if(s.Contains("Right")){
+
+                            if(s.Contains("Closed_Fist")){
+                               // HandController.instance.simula_gestureDX_afferra();
+                                 Debug.Log("SINISTRA");
+                            }else if(s.Contains("Victory")){
+                               Debug.Log("SINISTRA");
+                              //  HandController.instance.simula_gestureDX_rilascia();
+                            }else if(s.Contains("Open_Palm")){
+                                //Debug.Log("mano aperta non mi interessa");
                             }
                         }
                     }
@@ -83,6 +91,7 @@ byte [] data;
     // Update is called once per frame
    
 private void OnDestroy() {
+    startRecv=false;
     client.Close();
 }
 

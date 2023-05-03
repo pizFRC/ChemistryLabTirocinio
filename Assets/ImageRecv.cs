@@ -40,7 +40,7 @@ byte [] data;
                 if(data.Length>0)
                UnityMainThreadDispatcher.Instance().Enqueue(() =>BytesToTexture2D(data));
               
-              
+            
             }
             catch (Exception err)
             {
@@ -69,6 +69,7 @@ byte [] data;
           
 }
  private void OnDestroy() {
+    startRecv=false;
     client.Close();
 }
 }
