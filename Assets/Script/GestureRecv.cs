@@ -65,9 +65,11 @@ byte [] data;
 
                             if(s.Contains("Closed_Fist")){
                                // HandController.instance.simula_gestureDX_afferra();
+                                 HandController.instance.simula_gestureSX_afferra();
                                  Debug.Log("SINISTRA");
                             }else if(s.Contains("Victory")){
                                Debug.Log("SINISTRA");
+                                 HandController.instance.simula_gestureSX_rilascia();
                               //  HandController.instance.simula_gestureDX_rilascia();
                             }else if(s.Contains("Open_Palm")){
                                 //Debug.Log("mano aperta non mi interessa");

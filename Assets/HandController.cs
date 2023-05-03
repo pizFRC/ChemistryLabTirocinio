@@ -11,14 +11,18 @@ public class HandController : MonoBehaviour
     public RaycastItemSelector rightHandSelector; // Riferimento al RaycastSelector per la mano destra
 
     // Oggetto tenuto dalla mano sinistra
-    public InteractableItem selectedHandObject; // Oggetto tenuto dalla mano destra
+    public InteractableItem selectedLeftHandObject;
+    public InteractableItem selectedRightHandObject;
     public string hand = "";
     private GameObject[] slots; // Array di slot vuoti
-    public bool simulaGestureAfferra = false;
-    public bool simulaGestureRilascia = false;
+    public bool simulaGestureAfferraDestra = false;
+    public bool simulaGestureRilasciaDestra = false;
+    public bool simulaGestureAfferraSinistra = false;
+    public bool simulaGestureRilasciaSinistra = false;
     private string lastGestureChecked = "";
     public Sprite imgTest;
-    public Image selectedHandItemUI;
+    public Image selectedLeftHandItemUI;
+    public Image selectedRightHandItemUI;
 
     private void Awake()
     {
@@ -27,92 +31,135 @@ public class HandController : MonoBehaviour
     // Update is called once per frame
     public void simula_gestureDX_rilascia()
     {
-        simulaGestureRilascia = true;
-        simulaGestureAfferra = false;
-        
-        selectedHandObject.setSelector(null);
-        
+        simulaGestureRilasciaDestra = true;
+        simulaGestureAfferraDestra = false;
+
+        selectedRightHandObject.setSelector(null);
+
     }
     public void simula_gestureDX_afferra()
     {
-        simulaGestureRilascia = false;
-        simulaGestureAfferra = true;
-       
+        simulaGestureRilasciaDestra = false;
+        simulaGestureAfferraDestra = true;
+    }
+    public void simula_gestureSX_afferra()
+    {
+        simulaGestureRilasciaSinistra = false;
+        simulaGestureAfferraSinistra = true;
+    }
+
+        public void simula_gestureSX_rilascia()
+    {
+        simulaGestureRilasciaSinistra = true;
+        simulaGestureAfferraSinistra = false ;
     }
 
 
-    public void setHandObject(InteractableItem itemSelectedFor2Seconds, string hand)
+    public void setHandObject(InteractableItem itemSelectedFor2Seconds,string h)
     {
-        if (this.hand == "")
-        {
-            selectedHandObject = itemSelectedFor2Seconds;
-            this.hand = hand;
-        }
+            if(h=="Left")
+            selectedLeftHandObject = itemSelectedFor2Seconds;
+            if(h=="Right")
+            selectedRightHandObject = itemSelectedFor2Seconds;
+            
+        
 
     }
     void Update()
     {
 
-        if (selectedHandObject != null && hand != "")
-        {
-            if (hand == "Left")
-            {
-                rightHandSelector.canRaycast = false;
-            }
-            else if (hand == "Right")
-            {
-                leftHandSelector.canRaycast = false;
-            }
-           
-            if (simulaGestureRilascia && !simulaGestureAfferra)
-            {
-                Debug.Log(" gesture");
 
+
+
+        //ModifiableContactPair DESTRA
+        if (selectedRightHandObject != null )
+        {
+
+            if (simulaGestureRilasciaDestra && !simulaGestureAfferraDestra)
+            {
                 if (rightHandSelector.lastItemSelectedFor2Second != null)
                 {
-                    leftHandSelector.canRaycast = true;
-                     rightHandSelector.lastItemSelectedFor2Second.setSelector(null);
+
+                    rightHandSelector.lastItemSelectedFor2Second.setSelector(null);
                     rightHandSelector.lastItemSelectedFor2Second.isSelected = false;
                     rightHandSelector.lastItemSelectedFor2Second = null;
                     rightHandSelector.reset();
-                   
+
 
 
                 }
+                if (!selectedRightHandObject.gameObject.activeInHierarchy)
+                    selectedRightHandObject.gameObject.SetActive(true);
+
+                selectedRightHandItemUI.sprite = null;
+                selectedRightHandObject.isSelected = false;
+                selectedRightHandObject = null;
+
+
+                simulaGestureRilasciaDestra=false;
+                simulaGestureAfferraDestra=false;
+
+            }
+            else if (!simulaGestureRilasciaDestra && simulaGestureAfferraDestra)
+            {
+                selectedRightHandObject=rightHandSelector.lastItemSelectedFor2Second;
+                selectedRightHandItemUI.sprite = selectedRightHandObject.item.sprite;
+                simulaGestureRilasciaDestra=false;
+                simulaGestureAfferraDestra=false;
+                selectedRightHandObject.isSelected = true;
+                selectedRightHandObject.gameObject.SetActive(false);
+            }
+        }
+
+
+        //mano SX
+        if (selectedLeftHandObject != null )
+        {
+           
+
+             if (simulaGestureRilasciaSinistra && !simulaGestureAfferraSinistra)
+            {
                 if (leftHandSelector.lastItemSelectedFor2Second != null)
                 {
-                    rightHandSelector.canRaycast = true;
-                           leftHandSelector.lastItemSelectedFor2Second.setSelector(null);
+
+                    leftHandSelector.lastItemSelectedFor2Second.setSelector(null);
                     leftHandSelector.lastItemSelectedFor2Second.isSelected = false;
                     leftHandSelector.lastItemSelectedFor2Second = null;
-           
                     leftHandSelector.reset();
+
+
+
                 }
+                if (!selectedLeftHandObject.gameObject.activeInHierarchy)
+                    selectedLeftHandObject.gameObject.SetActive(true);
 
-                if (!selectedHandObject.gameObject.activeInHierarchy)
-                    selectedHandObject.gameObject.SetActive(true);
-                simulaGestureRilascia = false;
-
-                selectedHandObject.isSelected = false;
-                selectedHandObject = null;
-                selectedHandItemUI.sprite = null;
-                hand = "";
+                selectedLeftHandItemUI.sprite = null;
+                selectedLeftHandObject.isSelected = false;
+                selectedLeftHandObject = null;
 
             }
-            else if (simulaGestureAfferra && !simulaGestureRilascia)
+            else if (!simulaGestureRilasciaSinistra && simulaGestureAfferraSinistra)
             {
-                selectedHandItemUI.sprite = selectedHandObject.item.sprite;
-                simulaGestureAfferra = false;
-                //hand="";
-                selectedHandObject.isSelected = true;
-                selectedHandObject.gameObject.SetActive(false);
-
-
+                selectedLeftHandObject=leftHandSelector.lastItemSelectedFor2Second;
+                selectedLeftHandItemUI.sprite = selectedLeftHandObject.item.sprite;
+                selectedLeftHandObject.gameObject.SetActive(false);
+                 simulaGestureRilasciaSinistra=false;
+                simulaGestureAfferraSinistra=false;      
+                          selectedLeftHandObject.isSelected = true;
             }
 
 
+
+            simulaGestureRilasciaSinistra=false;
+                simulaGestureAfferraSinistra=false;
         }
+
+
         
+
+
     }
+
+
 
 }

@@ -110,7 +110,7 @@ public class RaycastItemSelector : MonoBehaviour
                     thumbTipPosition = this.transform.GetChild(4).transform.position;
                     GetComponent<LineRenderer>().SetPosition(0, thumbTipPosition);
                     GetComponent<LineRenderer>().SetPosition(1, itemPosition);
-                    HandController.instance.setHandObject(lastItemSelected, this.hand);
+                    HandController.instance.setHandObject(lastItemSelected,hand);
                     return;
                  case (selectorMode.MoveItem):
                  break;
@@ -183,6 +183,13 @@ public class RaycastItemSelector : MonoBehaviour
                 selectionTimer += timeToWait + Time.deltaTime;
                 isSelecting = true;
                 lastItemSelected = hit.transform.GetComponent<InteractableItem>();
+                Debug.Log("seleziona da n :"+lastItemSelected.rayNumber);
+                if(lastItemSelected.rayNumber>=1){
+                      this.mode = selectorMode.CanSelect;
+                     lastItemSelected=null;
+                    
+                      return;
+                }
                 lastItemSelected.isSelected = true;
                  
                 if (lastItemSelected.localObjectTimer >= 2.0f)
@@ -195,15 +202,7 @@ public class RaycastItemSelector : MonoBehaviour
                     
                 }
 
-                if(lastItemSelected!=null && lastItemSelected.rayNumber<=1){
-                    Debug.LogError("puoi usarlo ok");
-                    
-                }else
-                {
-                    Debug.LogError("a quanto pare qualcosa non va");
-                     this.mode = selectorMode.CanSelect;
-                    return;
-                }
+              
                 
             }
             else if (hit.collider.CompareTag("Wall"))
