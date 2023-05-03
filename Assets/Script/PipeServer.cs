@@ -146,7 +146,7 @@ public class PipeServer : MonoBehaviour
     private Hand left;
     private Hand right;
     public bool lineVisible = false;
-    public int port = 6789;
+    public int port = 6790;
     public bool startRecv = true;
     public bool printToConsole = false;
     public string data;
@@ -182,13 +182,15 @@ public class PipeServer : MonoBehaviour
 
     private void RecvData()
     {
-        client = new UdpClient(port);
+        IPAddress ipAddress = IPAddress.Parse("127.0.0.1");
+        client = new UdpClient(new IPEndPoint(ipAddress, port));
+       
         print("RECVDATA STARTED\n");
         while (startRecv)
         {
             try
             {
-                IPEndPoint anyIP = new IPEndPoint(IPAddress.Any, port);
+                IPEndPoint anyIP = new IPEndPoint(ipAddress, port);
                 dataByte = client.Receive(ref anyIP);
                 data = Encoding.ASCII.GetString(dataByte);
                 if (printToConsole) { print("recv:" + data); }

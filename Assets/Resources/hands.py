@@ -6,16 +6,20 @@ import threading
 import time
 from socket import *
 import time
-from threading import RLock
-import math
+from threading import RLock,Condition
+import os
+
 DEBUG = True # significantly reduces performance
 MODEL_COMPLEXITY = 0 # set to 1 to improve accuracy at the cost of performance
 CAMERA_INDEX=0
-print( mp.__file__)
+
 
 def setCamera(index):
     CAMERA_INDEX=index
 
+
+        
+        
 
 class ImageSender(threading.Thread):
     def __init__(self,):
@@ -23,19 +27,29 @@ class ImageSender(threading.Thread):
         print("start")
         self.serverName="127.0.0.1"
         self.serverPort=6792
+        
         self.clientSocket = socket(AF_INET, SOCK_DGRAM)
         self.server_address = (self.serverName, self.serverPort)
+        
         self.haveFinished=False
         self.dirty=False
+      
         self.lock =RLock()
         self.img=bytearray()
+        
+        
+        self.stringa=""
 
     def run(self):
+        self.timer=time.time()
         while True:
            
             
-        
+            
             self.clientSocket.sendto(self.img,self.server_address)
+
+           
+            
                # sent = self.clientSocket.sendto(, self.server_address)
             time.sleep(0.08)
             #in data ci sono i dati ottenuti dal thread hand
@@ -75,7 +89,7 @@ class CaptureThread(threading.Thread):
             if DEBUG:
                 self.counter = self.counter+1
                 if time.time()-self.timer>=3:
-                    print("Capture FPS: ",self.counter/(time.time()-self.timer))
+                    print("Capture FPS: ",self.counter/(time.time()-self.timer),self.timer)
                     self.counter = 0
                     self.timer = time.time()
         print("capture thread finished")
@@ -87,19 +101,20 @@ class CaptureThread(threading.Thread):
 class HandThread(threading.Thread):
     
     data=""
+    last_gesture=""
+    gesture_rilevata=False
     dirty = True
     haveFinished=False
     imageSender=ImageSender()
     capture = CaptureThread()
-   
+   # gestureSender=GestureSender()
     def is_finger_raised(self,tip,pip,mcp,wrist):
         return tip.y < pip.y and pip.y < mcp.y and mcp.y > wrist.y
     def run(self):
         mp_drawing = mp.solutions.drawing_utils
         self.mp_hands = mp.solutions.hands
         width=0
-        x1, y1 = int(image_w/4)  , int(image_h/2)
-        x2, y2 = int(image_w*(3/4)) ,int(image_h/2)
+        lastTimestamp=int(time.monotonic()*1000)
 
         # disegna i cerchi sui due frame
         radius = 100
@@ -108,9 +123,40 @@ class HandThread(threading.Thread):
         
         self.capture.start()
         self.imageSender.start()
-        print("started")
-        # Based Heavily on: https://github.com/nicknochnack/MediaPipeHandPose/blob/main/Handpose%20Tutorial.ipynb
-        with self.mp_hands.Hands(min_detection_confidence=0.5, min_tracking_confidence=0.6, model_complexity = MODEL_COMPLEXITY) as hands: 
+       # self.gestureSender.start()
+        def print_result(result: mp.tasks.vision.GestureRecognizerResult, output_image: mp.Image, timestamp_ms: int):
+          #  self.gestureSender.set_gesture(f"<{result.gestures}|{result.handedness}>")
+            
+           
+            
+            
+            if(len(result.gestures)>1 and len(result.handedness)>1 ):
+                #print(result.gestures," <----->",result.handedness)
+                resultGesture1=f"{result.gestures[0]}"
+                resultHand1=f"{result.handedness[0]}"
+                resultGesture=f"{result.gestures[1]}"
+                resultHand=f"{result.handedness[1]}"
+                final=f"[{resultGesture1.split(',')[3]}  [{resultHand1.split(',')[3]}"
+                final2=f"[{resultGesture.split(',')[3]}  [{resultHand.split(',')[3]}"
+                self.last_gesture=final+"---"+final2
+                self.gesture_rilevata=True
+                print(final ,"-----",final2)
+               
+                
+        gesture_file = os.path.join(os.path.dirname(__file__), 'gesture_recognizer.task')
+        with self.mp_hands.Hands(min_detection_confidence=0.5, min_tracking_confidence=0.6, model_complexity = MODEL_COMPLEXITY) as hands:
+            with open(gesture_file, 'rb') as f:
+                model = f.read()
+                options = mp.tasks.vision.GestureRecognizerOptions(
+                    base_options=mp.tasks.BaseOptions(model_asset_buffer=model),
+                    num_hands=2,
+                    min_hand_detection_confidence=0.4,
+                    min_hand_presence_confidence = 0.5,
+                    min_tracking_confidence = 0.5,
+                    running_mode=mp.tasks.vision.RunningMode.LIVE_STREAM,
+                    result_callback=print_result)
+                recognizer = mp.tasks.vision.GestureRecognizer.create_from_options(options)
+           
             while self.capture.isRunning==False:
                 print("Waiting for capture")
                 time.sleep(500/1000)
@@ -130,11 +176,13 @@ class HandThread(threading.Thread):
                
                 image.flags.writeable = True
                 # RGB 2 BGR
-                image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
+               
                 # Detections
                 results = hands.process(image)
 
                 image_h, image_w, _ = frame.shape
+                x1, y1 = int(image_w/4)  , int(image_h/2)
+                x2, y2 = int(image_w*(3/4)) ,int(image_h/2)
 
               
                 
@@ -142,26 +190,51 @@ class HandThread(threading.Thread):
                     
                 
                 if results.multi_hand_landmarks:
+                    
                     for num, hand in enumerate(results.multi_hand_landmarks):
                         mp_drawing.draw_landmarks(image, hand, self.mp_hands.HAND_CONNECTIONS, 
                                                 mp_drawing.DrawingSpec(color=(121, 22, 76), thickness=2, circle_radius=4),
                                                 mp_drawing.DrawingSpec(color=(250, 44, 250), thickness=2, circle_radius=2),
                                                 )
-                        
+
+                   
+                    
+                
+                    #if len(recognition_result.handedness)>0:
+                     #   print(recognition_result.gestures)
+                      #  print(recognition_result.handedness)
+                       # print(len(recognition_result.handedness))
+                        #print(recognition_result.handedness[0])
+                        #print(recognition_result.gestures[0][0])
+               
+                   
+                timestamp = int(time.monotonic() * 1000)
+                
+                if timestamp-lastTimestamp>180 :
+                    
+                    mp_image = mp.Image(image_format=mp.ImageFormat.SRGB, data=frame)
+                    
+                    lastTimestamp=timestamp
+                    
+                    recognition_result = recognizer.recognize_async(mp_image,timestamp)     
                        
+
                 # Set up data for piping
                 self.data = ""
-         
+                
+
+                
                 if results.multi_hand_landmarks:
+
                     for j in range(len(results.multi_handedness)):
                         
                         hand_world_landmarks = results.multi_hand_landmarks[j]
                        
-                        
                         for i in range(0,21):
                             self.data += "{}|{}|{}|{}|{}\n".format(results.multi_handedness[j].classification[0].label,i,hand_world_landmarks.landmark[i].x,hand_world_landmarks.landmark[i].y,hand_world_landmarks.landmark[i].z)
                    
-                            
+                        #self.data += "{}".format(self.gesture_rilevata)
+                        
                         self.dirty = True
                         
                         
@@ -173,14 +246,16 @@ class HandThread(threading.Thread):
     
                         # Verifica se la coordinata y del punto medio si trova più o meno nel centro dell'immagine lungo l'asse y
                         if y_coord < image_h / 2:
-                            print(f"{results.multi_handedness[j].classification[0].label} si più in alto rispetto  {y_coord} - { image_h / 2}")
+                            pass
+                            #print(f"{results.multi_handedness[j].classification[0].label} si più in alto rispetto  {y_coord} - { image_h / 2}")
                         elif y_coord > image_h / 2:
-                            print(f"{results.multi_handedness[j].classification[0].label}  più in basso rispetto{y_coord}  { image_h / 2}");
+                            pass
+                           # print(f"{results.multi_handedness[j].classification[0].label}  più in basso rispetto{y_coord}  { image_h / 2}");
                        # print(f"{results.multi_handedness[j].classification[0].label}: {euclidean_distance_to_camera}")       
                 
   
               
-                
+                image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
                 
                 
                 encode_param = [int(cv2.IMWRITE_JPEG_QUALITY), 50]
@@ -215,87 +290,3 @@ class HandThread(threading.Thread):
         self.capture.cap.release()
         self.capture.join()
         cv2.destroyAllWindows()
-
-
-
-    def get_gesture(self,multi_hand_landmarks,width):
-        hand_landmarks = multi_hand_landmarks[0]
-
-        landmarks = np.array([[lmk.x, lmk.y] for lmk in hand_landmarks.landmark])
-
-            # Calcola la distanza tra il pollice e l'indice
-        thumb_tip = landmarks[4]
-        index_tip = landmarks[8]
-        dist_thumb_index = np.linalg.norm(thumb_tip - index_tip)
-
-        # Rileva il gesto del pollice in su
-        if dist_thumb_index > 0.32:
-            # Il pollice è in su
-            print(dist_thumb_index /width)
-            print("Il pollice è in su.")
-            print(dist_thumb_index )
-        else:
-            # Il pollice non è in su
-            print(dist_thumb_index /width)
-            print("Il pollice non è in su.")
-            print(dist_thumb_index )
-    
-    
-    def count_raised_fingers(self,hand_landmarks_pa):
-        count = 0
-        i=0
-        hand_tmp = self.mp_hands.HandLandmark
-        print(hand_tmp)
-        for j, hand_landmarks in enumerate(hand_landmarks_pa):
-            
-            
-            for point in self.mp_hands.HandLandmark:
-                i+=1
-                print(point)
-                normalized_landmark = hand_landmarks.landmark[point]
-
-              #  print(f"cord:{normalized_landmark}")
-                
-          #  print(f"{hand_tmp.landmark[0]} ")
-                
-        return count        # Pollice
-    '''if hand_landmarks[4].x < hand_landmarks[3].x:
-           count += 1
-        
-        
-        # Indice
-        if self.is_finger_raised(hand_landmarks[self.mp_hands.HandLandmark.INDEX_FINGER_TIP],
-                            hand_landmarks[self.mp_hands.HandLandmark.INDEX_FINGER_PIP],
-                            hand_landmarks[self.mp_hands.HandLandmark.INDEX_FINGER_MCP],
-                            hand_landmarks[self.mp_hands.HandLandmark.WRIST]):
-            count += 1
-
-        # Medio
-        if self.is_finger_raised(hand_landmarks[self.mp_hands.HandLandmark.MIDDLE_FINGER_TIP],
-                            hand_landmarks[self.mp_hands.HandLandmark.MIDDLE_FINGER_PIP],
-                            hand_landmarks[self.mp_hands.HandLandmark.MIDDLE_FINGER_MCP],
-                            hand_landmarks[self.mp_hands.HandLandmark.WRIST]):
-            count += 1
-
-        # Anulare
-        if  self.is_finger_raised(hand_landmarks[self.mp_hands.HandLandmark.RING_FINGER_TIP],
-                            hand_landmarks[self.mp_hands.HandLandmark.RING_FINGER_PIP],
-                            hand_landmarks[self.mp_hands.HandLandmark.RING_FINGER_MCP],
-                            hand_landmarks[self.mp_hands.HandLandmark.WRIST]):
-            count += 1
-
-        # Mignolo
-        if  self.is_finger_raised(hand_landmarks[self.mp_hands.HandLandmark.PINKY_TIP],
-                            hand_landmarks[self.mp_hands.HandLandmark.PINKY_PIP],
-                            hand_landmarks[self.mp_hands.HandLandmark.PINKY_MCP],
-                            hand_landmarks[self.mp_hands.HandLandmark.WRIST]):
-            count += 1
-        print(f"{count} dita alzate")'''
-         
-
-
-
-       
-
-        #time.sleep(16/1000)
-        

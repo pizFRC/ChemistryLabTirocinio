@@ -8,7 +8,7 @@ public class GestureDetection : MonoBehaviour
     
 
     void Start() {
-        StartCoroutine(CheckPinchGestureCoroutine());
+      
     }
 
    IEnumerator CheckPinchGestureCoroutine() {

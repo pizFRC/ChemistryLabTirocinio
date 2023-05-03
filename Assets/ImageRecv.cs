@@ -12,7 +12,7 @@ public class ImageRecv : MonoBehaviour
 Thread receiveThread;
 UdpClient client;
 public  RawImage rm;
-int port=6792;
+public int port=6792;
 public bool startRecv;
 string dataStr;
 byte [] data;
@@ -26,13 +26,15 @@ byte [] data;
    
     private void RecvData()
     {
-        client = new UdpClient(port);
+      IPAddress ipAddress = IPAddress.Parse("127.0.0.1");
+        client = new UdpClient(new IPEndPoint(ipAddress, 6792));
+        
         print("image recv started\n");
         while (startRecv)
         {
             try
             {
-                IPEndPoint anyIP = new IPEndPoint(IPAddress.Any,port);
+                IPEndPoint anyIP = new IPEndPoint(ipAddress,port);
                 data = client.Receive(ref anyIP);
                 //qui uso la nuove classe
                 if(data.Length>0)
@@ -66,5 +68,7 @@ byte [] data;
         rm.texture=texture;
           
 }
-
+ private void OnDestroy() {
+    client.Close();
+}
 }

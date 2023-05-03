@@ -21,7 +21,10 @@ public class PythonScriptLauncher : MonoBehaviour
         string path_exe_21="C:\\Users\\fdefa\\Desktop\\ChemLabTirocinio\\dist\\main\\main.exe";
         //  p=Process.Start("C:\\Users\\fdefa\\Desktop\\ChemLabTirocinio\venv\\Scripts\\python.exe,");
         //p=Process.Start("dir",Application.dataPath);
-
+        string assetsPath = Application.streamingAssetsPath;
+        string appPath = assetsPath + "/pyHandTracking/main/main.exe";
+        string filePath = Path.Combine(Application.streamingAssetsPath, "main/main.exe");
+        print("percorso"+filePath);
         string m_Path = Application.dataPath + "\\Resources\\main.py";
         UnityEngine.Debug.Log("START " + m_Path);
         if (!debug)
@@ -29,7 +32,7 @@ public class PythonScriptLauncher : MonoBehaviour
             try
             {
                 string path = "C:\\Users\\fdefa\\Desktop\\HandTracking\\main.exe";
-                p = Process.Start(path_exe_21);
+                p = Process.Start(filePath);
             }
             catch
             {

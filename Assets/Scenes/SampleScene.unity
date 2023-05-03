@@ -1238,6 +1238,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rm: {fileID: 184874115}
+  port: 6792
   startRecv: 1
 --- !u!4 &190729176
 Transform:
@@ -7783,7 +7784,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1793044116
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -29,13 +29,14 @@ byte [] data;
    
     private void RecvData()
     {
-        client = new UdpClient(port);
+       IPAddress ipAddress = IPAddress.Parse("127.0.0.1");
+        client = new UdpClient(new IPEndPoint(ipAddress, port));
         print("gesture recv started\n");
         while (startRecv)
         {
             try
             {
-                IPEndPoint anyIP = new IPEndPoint(IPAddress.Any,port);
+                IPEndPoint anyIP = new IPEndPoint(ipAddress,port);
                     byte []data = client.Receive(ref anyIP);
                  string dataStr = Encoding.ASCII.GetString(data);
                     print("recv:"+dataStr);
@@ -81,7 +82,9 @@ byte [] data;
     }
     // Update is called once per frame
    
-
+private void OnDestroy() {
+    client.Close();
+}
 
 
 }
