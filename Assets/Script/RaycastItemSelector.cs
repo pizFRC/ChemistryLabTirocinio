@@ -161,7 +161,7 @@ public class RaycastItemSelector : MonoBehaviour
         this.mode = selectorMode.CanSelect;
           this.lastItemSelectedFor2Second=null;
           this.lastItemSelected.rayNumber=0;
-        Debug.LogError("reset called");
+        
     }
     private void raycast()
     {
@@ -199,6 +199,8 @@ public class RaycastItemSelector : MonoBehaviour
                     this.mode = selectorMode.LockOnItem;
                     this.itemPosition = hit.point;
                     lastItemSelected.rayNumber+=1;
+                    HandController.instance.lockGesture(this.hand);
+                    
                     
                 }
 

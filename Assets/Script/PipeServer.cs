@@ -225,6 +225,9 @@ public class PipeServer : MonoBehaviour
 
         if (Time.timeSinceLevelLoad - h.lastSampleTime >= sampleThreshold)
         {
+
+               if (lineVisible)
+                h.UpdateLines();
             for (int i = 0; i < LANDMARK_COUNT; ++i)
             {
 
@@ -237,8 +240,7 @@ public class PipeServer : MonoBehaviour
             h.reportedSamplesPerSecond = h.samplesCounter / (Time.timeSinceLevelLoad - h.lastSampleTime);
             h.lastSampleTime = Time.timeSinceLevelLoad;
             h.samplesCounter = 0f;
-            if (lineVisible)
-                h.UpdateLines();
+         
 
 
         }

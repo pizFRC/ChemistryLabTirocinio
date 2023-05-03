@@ -71,7 +71,7 @@ public class HandController : MonoBehaviour
 
 
 
-        //ModifiableContactPair DESTRA
+     
         if (selectedRightHandObject != null )
         {
 
@@ -83,6 +83,7 @@ public class HandController : MonoBehaviour
                     rightHandSelector.lastItemSelectedFor2Second.setSelector(null);
                     rightHandSelector.lastItemSelectedFor2Second.isSelected = false;
                     rightHandSelector.lastItemSelectedFor2Second = null;
+                    Debug.LogError("reset -> Right"+simulaGestureRilasciaDestra +simulaGestureAfferraDestra);
                     rightHandSelector.reset();
 
 
@@ -160,6 +161,17 @@ public class HandController : MonoBehaviour
 
     }
 
+public void lockGesture(string hand){
+    if(hand=="Right"){
+        simulaGestureRilasciaDestra=false;
+        simulaGestureAfferraDestra=false;
+        return;
+    
+    }
+     simulaGestureRilasciaSinistra=false;
+        simulaGestureAfferraSinistra=false;
+
+}
 
 
 }

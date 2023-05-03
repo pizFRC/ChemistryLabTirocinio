@@ -40,7 +40,7 @@ public class PythonScriptLauncher : MonoBehaviour
             }
         }
         else
-            p = Process.Start(path1, m_Path);
+            p = Process.Start(path2, m_Path);
 
     }
 
