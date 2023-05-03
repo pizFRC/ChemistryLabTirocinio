@@ -29,11 +29,15 @@ public class HandController : MonoBehaviour
     {
         simulaGestureRilascia = true;
         simulaGestureAfferra = false;
+        
+        selectedHandObject.setSelector(null);
+        
     }
     public void simula_gestureDX_afferra()
     {
         simulaGestureRilascia = false;
         simulaGestureAfferra = true;
+       
     }
 
 
@@ -67,18 +71,21 @@ public class HandController : MonoBehaviour
                 if (rightHandSelector.lastItemSelectedFor2Second != null)
                 {
                     leftHandSelector.canRaycast = true;
+                     rightHandSelector.lastItemSelectedFor2Second.setSelector(null);
                     rightHandSelector.lastItemSelectedFor2Second.isSelected = false;
                     rightHandSelector.lastItemSelectedFor2Second = null;
                     rightHandSelector.reset();
+                   
 
 
                 }
                 if (leftHandSelector.lastItemSelectedFor2Second != null)
                 {
                     rightHandSelector.canRaycast = true;
+                           leftHandSelector.lastItemSelectedFor2Second.setSelector(null);
                     leftHandSelector.lastItemSelectedFor2Second.isSelected = false;
                     leftHandSelector.lastItemSelectedFor2Second = null;
-
+           
                     leftHandSelector.reset();
                 }
 

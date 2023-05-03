@@ -21,6 +21,7 @@ public class InteractableItem : MonoBehaviour
    bool materialSetted=false;
   public float localObjectTimer;
    public string hand="";
+   public int rayNumber=0;
    public RaycastItemSelector leftOrRightSelector;
     void Start()
     {

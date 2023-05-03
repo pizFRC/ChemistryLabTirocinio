@@ -160,11 +160,12 @@ public class RaycastItemSelector : MonoBehaviour
     {
         this.mode = selectorMode.CanSelect;
           this.lastItemSelectedFor2Second=null;
+          this.lastItemSelected.rayNumber=0;
         Debug.LogError("reset called");
     }
     private void raycast()
     {
-
+        bool draw=true;
         Ray ray = new Ray(thumbTipPosition, GetHandDirection() * range);
 
         RaycastHit hit;
@@ -174,22 +175,36 @@ public class RaycastItemSelector : MonoBehaviour
         {
 
 
-            if (hit.collider.CompareTag("Item"))
+            if (hit.collider.CompareTag("Item") )
             {
+               
                 Debug.DrawRay(thumbTipPosition, filteredHandDirection * range, Color.black, 0.2f);
                 endPosition = hit.point;
                 selectionTimer += timeToWait + Time.deltaTime;
                 isSelecting = true;
                 lastItemSelected = hit.transform.GetComponent<InteractableItem>();
                 lastItemSelected.isSelected = true;
+                 
                 if (lastItemSelected.localObjectTimer >= 2.0f)
                 {
                     Debug.LogError("sull item per più di 2 secondi");
 
                     this.mode = selectorMode.LockOnItem;
                     this.itemPosition = hit.point;
+                    lastItemSelected.rayNumber+=1;
+                    
+                }
+
+                if(lastItemSelected!=null && lastItemSelected.rayNumber<=1){
+                    Debug.LogError("puoi usarlo ok");
+                    
+                }else
+                {
+                    Debug.LogError("a quanto pare qualcosa non va");
+                     this.mode = selectorMode.CanSelect;
                     return;
                 }
+                
             }
             else if (hit.collider.CompareTag("Wall"))
             {
@@ -201,15 +216,29 @@ public class RaycastItemSelector : MonoBehaviour
                     lastItemSelected = null;
 
                 }
+                
+
+            }else{
+                draw=false;
+                 selectionTimer = 0;
+                isSelecting = false;
+                if (lastItemSelected != null)
+                {
+                    lastItemSelected.isSelected = false;
+                    lastItemSelected = null;
+
+                }
 
             }
 
-
+            if(draw){
             GetComponent<LineRenderer>().positionCount = 2;
             GetComponent<LineRenderer>().SetPosition(0, thumbTipPosition);
             GetComponent<LineRenderer>().SetPosition(1, hit.point);
-        }
+            }else
+             GetComponent<LineRenderer>().positionCount = 0;
 
+        }
     }
 
 

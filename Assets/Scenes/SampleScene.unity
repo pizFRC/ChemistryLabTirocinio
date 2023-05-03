@@ -985,7 +985,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e79f24306f9e44649bd2bd4e98a91c47, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mode: 2
+  mode: 1
   hand: 
   timeToWait: 0.02
   smoothingFactor: 0.25
