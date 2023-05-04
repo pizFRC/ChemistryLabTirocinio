@@ -11,6 +11,7 @@ TagManager:
   - RightArrow
   - LeftArrow
   - Wall
+  - EmptySpace
   layers:
   - Default
   - TransparentFX

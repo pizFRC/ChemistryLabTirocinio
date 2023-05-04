@@ -43,7 +43,7 @@ public class InteractableItem : MonoBehaviour
     if(isSelected){
           localObjectTimer+=Time.deltaTime;
           if(localObjectTimer >=2.0f){
-                 print("test >2 f " +localObjectTimer);
+                
                 localObjectTimer=2;
                
                 //HandController.instance.setHandObject(this);
@@ -54,7 +54,7 @@ public class InteractableItem : MonoBehaviour
            if(localObjectTimer <2.0f)
            { 
 
-             print("test <2f" +localObjectTimer);
+      
             instance.SetActive(true);
           
               instance.GetComponentInChildren<Slider>().value=localObjectTimer;

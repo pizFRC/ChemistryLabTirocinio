@@ -39,7 +39,7 @@ byte [] data;
                 IPEndPoint anyIP = new IPEndPoint(ipAddress,port);
                     byte []data = client.Receive(ref anyIP);
                  string dataStr = Encoding.ASCII.GetString(data);
-                    print("recv:"+dataStr);
+                   // print("recv:"+dataStr);
                  
                     string []handGesture=dataStr.Split("---");
                    

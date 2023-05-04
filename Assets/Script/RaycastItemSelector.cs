@@ -21,13 +21,16 @@ public class RaycastItemSelector : MonoBehaviour
 
     float elapsedTime = 0f;
     public string hand;
-
+    public Material standard;
+    public Material riponiOggMaterial;
+    
 
     public float timeToWait = 1.0f;
     public float smoothingFactor = 0.020f, maxDistance = 150f;
     private LineRenderer lineRenderer;
     float selectionTimer = 0f;
     InteractableItem lastItemSelected;
+    InteractableEmptySpace lastEmptySpacePointed;
     public InteractableItem lastItemSelectedFor2Second;
     public float valueToSubtractY, valueToAddX;
     public float range = 2;
@@ -85,16 +88,14 @@ public class RaycastItemSelector : MonoBehaviour
 
 
         //ogni 1/10 di secondo  sparo non ogni frame
-        if (!canRaycast)
-        {
-
-        }
+        
         if (elapsedTime > timeToWait)
         {
 
             switch (mode)
             {
                 case (selectorMode.CanSelect):
+                    GetComponent<LineRenderer>().material=standard;
                     raycast();
                     return;
                 case (selectorMode.CannotSelect):
@@ -106,6 +107,7 @@ public class RaycastItemSelector : MonoBehaviour
                 case (selectorMode.LockOnItem):
                  //   Debug.Log("lock on item");
                     //lastItemSelectedFor2Second.setSelector(this);
+                    GetComponent<LineRenderer>().material=riponiOggMaterial;
                     this.lastItemSelectedFor2Second=lastItemSelected;
                     thumbTipPosition = this.transform.GetChild(4).transform.position;
                     GetComponent<LineRenderer>().SetPosition(0, thumbTipPosition);
@@ -124,31 +126,9 @@ public class RaycastItemSelector : MonoBehaviour
             }
 
 
-
-
-
-           
-
-
-
-
-
-
-
-
-
-
-
-
-
             elapsedTime = 0;
 
             previousHandDirection = filteredHandDirection;
-
-
-
-
-
 
 
         }
@@ -166,11 +146,35 @@ public class RaycastItemSelector : MonoBehaviour
         Vector3 endPosition = filteredHandDirection * maxDistance;
         if (Physics.Raycast(ray, out hit, 250f))
         {
-
+        
             if(hit.collider.gameObject.CompareTag("EmptySpace")){
-                Debug.Log("empty space qui puoi posizionare un oggetto");
+
+                lastEmptySpacePointed=hit.transform.GetComponent<InteractableEmptySpace>();
+                if(!lastEmptySpacePointed.containsObject)
+                {
+
+
+                    lastEmptySpacePointed.isPointed=true;
+
+                    if(lastEmptySpacePointed.putObject(lastItemSelectedFor2Second.gameObject)){
+                        HandController.instance.riponiOggetto(this);
+
+                        Debug.Log("Posizionato");
+                    }
+                       
+                }else{
+                    Debug.LogError("contiene gia un oggetto");
+                }
+                
+                
+
             }
-            GetComponent<LineRenderer>().material.color=Color.green;
+            else if(lastEmptySpacePointed !=null ){
+                lastEmptySpacePointed.isPointed=false;
+                lastEmptySpacePointed=null;
+
+            }
+           
             if(draw){
             GetComponent<LineRenderer>().positionCount = 2;
             GetComponent<LineRenderer>().SetPosition(0, thumbTipPosition);
@@ -179,6 +183,7 @@ public class RaycastItemSelector : MonoBehaviour
              GetComponent<LineRenderer>().positionCount = 0;
 
         }
+        
     }
     public void reset()
     {

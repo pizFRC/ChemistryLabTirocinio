@@ -177,5 +177,19 @@ public class HandController : MonoBehaviour
 
     }
 
+    public void riponiOggetto(RaycastItemSelector ris){
+        ris.lastItemSelectedFor2Second=null;
+
+        ris.mode=selectorMode.CanSelect;
+
+        if(ris.hand=="Right"){
+             selectedRightHandItemUI.sprite=null;
+        }
+
+        if(ris.hand=="Left"){
+            selectedLeftHandItemUI.sprite=null;
+        }
+    }
+
 
 }
