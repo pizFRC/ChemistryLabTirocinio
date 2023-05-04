@@ -113,6 +113,7 @@ public class RaycastItemSelector : MonoBehaviour
                     HandController.instance.setHandObject(lastItemSelected,hand);
                     return;
                  case (selectorMode.MoveItem):
+                    raycastMoveObject();
                  break;
                 
 
@@ -155,6 +156,29 @@ public class RaycastItemSelector : MonoBehaviour
 
 
 
+    }
+    public void raycastMoveObject(){
+         bool draw=true;
+        Ray ray = new Ray(thumbTipPosition, GetHandDirection() * range);
+
+        RaycastHit hit;
+
+        Vector3 endPosition = filteredHandDirection * maxDistance;
+        if (Physics.Raycast(ray, out hit, 250f))
+        {
+
+            if(hit.collider.gameObject.CompareTag("EmptySpace")){
+                Debug.Log("empty space qui puoi posizionare un oggetto");
+            }
+            GetComponent<LineRenderer>().material.color=Color.green;
+            if(draw){
+            GetComponent<LineRenderer>().positionCount = 2;
+            GetComponent<LineRenderer>().SetPosition(0, thumbTipPosition);
+            GetComponent<LineRenderer>().SetPosition(1, hit.point);
+            }else
+             GetComponent<LineRenderer>().positionCount = 0;
+
+        }
     }
     public void reset()
     {

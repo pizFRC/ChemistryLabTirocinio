@@ -9,6 +9,7 @@ public class PythonScriptLauncher : MonoBehaviour
     // Start is called before the first frame update
     Process p;
     public bool debug = false;
+    public bool pcUfficio=false;
     void Start()
     {
 
@@ -16,9 +17,11 @@ public class PythonScriptLauncher : MonoBehaviour
         // string m_Path= ("C:\\Users\\fdefa\\Desktop\\tirocinio_versato\\tirocinio_testing_versionato\\Assets");
 
         // UnityEngine.Debug.Log(m_Path);
-        string path1 = "C:\\Users\\francesco.defazio\\AppData\\Local\\Programs\\Python\\Python39\\python.exe";
-        string path2 = "C:\\Users\\fdefa\\Desktop\\ChemLabTirocinio\\venv\\Scripts\\python.exe";
-        string path_exe_21="C:\\Users\\fdefa\\Desktop\\ChemLabTirocinio\\dist\\main\\main.exe";
+        string pathUfficio = "C:\\Users\\francesco.defazio\\AppData\\Local\\Programs\\Python\\Python39\\python.exe";
+        string pathCasa= "C:\\Users\\fdefa\\Desktop\\ChemLabTirocinio\\venv\\Scripts\\python.exe";
+
+        string chosenPath  = pcUfficio ? pathUfficio : pathCasa ;
+       
         //  p=Process.Start("C:\\Users\\fdefa\\Desktop\\ChemLabTirocinio\venv\\Scripts\\python.exe,");
         //p=Process.Start("dir",Application.dataPath);
         string assetsPath = Application.streamingAssetsPath;
@@ -40,7 +43,7 @@ public class PythonScriptLauncher : MonoBehaviour
             }
         }
         else
-            p = Process.Start(path2, m_Path);
+            p = Process.Start(chosenPath, m_Path);
 
     }
 

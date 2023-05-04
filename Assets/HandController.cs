@@ -11,16 +11,15 @@ public class HandController : MonoBehaviour
     public RaycastItemSelector rightHandSelector; // Riferimento al RaycastSelector per la mano destra
 
     // Oggetto tenuto dalla mano sinistra
-    public InteractableItem selectedLeftHandObject;
+    public InteractableItem selectedLeftHandObject; 
     public InteractableItem selectedRightHandObject;
     public string hand = "";
-    private GameObject[] slots; // Array di slot vuoti
-    public bool simulaGestureAfferraDestra = false;
+    
+    public bool simulaGestureAfferraDestra = false ; 
     public bool simulaGestureRilasciaDestra = false;
     public bool simulaGestureAfferraSinistra = false;
     public bool simulaGestureRilasciaSinistra = false;
-    private string lastGestureChecked = "";
-    public Sprite imgTest;
+   
     public Image selectedLeftHandItemUI;
     public Image selectedRightHandItemUI;
 
@@ -48,21 +47,21 @@ public class HandController : MonoBehaviour
         simulaGestureAfferraSinistra = true;
     }
 
-        public void simula_gestureSX_rilascia()
+    public void simula_gestureSX_rilascia()
     {
         simulaGestureRilasciaSinistra = true;
-        simulaGestureAfferraSinistra = false ;
+        simulaGestureAfferraSinistra = false;
     }
 
 
-    public void setHandObject(InteractableItem itemSelectedFor2Seconds,string h)
+    public void setHandObject(InteractableItem itemSelectedFor2Seconds, string h)
     {
-            if(h=="Left")
+        if (h == "Left")
             selectedLeftHandObject = itemSelectedFor2Seconds;
-            if(h=="Right")
+        if (h == "Right")
             selectedRightHandObject = itemSelectedFor2Seconds;
-            
-        
+
+
 
     }
     void Update()
@@ -71,8 +70,8 @@ public class HandController : MonoBehaviour
 
 
 
-     
-        if (selectedRightHandObject != null )
+
+        if (selectedRightHandObject != null)
         {
 
             if (simulaGestureRilasciaDestra && !simulaGestureAfferraDestra)
@@ -83,7 +82,7 @@ public class HandController : MonoBehaviour
                     rightHandSelector.lastItemSelectedFor2Second.setSelector(null);
                     rightHandSelector.lastItemSelectedFor2Second.isSelected = false;
                     rightHandSelector.lastItemSelectedFor2Second = null;
-                    Debug.LogError("reset -> Right"+simulaGestureRilasciaDestra +simulaGestureAfferraDestra);
+                    Debug.LogError("reset -> Right" + simulaGestureRilasciaDestra + simulaGestureAfferraDestra);
                     rightHandSelector.reset();
 
 
@@ -97,28 +96,30 @@ public class HandController : MonoBehaviour
                 selectedRightHandObject = null;
 
 
-                simulaGestureRilasciaDestra=false;
-                simulaGestureAfferraDestra=false;
+                simulaGestureRilasciaDestra = false;
+                simulaGestureAfferraDestra = false;
 
             }
             else if (!simulaGestureRilasciaDestra && simulaGestureAfferraDestra)
             {
-                selectedRightHandObject=rightHandSelector.lastItemSelectedFor2Second;
+                selectedRightHandObject = rightHandSelector.lastItemSelectedFor2Second;
                 selectedRightHandItemUI.sprite = selectedRightHandObject.item.sprite;
-                simulaGestureRilasciaDestra=false;
-                simulaGestureAfferraDestra=false;
+                simulaGestureRilasciaDestra = false;
+                simulaGestureAfferraDestra = false;
                 selectedRightHandObject.isSelected = true;
                 selectedRightHandObject.gameObject.SetActive(false);
+
+                rightHandSelector.mode=selectorMode.MoveItem;
             }
         }
 
 
         //mano SX
-        if (selectedLeftHandObject != null )
+        if (selectedLeftHandObject != null)
         {
-           
 
-             if (simulaGestureRilasciaSinistra && !simulaGestureAfferraSinistra)
+
+            if (simulaGestureRilasciaSinistra && !simulaGestureAfferraSinistra)
             {
                 if (leftHandSelector.lastItemSelectedFor2Second != null)
                 {
@@ -141,37 +142,40 @@ public class HandController : MonoBehaviour
             }
             else if (!simulaGestureRilasciaSinistra && simulaGestureAfferraSinistra)
             {
-                selectedLeftHandObject=leftHandSelector.lastItemSelectedFor2Second;
+                selectedLeftHandObject = leftHandSelector.lastItemSelectedFor2Second;
                 selectedLeftHandItemUI.sprite = selectedLeftHandObject.item.sprite;
                 selectedLeftHandObject.gameObject.SetActive(false);
-                 simulaGestureRilasciaSinistra=false;
-                simulaGestureAfferraSinistra=false;      
-                          selectedLeftHandObject.isSelected = true;
+                simulaGestureRilasciaSinistra = false;
+                simulaGestureAfferraSinistra = false;
+                selectedLeftHandObject.isSelected = true;
+                leftHandSelector.mode=selectorMode.MoveItem;
             }
 
 
 
-            simulaGestureRilasciaSinistra=false;
-                simulaGestureAfferraSinistra=false;
+            simulaGestureRilasciaSinistra = false;
+            simulaGestureAfferraSinistra = false;
         }
 
 
-        
+
 
 
     }
 
-public void lockGesture(string hand){
-    if(hand=="Right"){
-        simulaGestureRilasciaDestra=false;
-        simulaGestureAfferraDestra=false;
-        return;
-    
-    }
-     simulaGestureRilasciaSinistra=false;
-        simulaGestureAfferraSinistra=false;
+    public void lockGesture(string hand)
+    {
+        if (hand == "Right")
+        {
+            simulaGestureRilasciaDestra = false;
+            simulaGestureAfferraDestra = false;
+            return;
 
-}
+        }
+        simulaGestureRilasciaSinistra = false;
+        simulaGestureAfferraSinistra = false;
+
+    }
 
 
 }
