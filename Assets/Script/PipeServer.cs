@@ -201,15 +201,7 @@ public class PipeServer : MonoBehaviour
             }
         }
     }
-    void OnDrawGizmosSelected()
-    {
-        // Draw a semitransparent red cube at the transforms position
-        Gizmos.color = new Color(1, 0, 0, 0.5f);
-
-        Gizmos.DrawCube(lParent.localPosition, new Vector3(1, 1, 1));
-        Gizmos.color = new Color(1, 1, 0, 0.5f);
-        Gizmos.DrawCube(rParent.localPosition, new Vector3(1, 1, 1));
-    }
+    
 
     private void Update()
     {

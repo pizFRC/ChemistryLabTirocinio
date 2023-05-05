@@ -9,9 +9,9 @@ import time
 from threading import RLock,Condition
 import os
 
-DEBUG = True # significantly reduces performance
+DEBUG =  False # significantly reduces performance
 MODEL_COMPLEXITY = 0 # set to 1 to improve accuracy at the cost of performance
-CAMERA_INDEX=1
+CAMERA_INDEX=0
 
 
 def setCamera(index):
@@ -76,6 +76,7 @@ class CaptureThread(threading.Thread):
     haveFinished=False
     def run(self):
         #self.set_best_camera()
+        
         self.cap = cv2.VideoCapture(CAMERA_INDEX)
         if cv2.useOptimized():
             print("Optimized")

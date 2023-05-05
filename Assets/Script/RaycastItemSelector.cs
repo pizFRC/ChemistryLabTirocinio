@@ -105,8 +105,7 @@ public class RaycastItemSelector : MonoBehaviour
                     return;
 
                 case (selectorMode.LockOnItem):
-                 //   Debug.Log("lock on item");
-                    //lastItemSelectedFor2Second.setSelector(this);
+                
                     GetComponent<LineRenderer>().material=riponiOggMaterial;
                     this.lastItemSelectedFor2Second=lastItemSelected;
                     thumbTipPosition = this.transform.GetChild(4).transform.position;
@@ -156,8 +155,10 @@ public class RaycastItemSelector : MonoBehaviour
 
                     lastEmptySpacePointed.isPointed=true;
 
-                    if(lastEmptySpacePointed.putObject(lastItemSelectedFor2Second.gameObject)){
-                        HandController.instance.riponiOggetto(this);
+                    if(lastEmptySpacePointed.putObject(this,lastItemSelectedFor2Second.gameObject)){
+                        HandController.instance.riponiOggetto(hand);
+                        this.lastItemSelected=null;
+                        mode=selectorMode.CanSelect;
 
                         Debug.Log("Posizionato");
                     }
@@ -212,7 +213,7 @@ public class RaycastItemSelector : MonoBehaviour
                 selectionTimer += timeToWait + Time.deltaTime;
                 isSelecting = true;
                 lastItemSelected = hit.transform.GetComponent<InteractableItem>();
-                Debug.Log("seleziona da n :"+lastItemSelected.rayNumber);
+                
                 if(lastItemSelected.rayNumber>=1){
                       this.mode = selectorMode.CanSelect;
                      lastItemSelected=null;
@@ -248,6 +249,10 @@ public class RaycastItemSelector : MonoBehaviour
                 }
                 
 
+            } else if (hit.collider.CompareTag("EmptySpace") ){
+                    if(hit.collider.GetComponent<InteractableEmptySpace>().containsObject){
+                        Debug.Log("intersagisci");
+                    }
             }else{
                 draw=false;
                  selectionTimer = 0;

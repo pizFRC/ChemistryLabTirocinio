@@ -7,6 +7,7 @@ public class RotateCamera : MonoBehaviour
 
     public GameObject handsObject, leftArraow, rightArrow,rawImage;
     bool alreadyRotateSecondoAgo = false;
+    public bool rotateManual=false;
     // Start is called before the first frame update
     void Start()
     {
@@ -16,7 +17,10 @@ public class RotateCamera : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
+                if(rotateManual){
+                    rotate(-90f);
+                    rotateManual=false;
+                }
     }
     public void rotate(float rotationAngle)
     {

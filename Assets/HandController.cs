@@ -74,7 +74,7 @@ public class HandController : MonoBehaviour
         if (selectedRightHandObject != null)
         {
 
-            if (simulaGestureRilasciaDestra && !simulaGestureAfferraDestra)
+            if (simulaGestureRilasciaDestra && !simulaGestureAfferraDestra )
             {
                 if (rightHandSelector.lastItemSelectedFor2Second != null)
                 {
@@ -87,7 +87,7 @@ public class HandController : MonoBehaviour
 
 
 
-                }
+              
                 if (!selectedRightHandObject.gameObject.activeInHierarchy)
                     selectedRightHandObject.gameObject.SetActive(true);
 
@@ -98,9 +98,9 @@ public class HandController : MonoBehaviour
 
                 simulaGestureRilasciaDestra = false;
                 simulaGestureAfferraDestra = false;
-
+             }
             }
-            else if (!simulaGestureRilasciaDestra && simulaGestureAfferraDestra)
+            else if (!simulaGestureRilasciaDestra && (simulaGestureAfferraDestra && selectedRightHandObject !=null))
             {
                 selectedRightHandObject = rightHandSelector.lastItemSelectedFor2Second;
                 selectedRightHandItemUI.sprite = selectedRightHandObject.item.sprite;
@@ -177,16 +177,13 @@ public class HandController : MonoBehaviour
 
     }
 
-    public void riponiOggetto(RaycastItemSelector ris){
-        ris.lastItemSelectedFor2Second=null;
-
-        ris.mode=selectorMode.CanSelect;
-
-        if(ris.hand=="Right"){
+    public void riponiOggetto(string ris){
+     
+        if(ris=="Right"){
              selectedRightHandItemUI.sprite=null;
         }
 
-        if(ris.hand=="Left"){
+        if(ris=="Left"){
             selectedLeftHandItemUI.sprite=null;
         }
     }

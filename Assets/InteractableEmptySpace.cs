@@ -12,6 +12,7 @@ public class InteractableEmptySpace : MonoBehaviour
     public bool isPointed=false;
      GameObject canvasLocal;
     public GameObject prefabCanvas;
+    public Transform centerDown;
     float timer;
     void Start()
     {
@@ -47,20 +48,22 @@ public class InteractableEmptySpace : MonoBehaviour
     }
 
 
-    public bool putObject(GameObject obj){
+    public bool putObject(RaycastItemSelector ris,GameObject obj){
         if(this.timer<2.0f)
             return false;
         if(containsObject)
             return false;
+       
         
+       
         objectContained=obj;
         containsObject=true;
         Debug.Log("put go"+obj);
         Transform pos= this.GetComponentInParent<Transform>();
         objectContained =Instantiate(obj,pos.position,pos.rotation);
-    
+        ris.lastItemSelectedFor2Second=null;
         objectContained.transform.rotation=obj.transform.rotation;
-        objectContained.transform.position = new Vector3(pos.position.x, pos.position.y , pos.position.z );
+        objectContained.transform.position = centerDown.position;
         objectContained.transform.SetParent(this.gameObject.transform);
 
         if(!objectContained.activeInHierarchy){
@@ -74,6 +77,8 @@ public class InteractableEmptySpace : MonoBehaviour
         Color newTransparentColor= this.GetComponent<Renderer>().material.color;
         newTransparentColor.a=0.1f;
         this.GetComponent<Renderer>().material.color=newTransparentColor;
+        
+        
         return containsObject;
     }
 }
