@@ -73,7 +73,7 @@ public class RaycastItemSelector : MonoBehaviour
         Vector3 middleFingerTipPosition = this.transform.GetChild(12).transform.position;
         Vector3 middleFingerDirection = (middleFingerTipPosition - wristPosition).normalized;
         //SMOTHING FILTER
-        filteredHandDirection = Vector3.Lerp(previousHandDirection, thumbDirection, smoothingFactor);
+        filteredHandDirection = Vector3.Lerp(previousHandDirection, thumbDirection+indexDirection+middleFingerDirection, smoothingFactor);
 
 
         //print("raycast");
