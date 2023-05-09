@@ -13,7 +13,12 @@ public class InteractableEmptySpace : MonoBehaviour
      GameObject canvasLocal;
     public GameObject prefabCanvas;
     public Transform centerDown;
-    float timer;
+    public float timer;
+    public float timerContained;
+    public int rayNumber=0;
+    public RaycastItemSelector ris;
+
+    bool stop;
     void Start()
     {
         canvasLocal=Instantiate(prefabCanvas);
@@ -25,6 +30,8 @@ public class InteractableEmptySpace : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if(stop)
+            return;
         if(isPointed && !containsObject){
             if(!canvasLocal.activeInHierarchy){
                 canvasLocal.SetActive(true);
@@ -32,17 +39,35 @@ public class InteractableEmptySpace : MonoBehaviour
             timer+=Time.deltaTime;
 
             if(timer>2.0f){
-                Debug.Log("ora puoi inserire qui");
+                
                 timer=2.0f;
             }
             canvasLocal.GetComponentInChildren<Slider>().value=timer;
 
-        }else{
+        }else  if(isPointed && containsObject ){
+          
+           
+            
+            timerContained+=Time.deltaTime;
+
+            if(timerContained>2.0f){
+               
+                timerContained=2.0f;
+                stop=true;
+               
+            }
+          
+            
+            }else{
+                
+                
             if(canvasLocal.activeInHierarchy){
                  canvasLocal.GetComponentInChildren<Slider>().value=0;
                 canvasLocal.SetActive(false);
             }
                 timer=0;
+                
+
 
         }
     }

@@ -14,7 +14,8 @@ public class InteractableItem : MonoBehaviour
    
     
     public bool isSelected = false;
-    public GameObject localCanvas;
+    public GameObject sliderSX;
+    public GameObject sliderDX;
     GameObject instance;
     bool canvasNotActive = true;
 
@@ -28,20 +29,34 @@ public class InteractableItem : MonoBehaviour
         var renderers = this.gameObject.GetComponents<Renderer>();
        
         Transform objTransform = this.transform;
-       
-        instance = Instantiate(localCanvas);
+        
+       /*  instance =Instantiate(localCanvas);
         instance.SetActive(false);
         instance.transform.SetParent(this.gameObject.transform);
-        instance.transform.position = new Vector3(objTransform.position.x, objTransform.position.y + 1f, objTransform.position.z - 0.3f);
+        instance.transform.position = new Vector3(objTransform.position.x, objTransform.position.y + 1f, objTransform.position.z - 0.3f);*/
     }
 
+
+void setCorrectSlider(string hand){
+    if(hand=="Right"){
+        instance=sliderDX;
+        return;
+    }
+    instance=sliderSX;
+}
     // Update is called once per frame
     void Update()
     {
        
         
     if(isSelected){
+      
+       string tag="loading_slider_"+leftOrRightSelector.hand;
+        Debug.Log(tag);
+       setCorrectSlider(leftOrRightSelector.hand);
+         Debug.Log(instance);
           localObjectTimer+=Time.deltaTime;
+          
           if(localObjectTimer >=2.0f){
                 
                 localObjectTimer=2;
@@ -54,7 +69,7 @@ public class InteractableItem : MonoBehaviour
            if(localObjectTimer <2.0f)
            { 
 
-      
+               
             instance.SetActive(true);
           
               instance.GetComponentInChildren<Slider>().value=localObjectTimer;
@@ -63,8 +78,12 @@ public class InteractableItem : MonoBehaviour
     }else{
            
             localObjectTimer=0;
+            if(instance==null)
+                return;
              instance.GetComponentInChildren<Slider>().value=0;
              instance.SetActive(false);
+             leftOrRightSelector=null;
+             instance=null;
              
            }
 
@@ -89,12 +108,7 @@ public class InteractableItem : MonoBehaviour
        
     }
 
-        private void OnTriggerStay(Collider other)
-    {
 
-
-        Debug.LogError("stay on ");
-    }
 
 
     public void changeMaterial(bool selected_material)

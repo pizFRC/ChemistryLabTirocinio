@@ -12,6 +12,8 @@ TagManager:
   - LeftArrow
   - Wall
   - EmptySpace
+  - loading_slider_Right
+  - loading_slider_Left
   layers:
   - Default
   - TransparentFX

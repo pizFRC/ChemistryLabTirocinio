@@ -32,15 +32,27 @@ byte [] data;
        IPAddress ipAddress = IPAddress.Parse("127.0.0.1");
         client = new UdpClient(new IPEndPoint(ipAddress, port));
         print("gesture recv started\n");
+        IPEndPoint anyIP = new IPEndPoint(ipAddress,port);
+        string dataStr="";
         while (startRecv)
         {
+            
             try
             {
-                IPEndPoint anyIP = new IPEndPoint(ipAddress,port);
-                    byte []data = client.Receive(ref anyIP);
-                 string dataStr = Encoding.ASCII.GetString(data);
-                   // print("recv:"+dataStr);
+                 data = client.Receive(ref anyIP);
+                 dataStr = Encoding.ASCII.GetString(data);
                  
+                 }
+                  catch (Exception err)
+            {
+
+               
+                print(err.ToString() +  err.GetType().ToString());
+            }
+                 
+                   // print("recv:"+dataStr);
+                 if(dataStr.Length<=0)
+                    continue;
                     string []handGesture=dataStr.Split("---");
                    
 
@@ -55,7 +67,7 @@ byte [] data;
                                 HandController.instance.simula_gestureDX_afferra();
                                Debug.Log("afferra");
                             }else if(s.Contains("Victory")){
-                                Debug.Log("victory");
+                                Debug.Log("victory DX ");
                                 HandController.instance.simula_gestureDX_rilascia();
                             }else if(s.Contains("Open_Palm")){
                                 //Debug.Log("mano aperta non mi interessa");
@@ -83,11 +95,8 @@ byte [] data;
                 //qui uso la nuove classe
                 
               
-            }
-            catch (Exception err)
-            {
-                print(err.ToString());
-            }
+            dataStr="";
+            
         }
     }
     // Update is called once per frame
