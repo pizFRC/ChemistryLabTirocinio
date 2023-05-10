@@ -111,7 +111,7 @@ public class HandController : MonoBehaviour
                 simulaGestureAfferraDestra = false;
              }
             }
-            else if (!simulaGestureRilasciaDestra && simulaGestureAfferraDestra && selectedRightHandObject!=null)
+            else if (!simulaGestureRilasciaDestra && simulaGestureAfferraDestra )
             {
                  Debug.Log("DX ITEM afferrato");
                 selectedRightHandObject = rightHandSelector.lastItemSelectedFor2Second;
@@ -120,7 +120,7 @@ public class HandController : MonoBehaviour
                 simulaGestureAfferraDestra = false;
                 selectedRightHandObject.isSelected = true;
                 selectedRightHandObject.gameObject.SetActive(false);
-
+                
                 rightHandSelector.mode=selectorMode.MoveItem;
             }
         }
@@ -139,7 +139,7 @@ public class HandController : MonoBehaviour
 
 
         //mano SX
-        if (selectedLeftHandObject != null)
+        if (selectedLeftHandObject != null && selectedLeftSpaceObject==null)
         { 
             Debug.Log("SX ITEM SELEZIONATO");
 
@@ -156,16 +156,16 @@ public class HandController : MonoBehaviour
 
 
 
-                }
+                
                 if (!selectedLeftHandObject.gameObject.activeInHierarchy)
                     selectedLeftHandObject.gameObject.SetActive(true);
 
                 selectedLeftHandItemUI.sprite = null;
                 selectedLeftHandObject.isSelected = false;
                 selectedLeftHandObject = null;
-
+                }
             }
-            else if (!simulaGestureRilasciaSinistra && simulaGestureAfferraSinistra  && selectedLeftHandObject!= null)
+            else if (!simulaGestureRilasciaSinistra && simulaGestureAfferraSinistra  )
             {
                 selectedLeftHandObject = leftHandSelector.lastItemSelectedFor2Second;
                 selectedLeftHandItemUI.sprite = selectedLeftHandObject.item.sprite;

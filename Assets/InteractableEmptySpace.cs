@@ -134,11 +134,27 @@ private bool changeImageSlider(gestureIndex value){
         Transform pos= this.GetComponentInParent<Transform>();
         objectContained =Instantiate(obj,pos.position,pos.rotation);
         this.ris.lastItemSelectedFor2Second=null;
+        
         objectContained.transform.rotation=obj.transform.rotation;
         objectContained.transform.localScale-=new Vector3(0.2f,0.2f,0.2f);
         objectContained.transform.position = centerDown.position;
         objectContained.transform.SetParent(this.gameObject.transform);
 
+
+/*if(ris.hand=="Right"){
+    HandController.instance.selectedRightHandObject=null;
+
+ HandController.instance.selectedRightHandItemUI=null;
+}*/
+    
+if(ris.hand=="Left"){
+    HandController.instance.selectedLeftHandObject=null;
+        HandController.instance.selectedLeftHandItemUI=null;
+        
+        
+        
+        }
+        
         if(!objectContained.activeInHierarchy){
             objectContained.SetActive(true);
         }
