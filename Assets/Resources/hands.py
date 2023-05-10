@@ -11,7 +11,7 @@ import os
 
 DEBUG =  False # significantly reduces performance
 MODEL_COMPLEXITY = 0 # set to 1 to improve accuracy at the cost of performance
-CAMERA_INDEX=0
+CAMERA_INDEX=1
 
 
 def setCamera(index):

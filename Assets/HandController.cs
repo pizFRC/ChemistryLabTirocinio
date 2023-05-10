@@ -36,7 +36,7 @@ public class HandController : MonoBehaviour
         simulaGestureRilasciaDestra = true;
         simulaGestureAfferraDestra = false;
 
-        selectedRightHandObject.setSelector(null);
+       // selectedRightHandObject.setSelector(null);
 
     }
     public void simula_gestureDX_afferra()
@@ -165,7 +165,7 @@ public class HandController : MonoBehaviour
                 selectedLeftHandObject = null;
 
             }
-            else if (!simulaGestureRilasciaSinistra && simulaGestureAfferraSinistra  && selectedRightHandObject!= null)
+            else if (!simulaGestureRilasciaSinistra && simulaGestureAfferraSinistra  && selectedLeftHandObject!= null)
             {
                 selectedLeftHandObject = leftHandSelector.lastItemSelectedFor2Second;
                 selectedLeftHandItemUI.sprite = selectedLeftHandObject.item.sprite;

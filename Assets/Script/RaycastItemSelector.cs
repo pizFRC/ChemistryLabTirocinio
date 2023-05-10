@@ -163,7 +163,7 @@ public class RaycastItemSelector : MonoBehaviour
             {
 
                 lastEmptySpacePointed = hit.transform.GetComponent<InteractableEmptySpace>();
-
+                lastEmptySpacePointed.ris=this;
                 if (!lastEmptySpacePointed.containsObject)
                 {
 
@@ -246,7 +246,7 @@ public class RaycastItemSelector : MonoBehaviour
                 isSelecting = true;
                 lastItemSelected = hit.transform.GetComponent<InteractableItem>();
 
-                if (lastItemSelected.rayNumber >= 1)
+                if (lastItemSelected.rayNumber > 1)
                 {
                     this.mode = selectorMode.CanSelect;
                     lastItemSelected = null;
@@ -263,6 +263,7 @@ public class RaycastItemSelector : MonoBehaviour
                     this.mode = selectorMode.LockOnItem;
                     this.itemPosition = hit.point;
                     lastItemSelected.rayNumber += 1;
+                 
                     HandController.instance.lockGesture(this.hand);
 
 

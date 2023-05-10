@@ -51,7 +51,7 @@ byte [] data;
             }
                  
                    // print("recv:"+dataStr);
-                 if(dataStr.Length<=0)
+                 if(dataStr.Length<5)
                     continue;
                     string []handGesture=dataStr.Split("---");
                    

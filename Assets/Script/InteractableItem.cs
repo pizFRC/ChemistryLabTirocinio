@@ -11,101 +11,132 @@ public class InteractableItem : MonoBehaviour
 
     public Item item;
 
-   
-    
+
+
     public bool isSelected = false;
     public GameObject sliderSX;
     public GameObject sliderDX;
     GameObject instance;
     bool canvasNotActive = true;
-
-   bool materialSetted=false;
-  public float localObjectTimer;
-   public string hand="";
-   public int rayNumber=0;
-   public RaycastItemSelector leftOrRightSelector;
+    private SliderController scInstance;
+    bool materialSetted = false;
+    public float localObjectTimer;
+    public string hand = "";
+    public int rayNumber = 0;
+    public RaycastItemSelector leftOrRightSelector;
+    void Awake() {
+            scInstance = SliderController.instance;
+    }
     void Start()
     {
         var renderers = this.gameObject.GetComponents<Renderer>();
-       
+
         Transform objTransform = this.transform;
-        
-       /*  instance =Instantiate(localCanvas);
-        instance.SetActive(false);
-        instance.transform.SetParent(this.gameObject.transform);
-        instance.transform.position = new Vector3(objTransform.position.x, objTransform.position.y + 1f, objTransform.position.z - 0.3f);*/
+      
+        /*  instance =Instantiate(localCanvas);
+         instance.SetActive(false);
+         instance.transform.SetParent(this.gameObject.transform);
+         instance.transform.position = new Vector3(objTransform.position.x, objTransform.position.y + 1f, objTransform.position.z - 0.3f);*/
     }
 
+    private bool updateSlider(float value){
+        if(leftOrRightSelector == null )
+            return false;
 
-void setCorrectSlider(string hand){
-    if(hand=="Right"){
-        instance=sliderDX;
-        return;
+        string gameEvent="";
+        if(leftOrRightSelector.hand=="Left")
+            gameEvent=GameEvents.LEFT_SLIDER_CHANGE;
+        if(leftOrRightSelector.hand=="Right")
+            gameEvent=GameEvents.RIGHT_SLIDER_CHANGE;
+        Messenger<float>.Broadcast(gameEvent,value);
+        return true;
     }
-    instance=sliderSX;
-}
+
+      private bool activeSlider(bool value){
+        if(leftOrRightSelector == null )
+            return false;
+
+        string gameEvent="";
+        if(leftOrRightSelector.hand=="Left")
+            gameEvent=GameEvents.LEFT_SLIDER_ACTIVE;
+        if(leftOrRightSelector.hand=="Right")
+            gameEvent=GameEvents.RIGHT_SLIDER_ACTIVE;
+        Messenger<bool>.Broadcast(gameEvent,value);
+        return true;
+    }
+
     // Update is called once per frame
     void Update()
     {
-       
-        
-    if(isSelected){
-      
-       string tag="loading_slider_"+leftOrRightSelector.hand;
-        Debug.Log(tag);
-       setCorrectSlider(leftOrRightSelector.hand);
-         Debug.Log(instance);
-          localObjectTimer+=Time.deltaTime;
-          
-          if(localObjectTimer >=2.0f){
-                
-                localObjectTimer=2;
-               
+
+
+        if (isSelected)
+        {
+
+
+
+
+
+            localObjectTimer += Time.deltaTime;
+
+            if (localObjectTimer >= 2.0f)
+            {
+
+                localObjectTimer = 2;
+
                 //HandController.instance.setHandObject(this);
-                 instance.GetComponentInChildren<Slider>().value=localObjectTimer;
-                
-                 return;
-           } 
-           if(localObjectTimer <2.0f)
-           { 
+                updateSlider(localObjectTimer); 
+                activeSlider(false);
+                // scInstance.getSlider(leftOrRightSelector.hand).GetComponentInChildren<Image>().sprite=item.sprite;
 
-               
-            instance.SetActive(true);
-          
-              instance.GetComponentInChildren<Slider>().value=localObjectTimer;
-
-           }
-    }else{
-           
-            localObjectTimer=0;
-            if(instance==null)
                 return;
-             instance.GetComponentInChildren<Slider>().value=0;
-             instance.SetActive(false);
-             leftOrRightSelector=null;
-             instance=null;
-             
-           }
+            }
+            if (localObjectTimer < 2.0f)
+            {
 
-        
 
-          
+                // instance.SetActive(true);
+                
+                activeSlider(true);
+                updateSlider(localObjectTimer); 
+
+            }
+        }
+        else
+        {
+
+            localObjectTimer = 0;
+            
+           if(leftOrRightSelector==null)
+                return;
+             updateSlider(localObjectTimer); 
+            activeSlider(false);
+            
+            leftOrRightSelector = null;
+            
+
+        }
+
+
+
+
     }
 
 
-    public void setSelector(RaycastItemSelector leftOrRight){
-        this.leftOrRightSelector=leftOrRight;
+    public void setSelector(RaycastItemSelector leftOrRight)
+    {
+        this.leftOrRightSelector = leftOrRight;
     }
-    
+
     public void showCanvas()
     {
         instance.SetActive(true);
-     
+
     }
     public void hideCanvas()
     {
         instance.SetActive(false);
-       
+
     }
 
 
