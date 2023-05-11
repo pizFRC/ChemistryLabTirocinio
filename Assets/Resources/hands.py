@@ -1,5 +1,6 @@
 # MediaPipe Hands
 import mediapipe as mp
+import mediapipe.modules.selfie_segmentation as mp2
 import cv2
 import numpy as np
 import threading
@@ -9,7 +10,8 @@ import time
 from threading import RLock,Condition
 import os
 
-DEBUG =  False # significantly reduces performance
+
+DEBUG =  True # significantly reduces performance
 MODEL_COMPLEXITY = 0 # set to 1 to improve accuracy at the cost of performance
 CAMERA_INDEX=1
 
@@ -184,20 +186,37 @@ class HandThread(threading.Thread):
                
                 # Detections
                 results = hands.process(image)
-
+                
+                
+                segmenter = mp.solutions.selfie_segmentation.SelfieSegmentation()
+                # Estrai la maschera binaria dell'hand
+                results2 = segmenter.process(image)
                 image_h, image_w, _ = frame.shape
+                mask2 = results2.segmentation_mask
+                mask2 = (results2.segmentation_mask > 0).astype(np.uint8) *255
                 x1, y1 = int(image_w/4)  , int(image_h/2)
                 x2, y2 = int(image_w*(3/4)) ,int(image_h/2)
 
               
                 
+                image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
+                #gray_image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
                
-                    
-                
+                gray_image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+                ret, threshold_image = cv2.threshold(gray_image, 180, 255, cv2.THRESH_BINARY_INV)
+                masked_image3 = cv2.bitwise_and(image, image, mask=threshold_image)
+          
+
+                background = np.zeros_like(image)
+               
+                result3 = cv2.add(masked_image3, background)
+
+              
+              
                 if results.multi_hand_landmarks:
                     
                     for num, hand in enumerate(results.multi_hand_landmarks):
-                        mp_drawing.draw_landmarks(image, hand, self.mp_hands.HAND_CONNECTIONS, 
+                        mp_drawing.draw_landmarks(result3, hand, self.mp_hands.HAND_CONNECTIONS, 
                                                 mp_drawing.DrawingSpec(color=(121, 22, 76), thickness=2, circle_radius=4),
                                                 mp_drawing.DrawingSpec(color=(250, 44, 250), thickness=2, circle_radius=2),
                                                 )
@@ -257,29 +276,23 @@ class HandThread(threading.Thread):
                            # print(f"{results.multi_handedness[j].classification[0].label}  più in basso rispetto{y_coord}  { image_h / 2}");
                        # print(f"{results.multi_handedness[j].classification[0].label}: {euclidean_distance_to_camera}")       
                 
-  
-              
-                image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
-                
-                
-                encode_param = [int(cv2.IMWRITE_JPEG_QUALITY), 50]
-                compressed_img, _ = cv2.imencode('.jpg', image, encode_param)
-                
-                #  resized_frame = cv2.resize(frame, (new_width, new_height))
-                
-                
-                
-                self.imageSender.img=_.tobytes()
-                        
-                        
-                       # self.imageSender.setImg()
+           
+                # mostra l'immagine sovrapposta alla maschera
             
-                        #print(results.multi_hand_landmarks[0])
-                        #self.count_raised_fingers(results.multi_hand_landmarks)
-                   # self.get_gesture(results.multi_hand_landmarks,width)
+                encode_param = [int(cv2.IMWRITE_JPEG_QUALITY), 50]
+                compressed_img, _ = cv2.imencode('.jpg', result3, encode_param)
+          
+               
+                
+                
+              
+                self.imageSender.img=_.tobytes()
+                
+                   
                 
                 if DEBUG:
-                    cv2.imshow('Hand Tracking', image)
+                    #cv2.imshow('Segmentation Mask', image)
+                    cv2.imshow('Hand Tracking', result3)
                     
                 if cv2.waitKey(5) & 0xFF == ord('q'):
                     self.haveFinished=True
