@@ -21,18 +21,18 @@ public class SliderController : MonoBehaviour
          Messenger<bool>.AddListener(GameEvents.RIGHT_SLIDER_ACTIVE,activeSliderRight);
          Messenger<bool>.AddListener(GameEvents.LEFT_SLIDER_ACTIVE,activeSliderLeft);
 
-          Messenger<gestureIndex>.AddListener(GameEvents.RIGHT_SLIDER_IMAGE_CHANGE,setGestureRight);
+        Messenger<gestureIndex>.AddListener(GameEvents.RIGHT_SLIDER_IMAGE_CHANGE,setGestureRight);
          Messenger<gestureIndex>.AddListener(GameEvents.LEFT_SLIDER_IMAGE_CHANGE,setGestureLeft);
     }
     void OnDestroy(){
-         Messenger<float>.RemoveListener(GameEvents.LEFT_SLIDER_CHANGE,updateSliderLeft);
+        Messenger<float>.RemoveListener(GameEvents.LEFT_SLIDER_CHANGE,updateSliderLeft);
         Messenger<float>.RemoveListener(GameEvents.RIGHT_SLIDER_CHANGE,updateSliderRight);
-         Messenger<bool>.RemoveListener(GameEvents.RIGHT_SLIDER_ACTIVE,activeSliderRight);
-         Messenger<bool>.RemoveListener(GameEvents.LEFT_SLIDER_ACTIVE,activeSliderLeft);
+        Messenger<bool>.RemoveListener(GameEvents.RIGHT_SLIDER_ACTIVE,activeSliderRight);
+        Messenger<bool>.RemoveListener(GameEvents.LEFT_SLIDER_ACTIVE,activeSliderLeft);
          
          
-          Messenger<gestureIndex>.RemoveListener(GameEvents.RIGHT_SLIDER_IMAGE_CHANGE,setGestureRight);
-         Messenger<gestureIndex>.RemoveListener(GameEvents.LEFT_SLIDER_IMAGE_CHANGE,setGestureLeft);
+        Messenger<gestureIndex>.RemoveListener(GameEvents.RIGHT_SLIDER_IMAGE_CHANGE,setGestureRight);
+        Messenger<gestureIndex>.RemoveListener(GameEvents.LEFT_SLIDER_IMAGE_CHANGE,setGestureLeft);
     }
 
     public Slider SX;

@@ -117,6 +117,7 @@ public class RaycastItemSelector : MonoBehaviour
                     HandController.instance.setHandObject(lastItemSelected, hand);
                     break;
                 case (selectorMode.MoveItem):
+                    this.lastItemSelectedFor2Second = lastItemSelected;
                     raycastMoveObject();
                     break;
                 case (selectorMode.LockOnEmptySpace):
@@ -246,7 +247,7 @@ public class RaycastItemSelector : MonoBehaviour
                 isSelecting = true;
                 lastItemSelected = hit.transform.GetComponent<InteractableItem>();
 
-                if (lastItemSelected.rayNumber > 1)
+                if (lastItemSelected.rayNumber > 0)
                 {
                     this.mode = selectorMode.CanSelect;
                     lastItemSelected = null;

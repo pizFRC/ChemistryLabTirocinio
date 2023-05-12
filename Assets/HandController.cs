@@ -102,6 +102,9 @@ public class HandController : MonoBehaviour
                 if (!selectedRightHandObject.gameObject.activeInHierarchy)
                     selectedRightHandObject.gameObject.SetActive(true);
 
+
+               // Messenger<Sprite>.Broadcast(GameEvents.)
+                Messenger<Sprite>.Broadcast(GameEvents.RIGHT_ITEM_IMAGE_CHANGE,null);
                 selectedRightHandItemUI.sprite = null;
                 selectedRightHandObject.isSelected = false;
                 selectedRightHandObject = null;
@@ -113,9 +116,10 @@ public class HandController : MonoBehaviour
             }
             else if (!simulaGestureRilasciaDestra && simulaGestureAfferraDestra )
             {
-                 Debug.Log("DX ITEM afferrato");
-                selectedRightHandObject = rightHandSelector.lastItemSelectedFor2Second;
-                selectedRightHandItemUI.sprite = selectedRightHandObject.item.sprite;
+                 selectedRightHandObject = rightHandSelector.lastItemSelectedFor2Second;
+                  Messenger<Sprite>.Broadcast(GameEvents.RIGHT_ITEM_IMAGE_CHANGE, selectedRightHandObject.item.sprite);
+                //
+             //   selectedRightHandItemUI.sprite;
                 simulaGestureRilasciaDestra = false;
                 simulaGestureAfferraDestra = false;
                 selectedRightHandObject.isSelected = true;
@@ -159,8 +163,8 @@ public class HandController : MonoBehaviour
                 
                 if (!selectedLeftHandObject.gameObject.activeInHierarchy)
                     selectedLeftHandObject.gameObject.SetActive(true);
-
-                selectedLeftHandItemUI.sprite = null;
+                Messenger<Sprite>.Broadcast(GameEvents.LEFT_ITEM_IMAGE_CHANGE,null);
+                //selectedLeftHandItemUI.sprite = null;
                 selectedLeftHandObject.isSelected = false;
                 selectedLeftHandObject = null;
                 }
@@ -168,7 +172,9 @@ public class HandController : MonoBehaviour
             else if (!simulaGestureRilasciaSinistra && simulaGestureAfferraSinistra  )
             {
                 selectedLeftHandObject = leftHandSelector.lastItemSelectedFor2Second;
-                selectedLeftHandItemUI.sprite = selectedLeftHandObject.item.sprite;
+
+                Messenger<Sprite>.Broadcast(GameEvents.LEFT_ITEM_IMAGE_CHANGE,selectedLeftHandObject.item.sprite);
+                //selectedLeftHandItemUI.sprite = selectedLeftHandObject.item.sprite;
                 selectedLeftHandObject.gameObject.SetActive(false);
                 simulaGestureRilasciaSinistra = false;
                 simulaGestureAfferraSinistra = false;

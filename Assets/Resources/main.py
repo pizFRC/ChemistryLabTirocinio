@@ -15,6 +15,7 @@ def main():
     
     clientSocket = socket(AF_INET, SOCK_DGRAM)
     server_address = (serverName, serverPort)
+    server_address_dataWorld = (serverName, 6770)
     server_address_gesture = (serverName, 6794)
     thread = HandThread()
     thread.start()
@@ -28,10 +29,10 @@ def main():
         
         if thread.dirty:
             #in data ci sono i dati ottenuti dal thread hand
-            s = thread.data.encode('ascii')
-        
+            s = thread.data.encode('ascii') 
+            s2 = thread.dataWorld.encode('ascii') 
             sent = clientSocket.sendto(s, server_address)
-            
+            sent = clientSocket.sendto(s, server_address_dataWorld)
                         
 
             thread.dirty = False

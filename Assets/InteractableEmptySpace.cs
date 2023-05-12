@@ -10,8 +10,7 @@ public class InteractableEmptySpace : MonoBehaviour
 
     public GameObject objectContained;
     public bool isPointed=false;
-     GameObject canvasLocal;
-    public GameObject prefabCanvas;
+  
     public Transform centerDown;
     public float timer;
     public float timerContained;
@@ -21,10 +20,7 @@ public class InteractableEmptySpace : MonoBehaviour
     bool stop=false;
     void Start()
     {
-        canvasLocal=Instantiate(prefabCanvas);
-        canvasLocal.SetActive(false);
-    canvasLocal.transform.SetParent(this.gameObject.transform);
-    canvasLocal.transform.position=new Vector3(this.transform.position.x,this.transform.position.y+0.8f,this.transform.position.z);
+        
     }
 
 
@@ -127,19 +123,26 @@ private bool changeImageSlider(gestureIndex value){
        
         
        
+        print(obj);
+       
+        this.ris=ris;
+        Transform parentTransform= this.GetComponentInParent<Transform>();
+        
+       
+        string hand=ris.hand.ToUpper();
+        string evento=hand+"_ITEM_IMAGE_CHANGE";
+        Debug.LogError(evento);
+        Messenger<Sprite>.Broadcast(evento,ris.lastItemSelectedFor2Second.item.sprite);
         objectContained=obj;
         containsObject=true;
-        Debug.Log("put go"+obj);
-        this.ris=ris;
-        Transform pos= this.GetComponentInParent<Transform>();
-        objectContained =Instantiate(obj,pos.position,pos.rotation);
-        this.ris.lastItemSelectedFor2Second=null;
         
+        objectContained =Instantiate(obj,parentTransform.position,parentTransform.rotation);
         objectContained.transform.rotation=obj.transform.rotation;
-        objectContained.transform.localScale-=new Vector3(0.2f,0.2f,0.2f);
+       // objectContained.transform.localScale=new Vector3(0.7f,0.7f,0.7f);
+       
         objectContained.transform.position = centerDown.position;
         objectContained.transform.SetParent(this.gameObject.transform);
-
+        
 
 /*if(ris.hand=="Right"){
     HandController.instance.selectedRightHandObject=null;
@@ -147,7 +150,7 @@ private bool changeImageSlider(gestureIndex value){
  HandController.instance.selectedRightHandItemUI=null;
 }*/
     
-if(ris.hand=="Left"){
+        if(ris.hand=="Left"){
     HandController.instance.selectedLeftHandObject=null;
         HandController.instance.selectedLeftHandItemUI=null;
         
@@ -158,9 +161,7 @@ if(ris.hand=="Left"){
         if(!objectContained.activeInHierarchy){
             objectContained.SetActive(true);
         }
-        if(objectContained.GetComponentInChildren<Canvas>().gameObject.activeInHierarchy){
-            objectContained.GetComponentInChildren<Canvas>().gameObject.SetActive(false);
-        }
+        
 
       
         Color newTransparentColor= this.GetComponent<Renderer>().material.color;

@@ -1,8 +1,5 @@
-using System.Collections;
-using System.Collections.Generic;
+
 using System.IO;
-using System.IO.Pipes;
-using System.Linq;
 using System.Text;
 using System.Threading;
 using UnityEngine;
@@ -162,10 +159,12 @@ public class PipeServer : MonoBehaviour
 
         left = new Hand(lParent, landmarkPrefab, linePrefab);
         right = new Hand(rParent, landmarkPrefab, linePrefab);
-
+        
         t = new Thread(new ThreadStart(Run));
         t.Start();
+
         gestureController = new Thread(new ThreadStart(checkGesture));
+        gestureController.IsBackground=true;
         gestureController.Start();
 
 
@@ -202,6 +201,7 @@ public class PipeServer : MonoBehaviour
         }
     }
     
+   
 
     private void Update()
     {
