@@ -112,6 +112,7 @@ public class RaycastItemSelector : MonoBehaviour
                     this.lastItemSelectedFor2Second = lastItemSelected;
                     
                     thumbTipPosition = this.transform.GetChild(4).transform.position;
+                    
                     GetComponent<LineRenderer>().SetPosition(0, thumbTipPosition);
                     GetComponent<LineRenderer>().SetPosition(1, itemPosition);
                     HandController.instance.setHandObject(lastItemSelected, hand);
@@ -322,7 +323,7 @@ public class RaycastItemSelector : MonoBehaviour
                 else
                 {
                    
-                    Debug.LogError("non puoi interagire se non c'è niente dentro");
+                  //  Debug.LogError("non puoi interagire se non c'è niente dentro");
                 }
 
 

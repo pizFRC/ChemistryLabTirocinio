@@ -191,11 +191,11 @@ class HandThread(threading.Thread):
                 
                 segmenter = mp.solutions.selfie_segmentation.SelfieSegmentation()
                 # Estrai la maschera binaria dell'hand
-                results2 = segmenter.process(image)
+                #results2 = segmenter.process(image)
                 image_h, image_w, _ = frame.shape
-                mask2 = results2.segmentation_mask
+                #mask2 = results2.segmentation_mask
                 
-                mask2 = (results2.segmentation_mask > 0).astype(np.uint8) *255
+               # mask2 = (results2.segmentation_mask > 0).astype(np.uint8) *255
                 x1, y1 = int(image_w/4)  , int(image_h/2)
                 x2, y2 = int(image_w*(3/4)) ,int(image_h/2)
 
@@ -203,12 +203,12 @@ class HandThread(threading.Thread):
                 
                 image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
                 #gray_image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-                kernel = np.ones((8, 8), np.uint8)
+                '''kernel = np.ones((8, 8), np.uint8)
                
                
                 dilated_image = cv2.erode(mask2, kernel, iterations=4)
                 masked_image3 = cv2.bitwise_and(image, image, mask=dilated_image)
-                '''TEST 
+                TEST 
                 kernel = np.ones((8,8), np.uint8)
                 eroded_mask = cv2.erode(mask2, kernel, iterations=3)
                 masked_image3 = cv2.bitwise_and(image, image, mask=eroded_mask)
@@ -221,12 +221,12 @@ class HandThread(threading.Thread):
                 
                 
 
-                '''
+               
 
 
                 background = np.zeros_like(masked_image3)
 
-
+                '''
                 #result3 = cv2.add(masked_image3, background)
 
               
@@ -234,7 +234,7 @@ class HandThread(threading.Thread):
                 if results.multi_hand_landmarks:
                     
                     for num, hand in enumerate(results.multi_hand_landmarks):
-                        mp_drawing.draw_landmarks(masked_image3, hand, self.mp_hands.HAND_CONNECTIONS, 
+                        mp_drawing.draw_landmarks(image, hand, self.mp_hands.HAND_CONNECTIONS, 
                                                 mp_drawing.DrawingSpec(color=(121, 22, 76), thickness=2, circle_radius=4),
                                                 mp_drawing.DrawingSpec(color=(250, 44, 250), thickness=2, circle_radius=2),
                                                 )
@@ -242,12 +242,7 @@ class HandThread(threading.Thread):
                    
                     
                 
-                    #if len(recognition_result.handedness)>0:
-                     #   print(recognition_result.gestures)
-                      #  print(recognition_result.handedness)
-                       # print(len(recognition_result.handedness))
-                        #print(recognition_result.handedness[0])
-                        #print(recognition_result.gestures[0][0])
+        
                
                    
                 timestamp = int(time.monotonic() * 1000)
@@ -299,7 +294,7 @@ class HandThread(threading.Thread):
                 # mostra l'immagine sovrapposta alla maschera
             
                 encode_param = [int(cv2.IMWRITE_JPEG_QUALITY), 50]
-                compressed_img, _ = cv2.imencode('.jpg', masked_image3, encode_param)
+                compressed_img, _ = cv2.imencode('.jpg', image, encode_param)
           
                
                 
@@ -312,7 +307,7 @@ class HandThread(threading.Thread):
                 if DEBUG:
                     #cv2.imshow('Segmentation Mask', image)
                     
-                    cv2.imshow('result3',masked_image3)
+                    cv2.imshow('result3',image)
                     #cv2.imshow('sef',dilated_image)
                     
                     
