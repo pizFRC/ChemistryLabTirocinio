@@ -8,12 +8,17 @@ public class SelectedItemImageController : MonoBehaviour
     // Start is called before the first frame update
     public Image LeftHandImage;
     public Image RightHandImage;
+
+    public GameObject sxGestureMenu;
+    public GameObject dxGestureMenu;
     void Awake()
     {
 
 
         Messenger<Sprite>.AddListener(GameEvents.LEFT_ITEM_IMAGE_CHANGE, updateImageItemLeftHand);
         Messenger<Sprite>.AddListener(GameEvents.RIGHT_ITEM_IMAGE_CHANGE, updateImageItemRightHand);
+        Messenger<string>.AddListener(GameEvents.GESTURE_MENU, activeUiGesture);
+      
          
 
 
@@ -32,6 +37,22 @@ public class SelectedItemImageController : MonoBehaviour
     {
         RightHandImage.sprite = spriteItem;
     }
+private void activeUiGesture(string hand)
+    {
+       if(hand=="Right")
+            {
+                
+                dxGestureMenu.SetActive(!dxGestureMenu.activeInHierarchy);
+            }   
+
+        if(hand=="Left"){
+            sxGestureMenu.SetActive((!sxGestureMenu.activeInHierarchy));
+        }
+
+ }
+
+
+    
 
 
     void Start()

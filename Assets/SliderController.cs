@@ -4,8 +4,10 @@ using UnityEngine;
 using UnityEngine.UI;
 
 public enum gestureIndex{
-    victory=1,
-    closed=0,
+    GET=0,
+    PUT=1,
+
+    USE=2,
 }
 public class SliderController : MonoBehaviour
 {
@@ -23,7 +25,21 @@ public class SliderController : MonoBehaviour
 
         Messenger<gestureIndex>.AddListener(GameEvents.RIGHT_SLIDER_IMAGE_CHANGE,setGestureRight);
          Messenger<gestureIndex>.AddListener(GameEvents.LEFT_SLIDER_IMAGE_CHANGE,setGestureLeft);
+
+
+
+
+           Messenger<Sprite>.AddListener(GameEvents.LEFT_SLIDER_IMAGE_CHANGE_ICON, updateImageItemLeftSlider);
+        Messenger<Sprite>.AddListener(GameEvents.RIGHT_SLIDER_IMAGE_CHANGE_ICON, updateImageItemRightSlider);
     }
+
+    void updateImageItemRightSlider(Sprite S){
+            DX_innerImage.sprite=S;
+    }
+    void updateImageItemLeftSlider(Sprite S){
+            SX_innerImage.sprite=S;
+    }
+    
     void OnDestroy(){
         Messenger<float>.RemoveListener(GameEvents.LEFT_SLIDER_CHANGE,updateSliderLeft);
         Messenger<float>.RemoveListener(GameEvents.RIGHT_SLIDER_CHANGE,updateSliderRight);
@@ -33,6 +49,10 @@ public class SliderController : MonoBehaviour
          
         Messenger<gestureIndex>.RemoveListener(GameEvents.RIGHT_SLIDER_IMAGE_CHANGE,setGestureRight);
         Messenger<gestureIndex>.RemoveListener(GameEvents.LEFT_SLIDER_IMAGE_CHANGE,setGestureLeft);
+
+
+           Messenger<Sprite>.RemoveListener(GameEvents.LEFT_SLIDER_IMAGE_CHANGE_ICON, updateImageItemLeftSlider);
+        Messenger<Sprite>.RemoveListener(GameEvents.RIGHT_SLIDER_IMAGE_CHANGE_ICON, updateImageItemRightSlider);
     }
 
     public Slider SX;
@@ -51,7 +71,7 @@ public class SliderController : MonoBehaviour
     void Update()
     {
         if(val){
-            setGestureLeft(gestureIndex.victory);
+            setGestureLeft(gestureIndex.GET);
         }
     }
     public void setGestureLeft(gestureIndex gi){

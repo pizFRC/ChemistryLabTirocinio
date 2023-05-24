@@ -19,7 +19,7 @@ public class RaycastItemSelector : MonoBehaviour
 {
     // Start is called before the first frame update
     [SerializeField] public selectorMode mode;
-    public GameObject uiGesture;
+ public GameObject uiGesture;
 
     float elapsedTime = 0f;
     public string hand;
@@ -31,7 +31,7 @@ public class RaycastItemSelector : MonoBehaviour
     public float smoothingFactor = 0.020f, maxDistance = 150f;
     private LineRenderer lineRenderer;
     float selectionTimer = 0f;
-    InteractableItem lastItemSelected;
+   public InteractableItem lastItemSelected;
     InteractableEmptySpace lastEmptySpacePointed;
     public InteractableItem lastItemSelectedFor2Second;
     public float valueToSubtractY, valueToAddX;
@@ -122,7 +122,7 @@ public class RaycastItemSelector : MonoBehaviour
                     raycastMoveObject();
                     break;
                 case (selectorMode.LockOnEmptySpace):
-                    uiGesture.SetActive(true);
+                   // uiGesture.SetActive(true);
                     
                     thumbTipPosition = this.transform.GetChild(4).transform.position;
                     GetComponent<LineRenderer>().SetPosition(0, thumbTipPosition);
@@ -173,8 +173,10 @@ public class RaycastItemSelector : MonoBehaviour
                     lastEmptySpacePointed.isPointed = true;
 
                     if (lastEmptySpacePointed.putObject(this, lastItemSelectedFor2Second.gameObject))
-                    {
+                    {   
+                        
                         HandController.instance.riponiOggetto(hand);
+                        //lastItemSelectedFor2Second.
                         this.lastItemSelected = null;
                         mode = selectorMode.CanSelect;
                         //lastEmptySpacePointed.isPointed=false;
@@ -187,7 +189,8 @@ public class RaycastItemSelector : MonoBehaviour
                 {
 
 
-                    Debug.LogError("contiene gia un oggetto");
+                    lastEmptySpacePointed.isPointed = true;
+                   
                 }
 
 

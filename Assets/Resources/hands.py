@@ -1,6 +1,6 @@
 # MediaPipe Hands
 import mediapipe as mp
-import mediapipe.modules.selfie_segmentation as mp2
+
 import cv2
 import numpy as np
 import threading
@@ -11,9 +11,9 @@ from threading import RLock,Condition
 import os
 
 
-DEBUG =  True# significantly reduces performance
+DEBUG =  False# significantly reduces performance
 MODEL_COMPLEXITY = 0 # set to 1 to improve accuracy at the cost of performance
-CAMERA_INDEX=0
+CAMERA_INDEX=1
 
 
 def setCamera(index):
@@ -189,7 +189,7 @@ class HandThread(threading.Thread):
                 results = hands.process(image)
                 
                 
-                segmenter = mp.solutions.selfie_segmentation.SelfieSegmentation()
+                #segmenter = mp.solutions.selfie_segmentation.SelfieSegmentation()
                 # Estrai la maschera binaria dell'hand
                 #results2 = segmenter.process(image)
                 image_h, image_w, _ = frame.shape
@@ -270,14 +270,14 @@ class HandThread(threading.Thread):
                         for i in range(0,21):
                             self.data += "{}|{}|{}|{}|{}\n".format(results.multi_handedness[j].classification[0].label,i,hand_landmarks.landmark[i].x,hand_landmarks.landmark[i].y,hand_landmarks.landmark[i].z)
                             self.dataWorld += "{}|{}|{}|{}|{}\n".format(results.multi_handedness[j].classification[0].label,i,hand_world_landmarks.landmark[i].x,hand_world_landmarks.landmark[i].y,hand_world_landmarks.landmark[i].z)
-                        #self.data += "{}".format(self.gesture_rilevata)
+                        
                         
                         self.dirty = True
                         
                         
                         
                         
-                        
+                    '''
                        # euclidean_distance_to_camera = math.sqrt(hand_world_landmarks.landmark[j].x ** 2 + hand_world_landmarks.landmark[0].y ** 2 + hand_world_landmarks.landmark[0].z ** 2)
                         y_coord = (hand_landmarks.landmark[0].y *image_h)
     
@@ -290,7 +290,7 @@ class HandThread(threading.Thread):
                            # print(f"{results.multi_handedness[j].classification[0].label}  più in basso rispetto{y_coord}  { image_h / 2}");
                        # print(f"{results.multi_handedness[j].classification[0].label}: {euclidean_distance_to_camera}")       
                 
-           
+                    '''   
                 # mostra l'immagine sovrapposta alla maschera
             
                 encode_param = [int(cv2.IMWRITE_JPEG_QUALITY), 50]

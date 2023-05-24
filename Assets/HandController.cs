@@ -134,7 +134,11 @@ public class HandController : MonoBehaviour
             if (simulaGestureRilasciaDestra && !simulaGestureAfferraDestra )
             {
 
-                Debug.LogError("gesture rilascia con space object");
+               
+               
+                 Debug.LogError("gesture rilascia con space object");
+
+                 Messenger<string>.Broadcast(GameEvents.GESTURE_MENU,"RIGHT");
                 simulaGestureRilasciaDestra=false;
                // selectedRightSpaceObject=null;
             }
@@ -145,7 +149,7 @@ public class HandController : MonoBehaviour
         //mano SX
         if (selectedLeftHandObject != null && selectedLeftSpaceObject==null)
         { 
-            Debug.Log("SX ITEM SELEZIONATO");
+          
 
 
             if (simulaGestureRilasciaSinistra && !simulaGestureAfferraSinistra)
@@ -212,12 +216,18 @@ public class HandController : MonoBehaviour
      
         if(ris=="Right"){
              selectedRightHandItemUI.sprite=null;
+             selectedRightHandObject=null;
+            rightHandSelector.lastItemSelected.inEmptySpace=true;
+             rightHandSelector.lastItemSelectedFor2Second=null;
         }
 
         if(ris=="Left"){
             selectedLeftHandItemUI.sprite=null;
+             selectedLeftHandObject=null;
+             leftHandSelector.lastItemSelected.inEmptySpace=true;
+             leftHandSelector.lastItemSelectedFor2Second=null;
         }
     }
 
-
+   
 }

@@ -47,20 +47,21 @@ public class InteractableEmptySpace : MonoBehaviour
             gameEvent=GameEvents.LEFT_SLIDER_ACTIVE;
         if(ris.hand=="Right")
             gameEvent=GameEvents.RIGHT_SLIDER_ACTIVE;
+
         Messenger<bool>.Broadcast(gameEvent,value);
          
         return true;
     }
-private bool changeImageSlider(gestureIndex value){
+private bool changeImageSlider(gestureIndex index){
     if(ris == null )
             return false;
-          
+        Debug.Log("change image slider");
         string gameEvent="";
         if(ris.hand=="Left")
             gameEvent=GameEvents.LEFT_SLIDER_IMAGE_CHANGE;
         if(ris.hand=="Right")
             gameEvent=GameEvents.RIGHT_SLIDER_IMAGE_CHANGE;
-        Messenger<gestureIndex>.Broadcast(gameEvent,value);
+        Messenger<gestureIndex>.Broadcast(gameEvent,index);
          
         return true;
 
@@ -70,8 +71,13 @@ private bool changeImageSlider(gestureIndex value){
     {
         if(stop)
             return;
+        if(!isPointed){
+            timer=0.0f;
+            timerContained=0.0f;
+        }
         if(isPointed && !containsObject){
-         changeImageSlider(gestureIndex.closed);
+              changeImageSlider(gestureIndex.PUT);
+      //   changeImageSlider(ris.lastItemSelected.item.sprite);
              activeSlider(true);
             timer+=Time.deltaTime;
 
@@ -84,24 +90,29 @@ private bool changeImageSlider(gestureIndex value){
 
         }else  if(isPointed && containsObject ){
           
-            changeImageSlider(gestureIndex.victory);
+            changeImageSlider(gestureIndex.USE);
+             activeSlider(true);
+            // changeImageSlider(ris.lastItemSelected.item.sprite);
+            Debug.Log("test funzionamento pointed:"+isPointed +"contains_:"+containsObject);
             
             timerContained+=Time.deltaTime;
-
+                 updateSlider(timerContained);
             if(timerContained>2.0f){
                
                 timerContained=2.0f;
                   updateSlider(timerContained);
+                  Messenger<string>.Broadcast(GameEvents.GESTURE_MENU,ris.hand);
+                  
                 stop=true;
                activeSlider(false);
             }
-          
+
             
             }else{
                 
                 
            
-                 changeImageSlider(gestureIndex.victory);
+                 //changeImageSlider(gestureIndex.victory);
                  updateSlider(0);
                  activeSlider(false);
               
@@ -127,12 +138,14 @@ private bool changeImageSlider(gestureIndex value){
        
         this.ris=ris;
         Transform parentTransform= this.GetComponentInParent<Transform>();
-        
+                        
        
         string hand=ris.hand.ToUpper();
         string evento=hand+"_ITEM_IMAGE_CHANGE";
         Debug.LogError(evento);
-        Messenger<Sprite>.Broadcast(evento,ris.lastItemSelectedFor2Second.item.sprite);
+        Messenger<Sprite>.Broadcast(evento,null);
+
+        HandController.instance.riponiOggetto(ris.hand);
         objectContained=obj;
         containsObject=true;
         
@@ -144,19 +157,8 @@ private bool changeImageSlider(gestureIndex value){
         objectContained.transform.SetParent(this.gameObject.transform);
         
 
-/*if(ris.hand=="Right"){
-    HandController.instance.selectedRightHandObject=null;
-
- HandController.instance.selectedRightHandItemUI=null;
-}*/
     
-        if(ris.hand=="Left"){
-    HandController.instance.selectedLeftHandObject=null;
-        HandController.instance.selectedLeftHandItemUI=null;
         
-        
-        
-        }
         
         if(!objectContained.activeInHierarchy){
             objectContained.SetActive(true);

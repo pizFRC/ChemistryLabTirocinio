@@ -17,6 +17,7 @@ public class InteractableItem : MonoBehaviour
     public GameObject sliderSX;
     public GameObject sliderDX;
     GameObject instance;
+    public bool inEmptySpace=false;
     bool canvasNotActive = true;
     private SliderController scInstance;
     bool materialSetted = false;
@@ -68,7 +69,8 @@ public class InteractableItem : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
+       if(inEmptySpace)
+            return;
 
         if (isSelected)
         {
@@ -78,7 +80,7 @@ public class InteractableItem : MonoBehaviour
 
 
             localObjectTimer += Time.deltaTime;
-
+            changeImageSlider(gestureIndex.GET);
             if (localObjectTimer >= 2.0f)
             {
 
@@ -121,7 +123,20 @@ public class InteractableItem : MonoBehaviour
 
 
     }
+private bool changeImageSlider(gestureIndex value){
+    if(leftOrRightSelector == null )
+            return false;
+        Debug.Log("change image slider");
+        string gameEvent="";
+        if(leftOrRightSelector.hand=="Left")
+            gameEvent=GameEvents.LEFT_SLIDER_IMAGE_CHANGE;
+        if(leftOrRightSelector.hand=="Right")
+            gameEvent=GameEvents.RIGHT_SLIDER_IMAGE_CHANGE;
+        Messenger<gestureIndex>.Broadcast(gameEvent,value);
+         
+        return true;
 
+}
 
     public void setSelector(RaycastItemSelector leftOrRight)
     {

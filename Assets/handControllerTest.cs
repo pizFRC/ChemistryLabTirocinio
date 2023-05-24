@@ -24,15 +24,16 @@ public class handControllerTest : MonoBehaviour
     public GameObject[] SX;
     public GameObject[] DX;
     GameObject[] hand;
-    public float moltiplicatore = 10f;
+    public float moltiplicatore_X = 10f;
     public float moltiplicatore_Z = 10f;
+    public float moltiplicatore_Y = 10f;
      
      public float  smoothTime;
      private Vector3 handVelocity = Vector3.zero;
     public float depthMin = 0f;
     public float depthMax = 10f;
     public float depth;
-    float z_min, z_max, z_proportional, x_min, x_max, y_min, y_max, x_proportional, y_proportional;
+    float z_min=0, z_max=0, z_proportional=0, x_min=0, x_max=0, y_min=0, y_max=0, x_proportional=0, y_proportional=0;
     byte[] dataByte;
     
         Thread c;
@@ -109,23 +110,23 @@ public class handControllerTest : MonoBehaviour
 
 
 
-                z_proportional = (z - z_min) * moltiplicatore / (z_max - z_min);
+                z_proportional = (z - z_min) * moltiplicatore_Z / (z_max - z_min);
                 depth = z_proportional;
 
                 if (x < x_min)
                     x_min = x;
-
-
                 if (x > x_max)
                     x_max = x;
-                    x_proportional = (x - x_min) * moltiplicatore / (x_max - x_min);
+
+                x_proportional = (x - x_min) * moltiplicatore_X / (x_max - x_min);
+
+
                 if (y < y_min)
                     y_min = y;
-
-
                 if (y > y_max)
                     y_max = y;
-                    y_proportional = (y - y_min) * moltiplicatore_Z / (y_max - y_min);
+
+                y_proportional = (y - y_min) * moltiplicatore_Y / (y_max - y_min);
                 // ottieni il valore z dalla mano Mediapipe
 
 
@@ -138,26 +139,16 @@ public class handControllerTest : MonoBehaviour
                    
                      Vector3 handPosition = Vector3.SmoothDamp(SX_Hand.transform.localPosition, newPosition, ref handVelocity, smoothTime);
                     SX_Hand.transform.localPosition =handPosition;
-                     Debug.Log(handPosition);
+                     Debug.Log(handPosition +" Left");
 
                 }
                 if (handS == "Right"){
                   Vector3 handPosition = Vector3.SmoothDamp(SX_Hand.transform.localPosition, newPosition, ref handVelocity, smoothTime);
                     DX_Hand.transform.localPosition =handPosition;
-                Debug.Log(handPosition);
+                Debug.Log(handPosition +" right");
                 }
 
-                //handtest.gameObject.transform.localPosition=new Vector3(x*moltiplicatore , y*moltiplicatore,depth);
-                /*   hand[i].transform.Translate(p);
-
-
-                           hand[i].transform.localPosition = p;
-                           hand[i].transform.position =new Vector3(x*moltiplicatore , y*moltiplicatore , z*moltiplicatore);
-                           hand[i].transform.parent.localPosition =new Vector3(x*moltiplicatore , y*moltiplicatore , z*moltiplicatore);
-                       hand[i].transform.localRotation=new Quaternion(180f,0,0,0);
-                       */
-                /* Vector3 pos=new Vector3( hand[i].transform.parent.localPosition.x,hand[i].transform.parent.localPosition.y,depth);
-                  hand[i].transform.parent.localPosition=pos;*/
+                
                
 
             }
