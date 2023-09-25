@@ -127,27 +127,59 @@ class HandThread(threading.Thread):
         
         self.capture.start()
         self.imageSender.start()
+
+        def replaceHandString(stringToModify):
+            # [ category_name='Left')]
+            print("function switch")
+            if "Left" in stringToModify:
+                print("in left")
+                return stringToModify.replace("Left", "Right")
+            elif  "Right" in stringToModify:
+
+                return stringToModify.replace("Right", "Left")
+            
+
+           
+
        # self.gestureSender.start()
         def print_result(result: mp.tasks.vision.GestureRecognizerResult, output_image: mp.Image, timestamp_ms: int):
           #  self.gestureSender.set_gesture(f"<{result.gestures}|{result.handedness}>")
             
-           
-            
+            #print('\n <-----> gesture recognition result: {} @@@@@@@@\n {}  <------>'.format(result.gestures,result.handedness))
+          #  print(result.handedness)
+        
             resultHand1=resultGesture1=resultGesture=resultHand=final=final2=""
-            if(len(result.gestures)>0 and len(result.handedness)>0 ):
-                #print(result.gestures," <----->",result.handedness)
-                resultGesture1=f"{result.gestures[0]}"
-                resultHand1=f"{result.handedness[0]}"
-                final=f"[{resultGesture1.split(',')[3]}  [{resultHand1.split(',')[3]}"
+            
+
             if( len(result.gestures)>1 and len(result.handedness)>1 ):
-                resultGesture=f"{result.gestures[1]}"
-                resultHand=f"{result.handedness[1]}"
-         
-            if(resultGesture!= "" and resultHand != ""):
-                final2=f"[{resultGesture.split(',')[3]}  [{resultHand.split(',')[3]}"
-            self.last_gesture=final+"---"+final2
-            self.gesture_rilevata=True
-            print(final ,"-----",final2)
+                resultGestureFirstHand=f"{result.gestures[0]}"
+                resultFirstHand=f"{result.handedness[0]}"
+                resultGestureSecondHand=f"{result.gestures[1]}"
+                resultSecondHand=f"{result.handedness[1]}"
+                firstHand=f"[{resultGestureFirstHand.split(',')[3]}  [{resultFirstHand.split(',')[3]}"
+                secondHand=f"[{resultGestureSecondHand.split(',')[3]}  [{resultSecondHand.split(',')[3]}"
+
+                self.last_gesture=f"{replaceHandString(firstHand)}---{replaceHandString(secondHand)}"
+                self.gesture_rilevata=True
+                print(self.last_gesture)
+                return
+                
+            if(len(result.gestures)>0 and len(result.handedness)>0 ):
+                
+                resultGestureSingleHand=f"{result.gestures[0]}"
+                resultSingleHand=f"{result.handedness[0]}"
+                
+                singleHand=f"[{resultGestureSingleHand.split(',')[3]}  [{resultSingleHand.split(',')[3]}"
+                
+                
+                self.last_gesture=replaceHandString(singleHand)
+                print(f"{self.last_gesture}\n")
+                self.gesture_rilevata=True
+                return
+            
+               
+           
+           
                
                 
         gesture_file = os.path.join(os.path.dirname(__file__), 'gesture_recognizer.task')
@@ -161,7 +193,8 @@ class HandThread(threading.Thread):
                     min_hand_presence_confidence = 0.5,
                     min_tracking_confidence = 0.5,
                     running_mode=mp.tasks.vision.RunningMode.LIVE_STREAM,
-                    result_callback=print_result)
+                    result_callback=print_result,
+                    )
                 recognizer = mp.tasks.vision.GestureRecognizer.create_from_options(options)
            
             while self.capture.isRunning==False:
@@ -275,7 +308,8 @@ class HandThread(threading.Thread):
                         self.dirty = True
                         
                         
-                        
+                
+                    
                         
                     '''
                        # euclidean_distance_to_camera = math.sqrt(hand_world_landmarks.landmark[j].x ** 2 + hand_world_landmarks.landmark[0].y ** 2 + hand_world_landmarks.landmark[0].z ** 2)
