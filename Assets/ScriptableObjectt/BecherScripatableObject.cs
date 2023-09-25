@@ -10,8 +10,11 @@ public class BecherScripatableObject : ScriptableObject
    public void Accept(IVisitor visitor){
     visitor.Visit(this);
    }
+    public bool function_Rilascia(){
 
-   public bool Riempi(ScriptableObject name){
+        return true;
+    }
+   public bool function_Riempi(ScriptableObject name){
     if(itemInside.Contains(name)){
                 return false;
     }
@@ -19,7 +22,7 @@ public class BecherScripatableObject : ScriptableObject
     return true;
    }
 
-    public bool Svuota(){
+    public bool   function_Svuota(){
     if(itemInside.Count<1){
         return false;
     }

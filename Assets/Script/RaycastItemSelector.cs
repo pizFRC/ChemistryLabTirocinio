@@ -58,7 +58,20 @@ public class RaycastItemSelector : MonoBehaviour
         }
 
     }
+    public void resetSelected(){
+        if(lastItemSelectedFor2Second!=null)
+            lastItemSelectedFor2Second.isSelected=false;
+               if(lastItemSelected!=null)
+            lastItemSelected.isSelected=false;
+            if(lastEmptySpacePointed!=null)
+            lastEmptySpacePointed.isPointed=false;
+       this.lastItemSelected=null;
+     this.lastEmptySpacePointed=null;
+    this.lastItemSelectedFor2Second=null;
 
+      this.mode=selectorMode.CanSelect;
+      
+    }
     private Vector3 GetHandDirection()
     {
         //GET BONES POSITION
@@ -165,9 +178,11 @@ public class RaycastItemSelector : MonoBehaviour
             {
 
                 lastEmptySpacePointed = hit.transform.GetComponent<InteractableEmptySpace>();
-                lastEmptySpacePointed.ris=this;
+                
+                 lastEmptySpacePointed.ris=this;
                 if (!lastEmptySpacePointed.containsObject)
                 {
+                   
 
 
                     lastEmptySpacePointed.isPointed = true;
@@ -241,7 +256,7 @@ public class RaycastItemSelector : MonoBehaviour
         if (Physics.Raycast(ray, out hit, 250f))
         {
 
-
+                print(hit.collider.tag);
             if (hit.collider.CompareTag("Item"))
             {
 
@@ -270,6 +285,7 @@ public class RaycastItemSelector : MonoBehaviour
                     lastItemSelected.rayNumber += 1;
                  
                     HandController.instance.lockGesture(this.hand);
+                   
 
 
                 }
@@ -299,19 +315,22 @@ public class RaycastItemSelector : MonoBehaviour
             {
 
                 lastEmptySpacePointed=  hit.collider.GetComponent<InteractableEmptySpace>();
+                 lastEmptySpacePointed.ris = this;
                 if (lastEmptySpacePointed.containsObject )
                 {
+
+                      
                     if (lastEmptySpacePointed.rayNumber>0)
                          return;
 
                    
                     lastEmptySpacePointed.isPointed = true;
-
+                    lastEmptySpacePointed.stop=false;
                     if (lastEmptySpacePointed.timerContained >= 2.0f)
                     {
                         lastEmptySpacePointed.rayNumber+=1;
 
-                        lastEmptySpacePointed.ris = this;
+                     
                         Debug.LogError("sullo space riempito per più di 2 secondi");
 
                        
@@ -322,6 +341,8 @@ public class RaycastItemSelector : MonoBehaviour
 
                     }
 
+                }else if(hit.collider.CompareTag("RightArrow")){
+                      hit.collider.GetComponent<RotateCamera>().rotate(90);
                 }
                 else
                 {

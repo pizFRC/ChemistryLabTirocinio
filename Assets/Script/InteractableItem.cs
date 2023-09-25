@@ -14,8 +14,7 @@ public class InteractableItem : MonoBehaviour
 
 
     public bool isSelected = false;
-    public GameObject sliderSX;
-    public GameObject sliderDX;
+   
     GameObject instance;
     public bool inEmptySpace=false;
     bool canvasNotActive = true;
@@ -25,6 +24,15 @@ public class InteractableItem : MonoBehaviour
     public string hand = "";
     public int rayNumber = 0;
     public RaycastItemSelector leftOrRightSelector;
+
+    public void reset(){
+        leftOrRightSelector=null;
+        localObjectTimer=0;
+        rayNumber=0;
+        hand="";
+        inEmptySpace=false;
+        
+    }
     void Awake() {
             scInstance = SliderController.instance;
     }
@@ -126,7 +134,7 @@ public class InteractableItem : MonoBehaviour
 private bool changeImageSlider(gestureIndex value){
     if(leftOrRightSelector == null )
             return false;
-        Debug.Log("change image slider");
+       // Debug.Log("change image slider");
         string gameEvent="";
         if(leftOrRightSelector.hand=="Left")
             gameEvent=GameEvents.LEFT_SLIDER_IMAGE_CHANGE;

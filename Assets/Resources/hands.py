@@ -11,9 +11,9 @@ from threading import RLock,Condition
 import os
 
 
-DEBUG =  False# significantly reduces performance
+DEBUG =  True# significantly reduces performance
 MODEL_COMPLEXITY = 0 # set to 1 to improve accuracy at the cost of performance
-CAMERA_INDEX=1
+CAMERA_INDEX=0
 
 
 def setCamera(index):

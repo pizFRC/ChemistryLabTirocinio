@@ -10,8 +10,8 @@ public class VisitorBehaviour : IVisitor
 
    public void Visit(BecherScripatableObject becher)
     {
-       becher.Riempi(becher);
+       becher. function_Riempi(becher);
        Debug.Log("riempito");
-       becher.Svuota();
+       becher. function_Svuota();
     }
 }

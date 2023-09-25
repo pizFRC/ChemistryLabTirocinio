@@ -16,6 +16,8 @@ TagManager:
   - loading_slider_Left
   - slider_left_image
   - slider_right_image
+  - selected_scriptable_SX
+  - selected_scriptable_DX
   layers:
   - Default
   - TransparentFX
