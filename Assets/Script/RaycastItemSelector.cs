@@ -19,7 +19,7 @@ public class RaycastItemSelector : MonoBehaviour
 {
     // Start is called before the first frame update
     [SerializeField] public selectorMode mode;
- public GameObject uiGesture;
+    public GameObject uiGesture;
 
     float elapsedTime = 0f;
     public string hand;
@@ -31,7 +31,7 @@ public class RaycastItemSelector : MonoBehaviour
     public float smoothingFactor = 0.020f, maxDistance = 150f;
     private LineRenderer lineRenderer;
     float selectionTimer = 0f;
-   public InteractableItem lastItemSelected;
+    public InteractableItem lastItemSelected;
     InteractableEmptySpace lastEmptySpacePointed;
     public InteractableItem lastItemSelectedFor2Second;
     public float valueToSubtractY, valueToAddX;
@@ -58,19 +58,20 @@ public class RaycastItemSelector : MonoBehaviour
         }
 
     }
-    public void resetSelected(){
-        if(lastItemSelectedFor2Second!=null)
-            lastItemSelectedFor2Second.isSelected=false;
-               if(lastItemSelected!=null)
-            lastItemSelected.isSelected=false;
-            if(lastEmptySpacePointed!=null)
-            lastEmptySpacePointed.isPointed=false;
-       this.lastItemSelected=null;
-     this.lastEmptySpacePointed=null;
-    this.lastItemSelectedFor2Second=null;
+    public void resetSelected()
+    {
+        if (lastItemSelectedFor2Second != null)
+            lastItemSelectedFor2Second.isSelected = false;
+        if (lastItemSelected != null)
+            lastItemSelected.isSelected = false;
+        if (lastEmptySpacePointed != null)
+            lastEmptySpacePointed.isPointed = false;
+        this.lastItemSelected = null;
+        this.lastEmptySpacePointed = null;
+        this.lastItemSelectedFor2Second = null;
 
-      this.mode=selectorMode.CanSelect;
-      
+        this.mode = selectorMode.CanSelect;
+
     }
     private Vector3 GetHandDirection()
     {
@@ -86,7 +87,7 @@ public class RaycastItemSelector : MonoBehaviour
         Vector3 middleFingerTipPosition = this.transform.GetChild(12).transform.position;
         Vector3 middleFingerDirection = (middleFingerTipPosition - wristPosition).normalized;
         //SMOTHING FILTER
-        filteredHandDirection = Vector3.Lerp(previousHandDirection, thumbDirection+indexDirection+middleFingerDirection, smoothingFactor);
+        filteredHandDirection = Vector3.Lerp(previousHandDirection, thumbDirection + indexDirection + middleFingerDirection, smoothingFactor);
 
 
         //print("raycast");
@@ -123,9 +124,9 @@ public class RaycastItemSelector : MonoBehaviour
 
                     GetComponent<LineRenderer>().material = riponiOggMaterial;
                     this.lastItemSelectedFor2Second = lastItemSelected;
-                    
+
                     thumbTipPosition = this.transform.GetChild(4).transform.position;
-                    
+
                     GetComponent<LineRenderer>().SetPosition(0, thumbTipPosition);
                     GetComponent<LineRenderer>().SetPosition(1, itemPosition);
                     HandController.instance.setHandObject(lastItemSelected, hand);
@@ -135,12 +136,12 @@ public class RaycastItemSelector : MonoBehaviour
                     raycastMoveObject();
                     break;
                 case (selectorMode.LockOnEmptySpace):
-                   // uiGesture.SetActive(true);
-                    
+                    // uiGesture.SetActive(true);
+
                     thumbTipPosition = this.transform.GetChild(4).transform.position;
                     GetComponent<LineRenderer>().SetPosition(0, thumbTipPosition);
                     GetComponent<LineRenderer>().SetPosition(1, itemPosition);
-                
+
                     break;
 
 
@@ -178,18 +179,18 @@ public class RaycastItemSelector : MonoBehaviour
             {
 
                 lastEmptySpacePointed = hit.transform.GetComponent<InteractableEmptySpace>();
-                
-                 lastEmptySpacePointed.ris=this;
+
+                lastEmptySpacePointed.ris = this;
                 if (!lastEmptySpacePointed.containsObject)
                 {
-                   
+
 
 
                     lastEmptySpacePointed.isPointed = true;
 
                     if (lastEmptySpacePointed.putObject(this, lastItemSelectedFor2Second.gameObject))
-                    {   
-                        
+                    {
+
                         HandController.instance.riponiOggetto(hand);
                         //lastItemSelectedFor2Second.
                         this.lastItemSelected = null;
@@ -205,7 +206,7 @@ public class RaycastItemSelector : MonoBehaviour
 
 
                     lastEmptySpacePointed.isPointed = true;
-                   
+
                 }
 
 
@@ -218,24 +219,25 @@ public class RaycastItemSelector : MonoBehaviour
 
             }
 
-           draw(canDraw,hit.point);
+            draw(canDraw, hit.point);
         }
 
     }
 
-    
-    public void draw(bool canDraw,Vector3 point){
-          if (canDraw)
-            {
 
-                
-                thumbTipPosition = this.transform.GetChild(4).transform.position;
-                GetComponent<LineRenderer>().positionCount = 2;
-                GetComponent<LineRenderer>().SetPosition(0, thumbTipPosition);
-                GetComponent<LineRenderer>().SetPosition(1, point);
-            }
-            else
-                GetComponent<LineRenderer>().positionCount = 0;
+    public void draw(bool canDraw, Vector3 point)
+    {
+        if (canDraw)
+        {
+
+
+            thumbTipPosition = this.transform.GetChild(4).transform.position;
+            GetComponent<LineRenderer>().positionCount = 2;
+            GetComponent<LineRenderer>().SetPosition(0, thumbTipPosition);
+            GetComponent<LineRenderer>().SetPosition(1, point);
+        }
+        else
+            GetComponent<LineRenderer>().positionCount = 0;
 
     }
     public void reset()
@@ -244,6 +246,38 @@ public class RaycastItemSelector : MonoBehaviour
         this.lastItemSelectedFor2Second = null;
         this.lastItemSelected.rayNumber = 0;
 
+    }
+    private void InteractWithItem(RaycastHit hit)
+    {
+        Debug.DrawRay(thumbTipPosition, filteredHandDirection * range, Color.black, 0.2f);
+        Vector3 endPosition = hit.point;
+        selectionTimer += timeToWait + Time.deltaTime;
+        isSelecting = true;
+        lastItemSelected = hit.transform.GetComponent<InteractableItem>();
+
+        if (lastItemSelected.rayNumber > 0)
+        {
+            this.mode = selectorMode.CanSelect;
+            lastItemSelected = null;
+
+            return;
+        }
+        lastItemSelected.setSelector(this);
+        lastItemSelected.isSelected = true;
+
+        if (lastItemSelected.localObjectTimer >= 2.0f)
+        {
+            Debug.LogError("sull item per più di 2 secondi");
+
+            this.mode = selectorMode.LockOnItem;
+            this.itemPosition = hit.point;
+            lastItemSelected.rayNumber += 1;
+
+            HandController.instance.lockGesture(this.hand);
+
+
+
+        }
     }
     private void raycast()
     {
@@ -256,44 +290,27 @@ public class RaycastItemSelector : MonoBehaviour
         if (Physics.Raycast(ray, out hit, 250f))
         {
 
-                print(hit.collider.tag);
-            if (hit.collider.CompareTag("Item"))
+            print(hit.collider.tag);
+            string colliderTag = hit.collider.tag;
+            switch (colliderTag)
             {
+                case "Item":
 
-                Debug.DrawRay(thumbTipPosition, filteredHandDirection * range, Color.black, 0.2f);
-                endPosition = hit.point;
-                selectionTimer += timeToWait + Time.deltaTime;
-                isSelecting = true;
-                lastItemSelected = hit.transform.GetComponent<InteractableItem>();
+                    InteractWithItem(hit);
 
-                if (lastItemSelected.rayNumber > 0)
-                {
-                    this.mode = selectorMode.CanSelect;
-                    lastItemSelected = null;
+                    break;
 
-                    return;
-                }
-                lastItemSelected.setSelector(this);
-                lastItemSelected.isSelected = true;
+                case "Wall":
+                    break;
 
-                if (lastItemSelected.localObjectTimer >= 2.0f)
-                {
-                    Debug.LogError("sull item per più di 2 secondi");
+                case "EmptySpace":
+                    break;
 
-                    this.mode = selectorMode.LockOnItem;
-                    this.itemPosition = hit.point;
-                    lastItemSelected.rayNumber += 1;
-                 
-                    HandController.instance.lockGesture(this.hand);
-                   
-
-
-                }
-
-
-
+                case (null):
+                    break;
             }
-            else if (hit.collider.CompareTag("Wall"))
+            /* 
+             if (hit.collider.CompareTag("Wall"))
             {
                 selectionTimer = 0;
                 isSelecting = false;
@@ -341,16 +358,8 @@ public class RaycastItemSelector : MonoBehaviour
 
                     }
 
-                }else if(hit.collider.CompareTag("RightArrow")){
-                      hit.collider.GetComponent<RotateCamera>().rotate(90);
                 }
-                else
-                {
-                   
-                  //  Debug.LogError("non puoi interagire se non c'è niente dentro");
-                }
-
-
+            
             }
             else
             {
@@ -369,9 +378,9 @@ public class RaycastItemSelector : MonoBehaviour
                     lastEmptySpacePointed = null;
                 }
 
-            }
+            } */
 
-          draw(canDraw,hit.point);
+            draw(canDraw, hit.point);
         }
     }
 
