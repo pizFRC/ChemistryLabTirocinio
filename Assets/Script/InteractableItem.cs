@@ -1,167 +1,93 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using Unity.VisualScripting;
+using Unity.VisualScripting.ReorderableList;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class InteractableItem : MonoBehaviour
 {
     // Start is called before the first frame update
+    public float localObjectTimer;
+    private bool isPointed;
     public Material original;
     public Material selected;
-
+    private UIController uiControllerInstance;
+    private RaycastItemSelector raycastSelector;
     public Item item;
 
+    private bool wasGrabbed=false;
+    
+    public bool GetWasGrabbed() { return wasGrabbed; }
+    public void SetWasGrabbed(bool value) { wasGrabbed = value; }
+
+    public bool GetIsPointed() { return isPointed; }
+    public void SetIsPointed(bool value) { isPointed = value; }
+
+    public RaycastItemSelector GetRaycastSelector() { return raycastSelector; }
+
+    public void SetRaycastSelector(RaycastItemSelector raycastItemSelector) { raycastSelector = raycastItemSelector; }
 
 
-    public bool isSelected = false;
-   
-    GameObject instance;
-    public bool inEmptySpace=false;
-    bool canvasNotActive = true;
-    private SliderController scInstance;
-    bool materialSetted = false;
-    public float localObjectTimer;
-    public string hand = "";
-    public int rayNumber = 0;
-    public RaycastItemSelector leftOrRightSelector;
+    
 
-    public void reset(){
-        leftOrRightSelector=null;
-        localObjectTimer=0;
-        rayNumber=0;
-        hand="";
-        inEmptySpace=false;
-        
-    }
-    void Awake() {
-            scInstance = SliderController.instance;
-    }
+
     void Start()
     {
         var renderers = this.gameObject.GetComponents<Renderer>();
-
-        Transform objTransform = this.transform;
       
-        /*  instance =Instantiate(localCanvas);
-         instance.SetActive(false);
-         instance.transform.SetParent(this.gameObject.transform);
-         instance.transform.position = new Vector3(objTransform.position.x, objTransform.position.y + 1f, objTransform.position.z - 0.3f);*/
+
     }
 
-    private bool updateSlider(float value){
-        if(leftOrRightSelector == null )
-            return false;
-
-        string gameEvent="";
-        if(leftOrRightSelector.hand=="Left")
-            gameEvent=GameEvents.LEFT_SLIDER_CHANGE;
-        if(leftOrRightSelector.hand=="Right")
-            gameEvent=GameEvents.RIGHT_SLIDER_CHANGE;
-        Messenger<float>.Broadcast(gameEvent,value);
-        return true;
-    }
-
-      private bool activeSlider(bool value){
-        if(leftOrRightSelector == null )
-            return false;
-
-        string gameEvent="";
-        if(leftOrRightSelector.hand=="Left")
-            gameEvent=GameEvents.LEFT_SLIDER_ACTIVE;
-        if(leftOrRightSelector.hand=="Right")
-            gameEvent=GameEvents.RIGHT_SLIDER_ACTIVE;
-        Messenger<bool>.Broadcast(gameEvent,value);
-        return true;
+   
+    private void UpdateUI(bool isSliderActive,float localTimer){
+        if(this.GetRaycastSelector()== null)
+            return;
+        
+        string eventNameActiveSlider=GameEvents.SLIDER_ACTIVE;
+        string eventNameUpdateSlider=GameEvents.SLIDER_CHANGE;
+        Messenger<bool>.Broadcast(this.GetRaycastSelector().hand.ToUpper()+eventNameActiveSlider, isSliderActive);
+        Messenger<float>.Broadcast(this.GetRaycastSelector().hand.ToUpper()+eventNameUpdateSlider, localTimer);
     }
 
     // Update is called once per frame
     void Update()
     {
-       if(inEmptySpace)
-            return;
+        
 
-        if (isSelected)
+        if(!isPointed){
+            localObjectTimer=0;
+            if(this.GetRaycastSelector()!=null){
+              string eventNameActiveSlider=GameEvents.SLIDER_ACTIVE;
+              Messenger<bool>.Broadcast(this.GetRaycastSelector().hand.ToUpper()+eventNameActiveSlider, false);
+            this.SetRaycastSelector(null);
+            }
+            UpdateUI(false,0f);
+            
+             //Debug.Log("fuori if(isPointed): "+localObjectTimer);
+             return;
+
+        }
+
+        if (isPointed)
         {
-
-
-
-
-
             localObjectTimer += Time.deltaTime;
-            changeImageSlider(gestureIndex.GET);
-            if (localObjectTimer >= 2.0f)
-            {
 
-                localObjectTimer = 2;
-
-                //HandController.instance.setHandObject(this);
-                updateSlider(localObjectTimer); 
-                activeSlider(false);
-                // scInstance.getSlider(leftOrRightSelector.hand).GetComponentInChildren<Image>().sprite=item.sprite;
-
-                return;
+            if(localObjectTimer>=2.0f){
+                localObjectTimer=2.0f;
+                //TO-DO grab degli oggetti
+                GetRaycastSelector().LockPointerOnItem(this);
             }
-            if (localObjectTimer < 2.0f)
-            {
-
-
-                // instance.SetActive(true);
-                
-                activeSlider(true);
-                updateSlider(localObjectTimer); 
-
-            }
+            UpdateUI(true,this.localObjectTimer);
+           
         }
-        else
-        {
-
-            localObjectTimer = 0;
-            
-           if(leftOrRightSelector==null)
-                return;
-             updateSlider(localObjectTimer); 
-            activeSlider(false);
-            
-            leftOrRightSelector = null;
-            
-
+        
+        if(wasGrabbed){
+            this.gameObject.SetActive(false);
         }
 
-
-
-
     }
-private bool changeImageSlider(gestureIndex value){
-    if(leftOrRightSelector == null )
-            return false;
-       // Debug.Log("change image slider");
-        string gameEvent="";
-        if(leftOrRightSelector.hand=="Left")
-            gameEvent=GameEvents.LEFT_SLIDER_IMAGE_CHANGE;
-        if(leftOrRightSelector.hand=="Right")
-            gameEvent=GameEvents.RIGHT_SLIDER_IMAGE_CHANGE;
-        Messenger<gestureIndex>.Broadcast(gameEvent,value);
-         
-        return true;
-
-}
-
-    public void setSelector(RaycastItemSelector leftOrRight)
-    {
-        this.leftOrRightSelector = leftOrRight;
-    }
-
-    public void showCanvas()
-    {
-        instance.SetActive(true);
-
-    }
-    public void hideCanvas()
-    {
-        instance.SetActive(false);
-
-    }
-
 
 
 

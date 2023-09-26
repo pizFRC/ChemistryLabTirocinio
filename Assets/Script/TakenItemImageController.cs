@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 
 using UnityEngine.UI;
-public class SelectedItemImageController : MonoBehaviour
+
+public class TakenItemImageController : MonoBehaviour
 {
     // Start is called before the first frame update
     public Image LeftHandImage;
@@ -33,11 +34,13 @@ public class SelectedItemImageController : MonoBehaviour
     }
     private void updateImageItemLeftHand(Sprite spriteItem)
     {
-        LeftHandImage.sprite = spriteItem;
+        UnityMainThreadDispatcher.Instance().Enqueue(() =>LeftHandImage.sprite = spriteItem);
     }
     private void updateImageItemRightHand(Sprite spriteItem)
     {
-        RightHandImage.sprite = spriteItem;
+      
+        UnityMainThreadDispatcher.Instance().Enqueue(() =>RightHandImage.sprite = spriteItem);
+       
     }
 private void activeUiGestureDX(bool value)
     {

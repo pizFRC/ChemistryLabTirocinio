@@ -280,16 +280,14 @@ MonoBehaviour:
   uiGesture: {fileID: 1950376653}
   hand: 
   standard: {fileID: 2100000, guid: 9a348eb0a65ec7a49be3505052e662e5, type: 2}
-  riponiOggMaterial: {fileID: 2100000, guid: d22856b3aadd4884cae51d5a78780120, type: 2}
   timeToWait: 0.02
   smoothingFactor: 0.25
   maxDistance: 150
-  lastItemSelected: {fileID: 0}
+  lastInteractableItemSelected: {fileID: 0}
   lastItemSelectedFor2Second: {fileID: 0}
   valueToSubtractY: 0.3
   valueToAddX: 0.2
   range: 10
-  canRaycast: 1
 --- !u!1 &23313183
 GameObject:
   m_ObjectHideFlags: 0
@@ -966,16 +964,14 @@ MonoBehaviour:
   uiGesture: {fileID: 1924821768}
   hand: 
   standard: {fileID: 2100000, guid: 9a348eb0a65ec7a49be3505052e662e5, type: 2}
-  riponiOggMaterial: {fileID: 2100000, guid: d22856b3aadd4884cae51d5a78780120, type: 2}
   timeToWait: 0.02
   smoothingFactor: 0.25
   maxDistance: 150
-  lastItemSelected: {fileID: 0}
+  lastInteractableItemSelected: {fileID: 0}
   lastItemSelectedFor2Second: {fileID: 0}
   valueToSubtractY: 0.45
   valueToAddX: -0.13
   range: 10
-  canRaycast: 1
 --- !u!120 &132509537
 LineRenderer:
   m_ObjectHideFlags: 0
@@ -4535,15 +4531,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bb893d998b1feda4baa1a3e6367ff58d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  localObjectTimer: 0
   original: {fileID: 2100000, guid: b44d0fba9fd9a2445b0648bd3e86c190, type: 2}
   selected: {fileID: 2100000, guid: b44d0fba9fd9a2445b0648bd3e86c190, type: 2}
   item: {fileID: 11400000, guid: cc5c16065f20b1f43934469834129f67, type: 2}
-  isSelected: 0
-  inEmptySpace: 0
-  localObjectTimer: 0
-  hand: 
-  rayNumber: 0
-  leftOrRightSelector: {fileID: 0}
 --- !u!64 &779839039
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -5470,6 +5461,7 @@ GameObject:
   - component: {fileID: 976425077}
   - component: {fileID: 976425078}
   - component: {fileID: 976425079}
+  - component: {fileID: 976425080}
   m_Layer: 0
   m_Name: UIController
   m_TagString: Untagged
@@ -5504,14 +5496,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 51cd5e9e84298004cacc80c1d2ce51cd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  takenItemImageController: {fileID: 0}
   gestureImage:
   - {fileID: 21300000, guid: 2888b2ffc99b877408265397630c47f3, type: 3}
   - {fileID: 21300000, guid: 3fc3f18624ac33743bd0413b63852736, type: 3}
   - {fileID: 21300000, guid: d29d0af383d787b4bad94229ee2788ad, type: 3}
-  SX: {fileID: 991427424}
-  DX: {fileID: 369803041}
-  SX_innerImage: {fileID: 350231398}
-  DX_innerImage: {fileID: 1820414898}
   val: 0
 --- !u!114 &976425079
 MonoBehaviour:
@@ -5529,6 +5518,22 @@ MonoBehaviour:
   RightHandImage: {fileID: 1100706012}
   sxGestureMenu: {fileID: 1924821768}
   dxGestureMenu: {fileID: 1950376653}
+--- !u!114 &976425080
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 976425076}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a622401f39cfc04459eeda84a0a6eade, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  leftSlider: {fileID: 991427424}
+  rightSlider: {fileID: 369803041}
+  leftSliderInnerImage: {fileID: 350231398}
+  rightSliderInnerImage: {fileID: 1820414898}
 --- !u!1 &991427422
 GameObject:
   m_ObjectHideFlags: 0
@@ -13612,17 +13617,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   leftHandSelector: {fileID: 132509536}
   rightHandSelector: {fileID: 9284485}
-  selectedLeftHandObject: {fileID: 0}
   selectedRightHandObject: {fileID: 0}
-  selectedLeftSpaceObject: {fileID: 0}
-  selectedRightSpaceObject: {fileID: 0}
-  hand: 
-  simulaGestureAfferraDestra: 0
-  simulaGestureRilasciaDestra: 0
-  simulaGestureAfferraSinistra: 0
-  simulaGestureRilasciaSinistra: 0
-  selectedLeftHandItemUI: {fileID: 534201440}
-  selectedRightHandItemUI: {fileID: 1100706012}
 --- !u!1 &2212252532244252929
 GameObject:
   m_ObjectHideFlags: 0

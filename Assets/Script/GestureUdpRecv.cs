@@ -26,7 +26,6 @@ byte [] data;
         receiveThread.Start();
     }
 
-   
     private void RecvData()
     {
        IPAddress ipAddress = IPAddress.Parse("127.0.0.1");
@@ -56,7 +55,6 @@ byte [] data;
                     string []handGesture=dataStr.Split("---");
                    
 
-                    string h=HandController.instance.hand;
                  //   print("hand di hand controller"+h);
               
                     foreach(string s in handGesture){
@@ -64,11 +62,13 @@ byte [] data;
                     //la mano destra e sinistra vengono inviate invertite quindi se left -> mano destra e viceversa
                         if(s.Contains("Right")){
                             if(s.Contains("Closed_Fist")){
-                                HandController.instance.simula_gestureDX_afferra();
+                                
+                                Messenger<Gesture>.Broadcast(GameEvents.GRAB,Gesture.GrabRight);
+                               // HandController.instance.simula_gestureDX_afferra();
                                Debug.Log("afferra");
                             }else if(s.Contains("Victory")){
                                 Debug.Log("victory DX ");
-                                HandController.instance.simula_gestureDX_rilascia();
+                               // HandController.instance.simula_gestureDX_rilascia();
                             }else if(s.Contains("Open_Palm")){
                                 //Debug.Log("mano aperta non mi interessa");
                             }
@@ -76,12 +76,13 @@ byte [] data;
                        if(s.Contains("Left")){
 
                             if(s.Contains("Closed_Fist")){
+                                Messenger<Gesture>.Broadcast(GameEvents.GRAB,Gesture.GrabLeft);
                                // HandController.instance.simula_gestureDX_afferra();
-                                 HandController.instance.simula_gestureSX_afferra();
-                                 Debug.Log("SINISTRA");
+                                 //HandController.instance.simula_gestureSX_afferra();
+                                
                             }else if(s.Contains("Victory")){
                                Debug.Log("SINISTRA");
-                                 HandController.instance.simula_gestureSX_rilascia();
+                                 //HandController.instance.simula_gestureSX_rilascia();
                               //  HandController.instance.simula_gestureDX_rilascia();
                             }else if(s.Contains("Open_Palm")){
                                 //Debug.Log("mano aperta non mi interessa");

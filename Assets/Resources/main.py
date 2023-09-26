@@ -32,7 +32,7 @@ def main():
             s = thread.data.encode('ascii') 
             s2 = thread.dataWorld.encode('ascii') 
             sent = clientSocket.sendto(s, server_address)
-            sent = clientSocket.sendto(s, server_address_dataWorld)
+          #  sent = clientSocket.sendto(s, server_address_dataWorld)
                         
 
             thread.dirty = False

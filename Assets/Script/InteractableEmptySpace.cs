@@ -166,7 +166,7 @@ public class InteractableEmptySpace : MonoBehaviour
         Debug.LogError(evento);
         Messenger<Sprite>.Broadcast(evento, null);
 
-        HandController.instance.riponiOggetto(ris.hand);
+      //  HandController.instance.riponiOggetto(ris.hand);
         objectContained = obj;
         containsObject = true;
 

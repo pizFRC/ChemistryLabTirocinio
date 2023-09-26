@@ -194,6 +194,7 @@ class HandThread(threading.Thread):
                     min_tracking_confidence = 0.5,
                     running_mode=mp.tasks.vision.RunningMode.LIVE_STREAM,
                     result_callback=print_result,
+
                     )
                 recognizer = mp.tasks.vision.GestureRecognizer.create_from_options(options)
            
@@ -235,35 +236,8 @@ class HandThread(threading.Thread):
               
                 
                 image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
-                #gray_image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-                '''kernel = np.ones((8, 8), np.uint8)
-               
-               
-                dilated_image = cv2.erode(mask2, kernel, iterations=4)
-                masked_image3 = cv2.bitwise_and(image, image, mask=dilated_image)
-                TEST 
-                kernel = np.ones((8,8), np.uint8)
-                eroded_mask = cv2.erode(mask2, kernel, iterations=3)
-                masked_image3 = cv2.bitwise_and(image, image, mask=eroded_mask)
-
-               
                 
-                kernel = np.ones((10, 10), np.uint8)
-                dilated_mask = cv2.dilate(mask2, kernel, iterations=5)
-                masked_image3 = cv2.bitwise_and(image, image, mask=dilated_mask)
-                
-                
-
                
-
-
-                background = np.zeros_like(masked_image3)
-
-                '''
-                #result3 = cv2.add(masked_image3, background)
-
-              
-              
                 if results.multi_hand_landmarks:
                     
                     for num, hand in enumerate(results.multi_hand_landmarks):
@@ -302,7 +276,7 @@ class HandThread(threading.Thread):
                         hand_world_landmarks = results.multi_hand_world_landmarks[j]
                         for i in range(0,21):
                             self.data += "{}|{}|{}|{}|{}\n".format(results.multi_handedness[j].classification[0].label,i,hand_landmarks.landmark[i].x,hand_landmarks.landmark[i].y,hand_landmarks.landmark[i].z)
-                            self.dataWorld += "{}|{}|{}|{}|{}\n".format(results.multi_handedness[j].classification[0].label,i,hand_world_landmarks.landmark[i].x,hand_world_landmarks.landmark[i].y,hand_world_landmarks.landmark[i].z)
+                            #self.dataWorld += "{}|{}|{}|{}|{}\n".format(results.multi_handedness[j].classification[0].label,i,hand_world_landmarks.landmark[i].x,hand_world_landmarks.landmark[i].y,hand_world_landmarks.landmark[i].z)
                         
                         
                         self.dirty = True

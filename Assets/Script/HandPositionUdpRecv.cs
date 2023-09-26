@@ -159,13 +159,13 @@ public class HandPositionUdpRecv : MonoBehaviour
 
         left = new Hand(lParent, landmarkPrefab, linePrefab);
         right = new Hand(rParent, landmarkPrefab, linePrefab);
-        
+        //THREAD t: si occupa di aggiornare la posizione delle mani
         t = new Thread(new ThreadStart(Run));
         t.Start();
 
         
 
-
+        //Thread recvThread: riceve i dati delle mani dal server udp
         recvThread = new Thread(new ThreadStart(RecvData));
         recvThread.IsBackground = true;
         recvThread.Start();
