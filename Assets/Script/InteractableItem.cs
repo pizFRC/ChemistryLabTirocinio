@@ -4,20 +4,21 @@ using System.Linq;
 using Unity.VisualScripting;
 using Unity.VisualScripting.ReorderableList;
 using UnityEngine;
-using UnityEngine.UI;
+using UnityEngine.Events;
 
 public class InteractableItem : MonoBehaviour
 {
     // Start is called before the first frame update
     public float localObjectTimer;
-    private bool isPointed;
-    public Material original;
-    public Material selected;
-    private UIController uiControllerInstance;
+    public bool isPointed;
+
+    
     private RaycastItemSelector raycastSelector;
     public Item item;
 
-    private bool wasGrabbed=false;
+
+    public bool wasGrabbed=false;
+    
     
     public bool GetWasGrabbed() { return wasGrabbed; }
     public void SetWasGrabbed(bool value) { wasGrabbed = value; }
@@ -28,16 +29,16 @@ public class InteractableItem : MonoBehaviour
     public RaycastItemSelector GetRaycastSelector() { return raycastSelector; }
 
     public void SetRaycastSelector(RaycastItemSelector raycastItemSelector) { raycastSelector = raycastItemSelector; }
-
-
+    [SerializeField]public UnityEvent evento;
     
 
 
     void Start()
     {
-        var renderers = this.gameObject.GetComponents<Renderer>();
+        
+       
       
-
+        
     }
 
    
@@ -55,16 +56,32 @@ public class InteractableItem : MonoBehaviour
     void Update()
     {
         
+        if(wasGrabbed){
+        
+        this.isPointed=false;
+        localObjectTimer=0f;
+          UpdateUI(false,0f);
+          
+        return;
 
+        }
+
+
+
+       
+         
+        
         if(!isPointed){
-            localObjectTimer=0;
+            if(this.TryGetComponent(out Outline outline))
+                outline.enabled=false;
             if(this.GetRaycastSelector()!=null){
-              string eventNameActiveSlider=GameEvents.SLIDER_ACTIVE;
-              Messenger<bool>.Broadcast(this.GetRaycastSelector().hand.ToUpper()+eventNameActiveSlider, false);
-            this.SetRaycastSelector(null);
+              UpdateUI(false,0f);
+              this.raycastSelector=null;
+
             }
-            UpdateUI(false,0f);
-            
+          
+         
+              localObjectTimer=0;
              //Debug.Log("fuori if(isPointed): "+localObjectTimer);
              return;
 
@@ -72,41 +89,44 @@ public class InteractableItem : MonoBehaviour
 
         if (isPointed)
         {
-            localObjectTimer += Time.deltaTime;
 
+       
+        if(this.TryGetComponent(out Outline outline))
+                outline.enabled=true;
+
+            localObjectTimer += Time.deltaTime;
+            
             if(localObjectTimer>=2.0f){
                 localObjectTimer=2.0f;
                 //TO-DO grab degli oggetti
-                GetRaycastSelector().LockPointerOnItem(this);
+               
+                  evento.Invoke();
+                
+                 UpdateUI(false,0f);
+                 localObjectTimer=0;
+                 isPointed=false;
+                 return;
             }
             UpdateUI(true,this.localObjectTimer);
            
         }
         
-        if(wasGrabbed){
-            this.gameObject.SetActive(false);
-        }
+       
 
     }
 
+public void setRaycastSelectorLockOnItem(){
+            GetRaycastSelector().LockPointerOnItem();
+}
 
 
-    public void changeMaterial(bool selected_material)
-    {
-        var renderer = this.gameObject.GetComponents<Renderer>();
-        foreach (Renderer r in renderer)
-        {
-
-            if (selected_material)
-            {
-                r.material = selected;
-            }
-            else
-            {
-                r.material = original;
-            }
-        }
-    }
+     
+public void visibile(bool value){
+    this.transform.gameObject.SetActive(value);
+}
+    
+    
+    
 
 
 

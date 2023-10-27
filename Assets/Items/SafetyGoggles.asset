@@ -1,0 +1,16 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 15168717178efa0408581c4b6b381dbd, type: 3}
+  m_Name: SafetyGoggles
+  m_EditorClassIdentifier: 
+  name: Occhiali Protettivi
+  sprite: {fileID: 21300000, guid: fb5de5ef5d4af4f4485f56136b231248, type: 3}

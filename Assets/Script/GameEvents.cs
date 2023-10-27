@@ -31,6 +31,10 @@ public static string RIGHT_SLIDER_IMAGE_CHANGE="RIGHT_SLIDER_IMAGE_CHANGE";
 //GESTURE EVENT
  public static string GRAB="GRAB";
  public static string RELEASE="RELEASE";
+ public static string INTERACT="INTERACT";
+ public static string NONE="NONE";
+  public static string OPEN_PALM="OPEN_PALM";
+ 
 
 
 /// END GESTURE EVENT
@@ -46,5 +50,31 @@ public static string RIGHT_ITEM_IMAGE_CHANGE="RIGHT_ITEM_IMAGE_CHANGE";
 public static string  SET_SCRIPATABLE_DX="SET_SCRIPATABLE_DX";
 
 public static string  SET_SCRIPATABLE_SX="SET_SCRIPATABLE_SX";
- 
+    public static string MISSING_HAND_LEFT="MISSING_HAND_LEFT";
+
+        public static string MISSING_HAND_RIGHT="MISSING_HAND_RIGHT";
+
+        public static string GRAB_UI="GRAB_UI";
+
+        public static string RELEASE_UI="RELEASE_UI";
+
+           public static string GESTURE_PANEL="GESTURE_PANEL";
+
+           public static string UI_GESTURE="UI_GESTURE";
+           public static string HAND_WRONG_DISTANCE_RIGHT="HAND_WRONG_DISTANCE_RIGHT";
+               public static string HAND_WRONG_DISTANCE_LEFT="HAND_WRONG_DISTANCE_LEFT";
+           
+                  public static string HAND_WRONG_DISTANCE_TEXT_RIGHT="HAND_WRONG_DISTANCE_TEXT_RIGHT";
+           public static string HAND_WRONG_DISTANCE_TEXT_LEFT="HAND_WRONG_DISTANCE_TEXT_LEFT";
+
+         public static string   HAND_WRONG_DISTANCE_TEXT="HAND_WRONG_DISTANCE_TEXT_";
+
+         public static string   HAND_WRONG_DISTANCE="HAND_WRONG_DISTANCE_";
+
+         public static string    DISPLAY_GESTURE_PANEL="DISPLAY_GESTURE_PANEL";
+            public static string    SHOW_REACTION_PANEL="SHOW_REACTION_PANEL";
 }
+
+
+
+

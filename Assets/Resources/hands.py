@@ -106,14 +106,14 @@ class HandThread(threading.Thread):
     data=""
     dataWorld=""
     last_gesture=""
+    sendNullFirstTime=True
     gesture_rilevata=False
     dirty = True
     haveFinished=False
     imageSender=ImageSender()
     capture = CaptureThread()
    # gestureSender=GestureSender()
-    def is_finger_raised(self,tip,pip,mcp,wrist):
-        return tip.y < pip.y and pip.y < mcp.y and mcp.y > wrist.y
+
     def run(self):
         mp_drawing = mp.solutions.drawing_utils
         self.mp_hands = mp.solutions.hands
@@ -227,6 +227,7 @@ class HandThread(threading.Thread):
                 # Estrai la maschera binaria dell'hand
                 #results2 = segmenter.process(image)
                 image_h, image_w, _ = frame.shape
+               
                 #mask2 = results2.segmentation_mask
                 
                # mask2 = (results2.segmentation_mask > 0).astype(np.uint8) *255
@@ -262,7 +263,7 @@ class HandThread(threading.Thread):
                     
                     recognizer.recognize_async(mp_image,timestamp)
 
-                # Set up data for piping
+               
                 self.data = ""
                 
                 self.dataWorld=""
@@ -275,13 +276,27 @@ class HandThread(threading.Thread):
                         
                         hand_world_landmarks = results.multi_hand_world_landmarks[j]
                         for i in range(0,21):
-                            self.data += "{}|{}|{}|{}|{}\n".format(results.multi_handedness[j].classification[0].label,i,hand_landmarks.landmark[i].x,hand_landmarks.landmark[i].y,hand_landmarks.landmark[i].z)
-                            #self.dataWorld += "{}|{}|{}|{}|{}\n".format(results.multi_handedness[j].classification[0].label,i,hand_world_landmarks.landmark[i].x,hand_world_landmarks.landmark[i].y,hand_world_landmarks.landmark[i].z)
+                            self.data += "{}|{}|{}|{}|{}\n".format(results.multi_handedness[j].classification[0].label,i,
+                                                                        hand_landmarks.landmark[i].x,
+                                                                        hand_landmarks.landmark[i].y,
+                                                                        hand_landmarks.landmark[i].z)
+                            
+                            self.dataWorld += "{}|{}|{}|{}|{}\n".format(results.multi_handedness[j].classification[0].label,i,
+                                                                        int(hand_world_landmarks.landmark[i].x*image_w),
+                                                                        int(hand_world_landmarks.landmark[i].y *image_h),
+                                                                        hand_world_landmarks.landmark[i].z )
+                            
+                           # print(self.data)
+                            self.dirty = True
+                            self.sendNullFirstTime=True
+                
+                    
                         
-                        
-                        self.dirty = True
-                        
-                        
+                if len(self.data)==0 and self.sendNullFirstTime:
+                  
+                    self.data="NULL"
+                    self.dirty = True
+                    self.sendNullFirstTime=False
                 
                     
                         

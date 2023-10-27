@@ -22,7 +22,9 @@ byte [] data;
         receiveThread=new Thread(new ThreadStart(RecvData));
         receiveThread.Start();
     }
-
+    void Awake(){
+          DontDestroyOnLoad(this.gameObject);
+    }
    
     private void RecvData()
     {

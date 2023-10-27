@@ -46,8 +46,8 @@ public class SliderController : MonoBehaviour
         Messenger<bool>.RemoveListener(GameEvents.RIGHT_SLIDER_ACTIVE, activeSliderRight);
         Messenger<bool>.RemoveListener(GameEvents.LEFT_SLIDER_ACTIVE, activeSliderLeft);
        
-        Messenger<Sprite>.RemoveListener(GameEvents.LEFT_SLIDER_IMAGE_CHANGE_ICON, updateImageItemLeftSlider);
-        Messenger<Sprite>.RemoveListener(GameEvents.RIGHT_SLIDER_IMAGE_CHANGE_ICON, updateImageItemRightSlider);
+       /*  Messenger<Sprite>.RemoveListener(GameEvents.LEFT_SLIDER_IMAGE_CHANGE, updateImageItemLeftSlider);
+        Messenger<Sprite>.RemoveListener(GameEvents.RIGHT_SLIDER_IMAGE_CHANGE, updateImageItemRightSlider); */
     }
 
 

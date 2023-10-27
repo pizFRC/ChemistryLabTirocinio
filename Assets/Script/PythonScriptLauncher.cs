@@ -10,6 +10,10 @@ public class PythonScriptLauncher : MonoBehaviour
     Process p;
     public bool debug = false;
     public bool pcUfficio=false;
+
+    void Awake(){
+          DontDestroyOnLoad(this.gameObject);
+    }
     void Start()
     {
 

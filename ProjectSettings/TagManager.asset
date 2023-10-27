@@ -18,6 +18,14 @@ TagManager:
   - slider_right_image
   - selected_scriptable_SX
   - selected_scriptable_DX
+  - canvasWorldSpace
+  - panel_left
+  - panel_right
+  - gesture_panel
+  - Sodio
+  - Water
+  - NamingCanvas
+  - Acqua
   layers:
   - Default
   - TransparentFX

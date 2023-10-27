@@ -25,6 +25,9 @@ byte [] data;
         receiveThread=new Thread(new ThreadStart(RecvData));
         receiveThread.Start();
     }
+    void Awake(){
+          DontDestroyOnLoad(this.gameObject);
+    }
 
     private void RecvData()
     {
@@ -64,28 +67,43 @@ byte [] data;
                             if(s.Contains("Closed_Fist")){
                                 
                                 Messenger<Gesture>.Broadcast(GameEvents.GRAB,Gesture.GrabRight);
-                               // HandController.instance.simula_gestureDX_afferra();
-                               Debug.Log("afferra");
+                               
+                               Messenger<Gesture>.Broadcast(GameEvents.UI_GESTURE,Gesture.GrabRight);
                             }else if(s.Contains("Victory")){
-                                Debug.Log("victory DX ");
-                               // HandController.instance.simula_gestureDX_rilascia();
+                                Messenger<Gesture>.Broadcast(GameEvents.RELEASE,Gesture.ReleaseRight);
+                                Messenger<Gesture>.Broadcast(GameEvents.UI_GESTURE,Gesture.ReleaseRight);
+                            }else if(s.Contains("Thumb_Up")){
+                                 Messenger<Gesture>.Broadcast(GameEvents.INTERACT,Gesture.InteractRight);
+                            
+                            }else if(s.Contains("None") ){
+                                 Messenger<Gesture>.Broadcast(GameEvents.NONE,Gesture.NoneRight);
+                            
                             }else if(s.Contains("Open_Palm")){
-                                //Debug.Log("mano aperta non mi interessa");
+                                 Messenger<Gesture>.Broadcast(GameEvents.OPEN_PALM,Gesture.OpenPalmRight);
+                                
                             }
                         }
                        if(s.Contains("Left")){
 
                             if(s.Contains("Closed_Fist")){
                                 Messenger<Gesture>.Broadcast(GameEvents.GRAB,Gesture.GrabLeft);
-                               // HandController.instance.simula_gestureDX_afferra();
-                                 //HandController.instance.simula_gestureSX_afferra();
+                                Messenger<Gesture>.Broadcast(GameEvents.UI_GESTURE,Gesture.GrabLeft);
                                 
                             }else if(s.Contains("Victory")){
-                               Debug.Log("SINISTRA");
-                                 //HandController.instance.simula_gestureSX_rilascia();
-                              //  HandController.instance.simula_gestureDX_rilascia();
+                                Messenger<Gesture>.Broadcast(GameEvents.RELEASE,Gesture.ReleaseLeft);
+                                Messenger<Gesture>.Broadcast(GameEvents.UI_GESTURE,Gesture.ReleaseLeft);
+                                print("left vic");
+                               
+                            }else if(s.Contains("Thumb_Up")){
+                                 Messenger<Gesture>.Broadcast(GameEvents.INTERACT,Gesture.InteractLeft);
+                            
+                            }
+                            else if(s.Contains("None")){
+                                 Messenger<Gesture>.Broadcast(GameEvents.NONE,Gesture.NoneLeft);
+                            
                             }else if(s.Contains("Open_Palm")){
-                                //Debug.Log("mano aperta non mi interessa");
+                                   Messenger<Gesture>.Broadcast(GameEvents.OPEN_PALM,Gesture.OpenPalmLeft);
+                                
                             }
                         }
                     }
