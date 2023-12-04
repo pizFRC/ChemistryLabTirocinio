@@ -25,23 +25,10 @@ public class LabController : MonoBehaviour
             meshes = g.GetComponentsInChildren<MeshRenderer>();
             print(meshes.Length);
             
-            foreach(MeshRenderer m in meshes)
-            {
-            
-                MeshFilter meshFilter = m.GetComponent<MeshFilter>();
-
-            if (meshFilter != null)
-            {
-                // Ottieni la mesh dall'oggetto MeshFilter.
-                Mesh mesh = meshFilter.mesh;
-                
-
-                // Adesso hai accesso alla mesh, puoi fare quello che desideri con essa.
-            }
-            }
+          
             if(meshes.Length>=0)
                 if(!meshes[0].transform.parent.TryGetComponent(out Outline outline)){
-            Outline addedOutline=g.AddComponent<Outline>();
+                            Outline addedOutline=g.AddComponent<Outline>();
                         
                             addedOutline.enabled=false;
                             addedOutline.OutlineColor=Color.red;
@@ -65,6 +52,9 @@ public class LabController : MonoBehaviour
         
 
         
+    }
+    void OnDisable(){
+
     }
 
     // Update is called once per frame

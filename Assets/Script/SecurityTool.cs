@@ -11,7 +11,6 @@ public class SecurityTool : MonoBehaviour
     public bool containsObject;
     public float timeRequired; 
     public bool isPointed;
-   float timeElapsed =0f;
 
         public float multiplier;
     public void open(){
@@ -22,6 +21,12 @@ public class SecurityTool : MonoBehaviour
 
        isClosed=false;
      
+    }
+
+    void OnDisable(){
+        isPointed=false;
+        containsObject=false;
+        close();
     }
     public void close(){
         if(!isClosed)
@@ -59,9 +64,9 @@ public class SecurityTool : MonoBehaviour
         
     }
     IEnumerator changeState(bool value){
-
-        isClosed=value;
         yield return new WaitForSeconds(0.5f);
+        isClosed=value;
+      
     }
     public IEnumerator OpenWindows(){
         

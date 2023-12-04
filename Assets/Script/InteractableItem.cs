@@ -1,15 +1,11 @@
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using Unity.VisualScripting;
-using Unity.VisualScripting.ReorderableList;
+
 using UnityEngine;
 using UnityEngine.Events;
 
 public class InteractableItem : MonoBehaviour
 {
     // Start is called before the first frame update
-    public float localObjectTimer;
+    public float localObjectTimer,timerTheshold=2.0f;
     public bool isPointed;
 
     
@@ -31,16 +27,6 @@ public class InteractableItem : MonoBehaviour
     public void SetRaycastSelector(RaycastItemSelector raycastItemSelector) { raycastSelector = raycastItemSelector; }
     [SerializeField]public UnityEvent evento;
     
-
-
-    void Start()
-    {
-        
-       
-      
-        
-    }
-
    
     private void UpdateUI(bool isSliderActive,float localTimer){
         if(this.GetRaycastSelector()== null)
@@ -90,15 +76,14 @@ public class InteractableItem : MonoBehaviour
         if (isPointed)
         {
 
-       
         if(this.TryGetComponent(out Outline outline))
                 outline.enabled=true;
 
             localObjectTimer += Time.deltaTime;
             
-            if(localObjectTimer>=2.0f){
-                localObjectTimer=2.0f;
-                //TO-DO grab degli oggetti
+            if(localObjectTimer>=timerTheshold){
+                localObjectTimer=timerTheshold;
+                
                
                   evento.Invoke();
                 
@@ -113,6 +98,12 @@ public class InteractableItem : MonoBehaviour
         
        
 
+    }
+
+    void OnDisable(){
+        isPointed=false;
+        wasGrabbed=false;
+        localObjectTimer=0f;
     }
 
 public void setRaycastSelectorLockOnItem(){

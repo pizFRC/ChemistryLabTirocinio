@@ -27,7 +27,7 @@ public class GestureUIFiller : MonoBehaviour
     public ScriptableObject so;
     static string lastF;
     public Sprite[] gesture;
-    int t = 0;
+    
     // Update is called once per frame
     void Awake()
     {

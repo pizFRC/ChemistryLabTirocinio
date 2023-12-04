@@ -53,50 +53,18 @@ public class HandController : MonoBehaviour
         Messenger<Gesture>.AddListener(GameEvents.GRAB, GrabGesture);
 
         Messenger<Gesture>.AddListener(GameEvents.RELEASE, ReleaseGesture);
-        Messenger<Gesture>.AddListener(GameEvents.INTERACT, InteractGesture);
+       
        
 
     }
 
-    void InteractGesture(Gesture gesture){
-        return;
-        print("interact");
-  switch (gesture)
-        {
-            case Gesture.InteractLeft:
-            if(leftHandSelector.lastInteractableItemSelected==null)
-            return;
-            if(leftHandSelector.lastInteractableItemSelected.TryGetComponent(out Contenitore contenitore)){
-                    contenitore.clear();
-            }
-
-            if(leftHandSelector.lastInteractableItemSelected.TryGetComponent(out SecurityTool securityTool)){
-                   securityTool.SetIsPointed(true);
-            }
-            break;
-
-            case Gesture.InteractRight:
-            if(rightHandSelector.lastInteractableItemSelected==null)
-            return;
-            if(rightHandSelector.lastInteractableItemSelected.TryGetComponent(out Contenitore contenitoreRight)){
-                    contenitoreRight.clear();
-            }
-
-            if(rightHandSelector.lastInteractableItemSelected.TryGetComponent(out SecurityTool securityToolRight)){
-                    securityToolRight.SetIsPointed(true);
-            }
-            break;
-
-            
-        }
-        
-    }
+    
     private void OnDestroy()
     {
         Messenger<Gesture>.RemoveListener(GameEvents.GRAB, GrabGesture);
         Messenger<Gesture>.RemoveListener(GameEvents.RELEASE, ReleaseGesture);
 
-        Messenger<Gesture>.RemoveListener(GameEvents.INTERACT, InteractGesture);
+     
          
     }
     // Update is called once per frame
@@ -109,6 +77,14 @@ public class HandController : MonoBehaviour
         switch (gesture)
         {
             case Gesture.GrabRight:
+
+                if (UIController.instance.grabNextStepReactionPanel)
+                    {
+                        UnityMainThreadDispatcher.Instance().Enqueue(() => UIController.instance.loadMenu());
+                    }
+
+
+
                 //se non ho selezionato nulla non posso grabbare
 
                 if (CheckItemInRightHand()){
@@ -117,7 +93,7 @@ public class HandController : MonoBehaviour
                 }
 
                 Messenger<bool>.Broadcast(GameEvents.DISPLAY_GESTURE_PANEL,false);
-                Debug.LogAssertion("entrato nell grab");
+                
 
 
                 rightHandSelector.mode = selectorMode.MoveItem;
@@ -135,6 +111,12 @@ public class HandController : MonoBehaviour
 
 
             case Gesture.GrabLeft:
+              if (UIController.instance.grabNextStepReactionPanel)
+                    {
+                         
+                        UnityMainThreadDispatcher.Instance().Enqueue(() => UIController.instance.loadMenu());
+                    }
+
                 if (CheckItemInLeftHand())
                     return;
                 
@@ -225,7 +207,11 @@ public class HandController : MonoBehaviour
         return leftHandSelector.lastInteractableItemSelected == null;
     }
 
-
+    public void ResetRIS(){
+         
+       leftHandSelector.resetAll();
+       rightHandSelector.resetAll();
+    }
     
 
 

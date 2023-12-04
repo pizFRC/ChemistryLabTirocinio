@@ -73,7 +73,7 @@ byte [] data;
                                 Messenger<Gesture>.Broadcast(GameEvents.RELEASE,Gesture.ReleaseRight);
                                 Messenger<Gesture>.Broadcast(GameEvents.UI_GESTURE,Gesture.ReleaseRight);
                             }else if(s.Contains("Thumb_Up")){
-                                 Messenger<Gesture>.Broadcast(GameEvents.INTERACT,Gesture.InteractRight);
+                               
                             
                             }else if(s.Contains("None") ){
                                  Messenger<Gesture>.Broadcast(GameEvents.NONE,Gesture.NoneRight);
@@ -95,7 +95,7 @@ byte [] data;
                                 print("left vic");
                                
                             }else if(s.Contains("Thumb_Up")){
-                                 Messenger<Gesture>.Broadcast(GameEvents.INTERACT,Gesture.InteractLeft);
+                                
                             
                             }
                             else if(s.Contains("None")){

@@ -47,8 +47,7 @@ public class HandPositionUdpRecv : MonoBehaviour
     {
         public Vector3[] positionsBuffer = new Vector3[LANDMARK_COUNT];
         public GameObject[] instances = new GameObject[LANDMARK_COUNT];
-        public LineRenderer[] lines = new LineRenderer[5];
-
+      
         
         public GameObject palmCenterObject;
         public float reportedSamplesPerSecond;
@@ -69,21 +68,9 @@ public class HandPositionUdpRecv : MonoBehaviour
                 instances[i].transform.localScale = Vector3.one;
                 instances[i].transform.parent = parent;
             }
-            for (int i = 0; i < lines.Length; ++i)
-            {
-                lines[i] = Instantiate(linePrefab).GetComponent<LineRenderer>();
-            }
+           
         }
 
-
-
-
-        public float GetFingerAngle(Landmark referenceFrom, Landmark referenceTo, Landmark from, Landmark to)
-        {
-            Vector3 reference = (instances[(int)referenceTo].transform.position - instances[(int)referenceFrom].transform.position).normalized;
-            Vector3 direction = (instances[(int)to].transform.position - instances[(int)from].transform.position).normalized;
-            return Vector3.SignedAngle(reference, direction, Vector3.Cross(reference, direction));
-        }
     }
 
 
@@ -222,7 +209,7 @@ public class HandPositionUdpRecv : MonoBehaviour
 
     private void correctHandPosition()
     {
-              int larghezzaFinestra = Screen.width;
+        int larghezzaFinestra = Screen.width;
 
         // Calcola le posizioni in coordinate del mondo
         float posXSinistra = Camera.main.ScreenToWorldPoint(new Vector3(0-larghezzaFinestra, 0, 10)).x; // 10 è la distanza dalla camera
@@ -236,18 +223,14 @@ public class HandPositionUdpRecv : MonoBehaviour
 
     private void UpdateHand(Hand h)
     {
-
         if (elapsedTimeLeft > timeSinceLastDetection || resetHand)
         {
             SetLeftVisibile(false);
             Messenger<bool>.Broadcast(GameEvents.MISSING_HAND_LEFT, true);
-
         }
         else
         {
-
             SetLeftVisibile(true);
-
             Messenger<bool>.Broadcast(GameEvents.MISSING_HAND_LEFT, false);
         }
 
@@ -255,17 +238,13 @@ public class HandPositionUdpRecv : MonoBehaviour
         {
             SetRightVisibile(false);
             Messenger<bool>.Broadcast(GameEvents.MISSING_HAND_RIGHT, true);
-            
+        
         }
         else
         {
-
-
             SetRightVisibile(true);
-
             Messenger<bool>.Broadcast(GameEvents.MISSING_HAND_RIGHT, false);
         }
-
         if(resetHand)
             resetHand=!resetHand;
 
@@ -273,7 +252,6 @@ public class HandPositionUdpRecv : MonoBehaviour
 
         if (Time.timeSinceLevelLoad - h.lastSampleTime >= sampleThreshold)
         {
-
             Vector3 palmCenter=Vector3.zero;
             for (int i = 0; i < LANDMARK_COUNT; ++i)
             {   
@@ -295,17 +273,9 @@ public class HandPositionUdpRecv : MonoBehaviour
             // Crea un oggetto sfera
             h.palmCenterObject.transform.position = palmCenterForward; //
             h.palmCenterObject.transform.LookAt(h.instances[0].transform,Vector3.up);
-             
-            
-            
-
-
             h.reportedSamplesPerSecond = h.samplesCounter / (Time.timeSinceLevelLoad - h.lastSampleTime);
             h.lastSampleTime = Time.timeSinceLevelLoad;
             h.samplesCounter = 0f;
-
-
-
 
         }
 
@@ -410,7 +380,7 @@ public class HandPositionUdpRecv : MonoBehaviour
                  
 
                   // Assumendo che il punto chiave 4 rappresenti un punto nella parte anteriore della mano
-                    ; 
+                
 
                 if (!recvThread.IsAlive)
                 {

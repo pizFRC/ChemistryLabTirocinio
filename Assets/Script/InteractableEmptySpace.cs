@@ -99,6 +99,12 @@ public class InteractableEmptySpace : MonoBehaviour
        
     }
 
+    void OnDisable(){
+        isPointed=false;
+        timer=0f;
+        ris=null;
+    }
+
     public void InserObjectInEmptySpace(){
         if(ris==null || ris.lastInteractableItemSelected==null)
             return;

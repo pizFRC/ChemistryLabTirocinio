@@ -28,26 +28,29 @@ public class PythonScriptLauncher : MonoBehaviour
        
         //  p=Process.Start("C:\\Users\\fdefa\\Desktop\\ChemLabTirocinio\venv\\Scripts\\python.exe,");
         //p=Process.Start("dir",Application.dataPath);
-        string assetsPath = Application.streamingAssetsPath;
-        string appPath = assetsPath + "/pyHandTracking/main/main.exe";
-        string filePath = Path.Combine(Application.streamingAssetsPath, "main/main.exe");
-        print("percorso"+filePath);
+      
+
+        string filePath = Path.Combine(Application.streamingAssetsPath, "main"+Path.DirectorySeparatorChar+"main.exe");
+
+
         string m_Path = Application.dataPath + "\\Resources\\main.py";
-        UnityEngine.Debug.Log("START " + m_Path);
-        if (!debug)
+      print(filePath);
+      if (debug)
+          p = Process.Start(chosenPath, m_Path);
+          else
         {
             try
             {
-                string path = "C:\\Users\\fdefa\\Desktop\\HandTracking\\main.exe";
+                
                 p = Process.Start(filePath);
             }
             catch
             {
-                UnityEngine.Debug.LogError("errore");
+                UnityEngine.Debug.LogError("errore percorso eseguibile non trovato"+filePath);
             }
         }
-        else
-            p = Process.Start(chosenPath, m_Path);
+      
+          
 
     }
 

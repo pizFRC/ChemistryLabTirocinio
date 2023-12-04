@@ -223,12 +223,12 @@ class HandThread(threading.Thread):
                 results = hands.process(image)
                 
                 
-                #segmenter = mp.solutions.selfie_segmentation.SelfieSegmentation()
+               # segmenter = mp.solutions.selfie_segmentation.SelfieSegmentation()
                 # Estrai la maschera binaria dell'hand
-                #results2 = segmenter.process(image)
+             #   results2 = segmenter.process(image)
                 image_h, image_w, _ = frame.shape
                
-                #mask2 = results2.segmentation_mask
+               # mask2 = results2.segmentation_mask
                 
                # mask2 = (results2.segmentation_mask > 0).astype(np.uint8) *255
                 x1, y1 = int(image_w/4)  , int(image_h/2)
@@ -286,7 +286,7 @@ class HandThread(threading.Thread):
                                                                         int(hand_world_landmarks.landmark[i].y *image_h),
                                                                         hand_world_landmarks.landmark[i].z )
                             
-                           # print(self.data)
+                            print(self.data)
                             self.dirty = True
                             self.sendNullFirstTime=True
                 
@@ -328,7 +328,7 @@ class HandThread(threading.Thread):
                    
                 
                 if DEBUG:
-                    #cv2.imshow('Segmentation Mask', image)
+                  #  cv2.imshow('Segmentation Mask', mask2)
                     
                     cv2.imshow('result3',image)
                     #cv2.imshow('sef',dilated_image)

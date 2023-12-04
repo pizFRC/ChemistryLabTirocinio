@@ -73,7 +73,11 @@ public static string  SET_SCRIPATABLE_SX="SET_SCRIPATABLE_SX";
 
          public static string    DISPLAY_GESTURE_PANEL="DISPLAY_GESTURE_PANEL";
             public static string    SHOW_REACTION_PANEL="SHOW_REACTION_PANEL";
+
+   public static string    SHOW_MENU="SHOW_MENU";
+
 }
+
 
 
 

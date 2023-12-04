@@ -1,22 +1,18 @@
-using System.Collections;
+
 using System.Collections.Generic;
-using System.Runtime.ConstrainedExecution;
-using Unity.VisualScripting;
+
+
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
-using UnityEditor.Experimental.GraphView;
+
 public enum selectorMode
 {
     CanSelect = 1,
     CannotSelect = 2,
-    RaycastOff = 3,
-
-    AlreadySelect = 4,
-
-    LockOnItem = 5,
-    MoveItem = 6,
-    LockOnEmptySpace = 7,
+    LockOnItem = 3,
+    MoveItem = 4,
+    LockOnEmptySpace = 5,
 }
 
 public class RaycastItemSelector : MonoBehaviour
@@ -72,16 +68,14 @@ void Awake(){
     {
         lastButtonPointed = null;
 
-        updatePosition();
 
-        Debug.LogError(lineRenderer);
+        
         // Usa nearClipPlane come valore Z
 
         
     }
 
-    private void updatePosition(){}
-    // Update is called once per frame
+
     void Update()
     {
 
@@ -178,7 +172,7 @@ void Awake(){
         //aggiungere pannello per gesture
         Messenger<bool>.Broadcast(GameEvents.DISPLAY_GESTURE_PANEL,true);
         UIController.instance.setHandGesturePanel(this);
-        
+   
     }
 
 
@@ -358,11 +352,7 @@ void Awake(){
 
 
         thumbDirection = (thumbTipPosition - wristPosition).normalized;
-        /* Debug.DrawRay(centerSphere.transform.position,-centerSphere.transform.forward * 100, Color.red, 0.2f);
-        Debug.DrawRay(wristPosition,thumbDirection * 100, Color.blue, 0.2f); */
-
-
-
+       
         previousHandDirection = filteredHandDirection;
 
         filteredHandDirection = -centerSphere.transform.forward;
@@ -415,18 +405,9 @@ void Awake(){
                     break;
 
                 case "Wall":
-                    ResetLastItemSelected();
-                    ResetLastItemHitten();
-                    break;
-
                 case "EmptySpace":
-                    ResetLastItemSelected();
-                    ResetLastItemHitten();
-                    break;
-                case "SecutiryTool":
-
-                    break;
-                case "Untagged":
+                case "Untagged":       
+                
                     ResetLastItemSelected();
                     ResetLastItemHitten();
 
@@ -507,6 +488,14 @@ void Awake(){
 
     }
 
+public void resetAll(){
+    ResetLastEmprySpacePointed();
+    ResetLastItemHitten();
+    ResetLastItemSelected();
+    
+    lastSecurityToolPointed=null;
+    this.mode=selectorMode.CanSelect;
+}
 
 }
 

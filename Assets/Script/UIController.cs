@@ -31,6 +31,7 @@ public class UIController : MonoBehaviour
     public GameObject tutorialPanel;
     public GameObject reactionPanel;
     public GameObject gesture_panel_item;
+    public GameObject imageNextStep;
     public GameObject leftHandStatus;
     public GameObject securityToolPanel;
     public GameObject rightHandStatus;
@@ -38,11 +39,12 @@ public class UIController : MonoBehaviour
     [SerializeField] public UnityEvent loadTutorial;
 
     public bool val = false;
+    public SecurityController securityController;
     public bool gesturePanelActiveLeft, gesturePanelActiveRight, exitLeft = false, exitOpened = false, tutorialOpened, experiment, notInUi = false;
     public bool menuOpen;
 
     public float time;
-    public bool grabNextStepInTutorial;
+    public bool grabNextStepInTutorial, grabNextStepReactionPanel;
 
     public void setExperiment(bool value)
     {
@@ -66,8 +68,8 @@ public class UIController : MonoBehaviour
     void Awake()
     {
         DontDestroyOnLoad(this.gameObject);
+        grabNextStepReactionPanel = false;
 
-                    
         Messenger<bool>.AddListener(GameEvents.SHOW_REACTION_PANEL, ShowReactionPanel);
         Messenger<bool>.AddListener(GameEvents.MISSING_HAND_LEFT, displayAlertMessageLeft);
         Messenger<bool>.AddListener(GameEvents.MISSING_HAND_RIGHT, displayAlertMessageRight);
@@ -84,7 +86,7 @@ public class UIController : MonoBehaviour
     {
         Messenger<Gesture>.RemoveListener(GameEvents.UI_GESTURE, ManageHandGesture);
         Messenger<bool>.RemoveListener(GameEvents.SHOW_REACTION_PANEL, ShowReactionPanel);
-
+        // Messenger<bool>.RemoveListener(GameEvents.SHOW_MENU, loadm);
         Messenger<bool>.RemoveListener(GameEvents.MISSING_HAND_RIGHT, displayAlertMessageRight);
         Messenger<bool>.RemoveListener(GameEvents.MISSING_HAND_LEFT, displayAlertMessageLeft);
 
@@ -99,12 +101,26 @@ public class UIController : MonoBehaviour
         Messenger<bool>.RemoveListener(GameEvents.DISPLAY_GESTURE_PANEL, displayGesturePanel);
 
     }
+    public void showButtonAvanti(){
+
+     StartCoroutine(WaitAndShowButton());
+    }
+    IEnumerator WaitAndShowButton()
+    {
 
 
+        yield return new WaitForSeconds(5f);
+        imageNextStep.SetActive(true);
+        grabNextStepReactionPanel = true;
 
-void ShowReactionPanel(bool value){
-  reactionPanel.SetActive(value);
-}
+    }
+    void ShowReactionPanel(bool value)
+    {
+        this.disactiveRaycast();
+        reactionPanel.SetActive(value);
+        
+    }
+
     void changeMessageWrongDistanceLeft(string value)
     {
         alertTextLeft.GetComponentInChildren<Text>().text = value;
@@ -124,6 +140,8 @@ void ShowReactionPanel(bool value){
     {
         alertTextRight.SetActive(value);
     }
+
+    
     void displayAlertMessageRight(bool value)
     {
 
@@ -205,7 +223,8 @@ void ShowReactionPanel(bool value){
     }
     // Start is called before the first frame update
     void Start()
-    {   grabNextStepInTutorial=false;
+    {
+        grabNextStepInTutorial = false;
         time = 0.0f;
         alertTextRight.SetActive(false);
         alertTextLeft.SetActive(false);
@@ -214,30 +233,28 @@ void ShowReactionPanel(bool value){
         if (this.rightHandStatus == null) this.rightHandStatus = GameObject.FindWithTag("panel_right");
     }
 
+public void setTextGesturePanel(RaycastItemSelector ris){
 
+}
     // Update is called once per frame
     void Update()
     {
-        string hand="";
+        
         time += Time.deltaTime;
 
-        if(gesturePanelActiveLeft)
-            hand="Left";
-        if(gesturePanelActiveRight)
-            hand="Right";
+       
+       
 
-        if(gesture_panel_item.activeInHierarchy){
-         handTitleGesturePanelPRO.text=hand;
-           // handTitleGesturePanel.text=hand;
+        if (tutorialPanel.activeInHierarchy)
+        {
+
+            grabNextStepInTutorial = true;
+
         }
-
-           if(tutorialPanel.activeInHierarchy){
-
-                grabNextStepInTutorial=true;
-
-           }else{
-            grabNextStepInTutorial=false;
-           }
+        else
+        {
+            grabNextStepInTutorial = false;
+        }
 
     }
     void loadSceneExperiment()
@@ -245,13 +262,30 @@ void ShowReactionPanel(bool value){
         this.lab_prefab.SetActive(true);
         securityToolPanel.SetActive(true);
         menuOpen = false;
-        activeRaycast();
+        HandController.instance.ResetRIS();
+
         notInUi = true;
         gesture_panel_item.SetActive(false);
 
         menuButtonPanel.SetActive(false);
         //  SceneManager.LoadScene("SampleScene");
     }
+
+    public void loadMenu()
+    {
+        this.lab_prefab.SetActive(false);
+        securityToolPanel.SetActive(false);
+        this.reactionPanel.SetActive(false);
+        imageNextStep.SetActive(false);
+        grabNextStepReactionPanel = false;
+        activeRaycast();
+
+        SetGesturePanelNotActive();
+        notInUi = false;
+
+    }
+
+
     public void setHandGesturePanel(RaycastItemSelector ris)
 
     {
@@ -262,21 +296,25 @@ void ShowReactionPanel(bool value){
             return;
 
         }
-        if (ris.hand == "Left")
+        if (ris.hand.Contains("Left"))
         {
-
+           Debug.LogError("left");
             gesturePanelActiveRight = false;
             gesturePanelActiveLeft = true;
 
 
-            return;
+            
         }
-
-
+        if(ris.hand.Contains("Right")){
+   
+         Debug.LogError("right");
         gesturePanelActiveRight = true;
 
         gesturePanelActiveLeft = false;
-
+        }
+        
+          
+         
 
     }
 
@@ -299,13 +337,14 @@ void ShowReactionPanel(bool value){
             gesturePanelActiveRight = false;
             gesturePanelActiveLeft = true;
 
-            return;
-        }
+     }else if(longClickRis.pointerRaycastItemSelector.hand=="Right"){
+   
+
         gesturePanelActiveRight = true;
 
         gesturePanelActiveLeft = false;
-
-
+        }
+       
     }
 
 
@@ -319,21 +358,28 @@ void ShowReactionPanel(bool value){
                 if (gesturePanelActiveRight)
                 {
                     //parte il tutorial
-                    if(grabNextStepInTutorial){
-                    print("prossimo step");
-                       UnityMainThreadDispatcher.Instance().Enqueue(() =>tutorialPanel.GetComponent<TutorialController>().nextStep());
-                    return;
+                    if (grabNextStepInTutorial)
+                    {
+                        print("prossimo step");
+                        UnityMainThreadDispatcher.Instance().Enqueue(() => tutorialPanel.GetComponent<TutorialController>().nextStep());
+                        return;
                     }
+                   
                     if (tutorialOpened)
+                    {
                         UnityMainThreadDispatcher.Instance().Enqueue(() => OpenTutorial());
+                        return;
+                    }
                     if (exitOpened)
                     {
                         UnityMainThreadDispatcher.Instance().Enqueue(() => Application.Quit());
                         Debug.LogError("exit");
                     }
                     if (experiment)
+                    {
                         UnityMainThreadDispatcher.Instance().Enqueue(() => loadSceneExperiment());
-
+                        return;
+                    }
 
 
                 }
@@ -344,28 +390,38 @@ void ShowReactionPanel(bool value){
                 if (gesturePanelActiveLeft)
                 {
                     //parte il tutorial
-                    if(grabNextStepInTutorial){
-                    print("prossimo step");
-                        UnityMainThreadDispatcher.Instance().Enqueue(() =>tutorialPanel.GetComponent<TutorialController>().nextStep());
-                      return;
+                    if (grabNextStepInTutorial)
+                    {
+                        print("prossimo step");
+                        UnityMainThreadDispatcher.Instance().Enqueue(() => tutorialPanel.GetComponent<TutorialController>().nextStep());
+                        return;
                     }
+                       
                     if (tutorialOpened)
+                    {
                         UnityMainThreadDispatcher.Instance().Enqueue(() => OpenTutorial());
+                        return;
+                    }
                     if (exitOpened)
                     {
                         UnityMainThreadDispatcher.Instance().Enqueue(() => Application.Quit());
                         Debug.LogError("exit");
+                        return;
                     }
                     if (experiment)
+                    {
                         UnityMainThreadDispatcher.Instance().Enqueue(() => loadSceneExperiment());
+                        return;
 
+                    }
                 }
                 break;
             case Gesture.ReleaseRight:
 
                 if (gesturePanelActiveRight)
                 {
-
+                if(grabNextStepInTutorial)
+                    return;
                     UnityMainThreadDispatcher.Instance().Enqueue(() => SetGesturePanelNotActive());
 
                     UnityMainThreadDispatcher.Instance().Enqueue(() => Reset());
@@ -375,7 +431,8 @@ void ShowReactionPanel(bool value){
 
                 if (gesturePanelActiveLeft)
                 {
-
+                    if(grabNextStepInTutorial)
+                    return;
                     UnityMainThreadDispatcher.Instance().Enqueue(() => SetGesturePanelNotActive());
 
 
@@ -400,8 +457,6 @@ void ShowReactionPanel(bool value){
         gesture_panel_item.SetActive(false);
         print("opentutorial");
 
-        gesturePanelActiveLeft = false;
-        gesturePanelActiveRight = false;
 
     }
 

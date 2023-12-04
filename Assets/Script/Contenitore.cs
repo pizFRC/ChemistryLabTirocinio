@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Lean.Transition;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class Contenitore : MonoBehaviour
 {
@@ -18,29 +19,29 @@ public class Contenitore : MonoBehaviour
     public Contenitore()
     {
         this.itemInside = new List<GameObject>();
-this.Reagenti=new List<Reagente>();
+        this.Reagenti = new List<Reagente>();
     }
 
 
     public bool refill(Reagente r)
     {
-      
+
         foreach (GameObject g in ItemController.instance.gameObjectPrefab)
         {
             if (g.tag == r.Nome)
             {
-            if (!Reagenti.Contains(r))
+                if (!Reagenti.Contains(r))
 
                 {
-                Reagenti.Add(r);
-                GameObject tmp = GameObject.Instantiate(g,this.transform);
-                tmp.tag = g.tag;
-                tmp.transform.parent = this.transform;
+                    Reagenti.Add(r);
+                    GameObject tmp = GameObject.Instantiate(g, this.transform);
+                    tmp.tag = g.tag;
+                    tmp.transform.parent = this.transform;
 
-               
-                itemInside.Add(tmp);
-                Reaction();
-                return true;
+
+                    itemInside.Add(tmp);
+                    Reaction();
+                    return true;
                 }
             }
 
@@ -50,7 +51,7 @@ this.Reagenti=new List<Reagente>();
 
         return false;
 
-        
+
 
     }
 
@@ -61,16 +62,17 @@ this.Reagenti=new List<Reagente>();
         {
             Destroy(child);
         }
+        itemInside.Clear();
 
     }
 
-    int counter;
+
 
 
     // Start is called before the first frame update
     void Start()
     {
-        counter = 0;
+
     }
 
     // Update is called once per frame
@@ -104,7 +106,7 @@ this.Reagenti=new List<Reagente>();
             }
 
 
-            
+
             ps_flame.transform.parent.gameObject.SetActive(true);
             ps_flame.transform.position = this.transform.position;
             ps_smoke.transform.position = this.transform.position;
@@ -116,16 +118,32 @@ this.Reagenti=new List<Reagente>();
     IEnumerator StartAnimation()
     {
         yield return new WaitForSeconds(2f);
-       
+
         ps_smoke.Play();
         ps_flame.Play();
-     StartCoroutine(OpenPanel());
-       
+        StartCoroutine(OpenPanel());
+
     }
     IEnumerator OpenPanel()
     {
         yield return new WaitForSeconds(0.5f);
         Messenger<bool>.Broadcast(GameEvents.SHOW_REACTION_PANEL, true);
+
+        yield return new WaitForSeconds(5f);
+
+        //load button avanti
+        UIController.instance.showButtonAvanti();
+    }
+
+    void OnDisable()
+    {
+        containsWater = false;
+        containsSodium = false;
+        clear();
+        ps_flame.Stop();
+        ps_smoke.Stop();
+        ps_flame.transform.parent.gameObject.SetActive(false);
+
     }
 }
 
